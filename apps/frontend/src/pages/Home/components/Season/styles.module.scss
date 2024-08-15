@@ -1,0 +1,132 @@
+@import "@blueprintjs/core/lib/scss/variables";
+
+$season-width: 320px;
+$season-margin: 6px;
+
+.season {
+  margin: $season-margin;
+  float: left;
+  width: $season-width;
+  height: 220px;
+  background-color: $light-gray5;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  -webkit-box-shadow: 2px 2px 3px 0px $gray1;
+  -moz-box-shadow: 2px 2px 3px 0px $gray1;
+  box-shadow: 2px 2px 3px 0px $gray1;
+
+  .coefficient {
+    padding: 14px;
+    width: 100%;
+  }
+
+  &-50 {
+    h2 {
+      background-color: $light-gray2;
+    }
+
+    .coefficient {
+      border-top: 3px solid $light-gray2;
+    }
+  }
+
+  &-60 {
+    h2 {
+      background-color: $indigo5;
+    }
+
+    .coefficient {
+      border-top: 3px solid $indigo5;
+    }
+  }
+
+  &-70 {
+    h2 {
+      background-color: $lime5;
+    }
+
+    .coefficient {
+      border-top: 3px solid $lime5;
+    }
+  }
+
+  &-80 {
+    h2 {
+      background-color: $vermilion5;
+
+      a {
+        color: $light-gray5;
+
+        &:visited,
+        &:active {
+          color: $light-gray4;
+        }
+      }
+    }
+
+    .coefficient {
+      border-top: 3px solid $vermilion5;
+    }
+  }
+
+  &-90 {
+    h2 {
+      background-color: $cerulean5;
+
+      a {
+        color: $light-gray5;
+
+        &:visited,
+        &:active {
+          color: $light-gray4;
+        }
+      }
+    }
+
+    .coefficient {
+      border-top: 3px solid $cerulean5;
+    }
+  }
+
+  &-00 {
+    h2 {
+      background-color: $forest5;
+    }
+
+    .coefficient {
+      border-top: 3px solid $forest5;
+    }
+  }
+
+  &-10 {
+    h2 {
+      background-color: $turquoise5;
+    }
+
+    .coefficient {
+      border-top: 3px solid $turquoise5;
+    }
+  }
+
+  &-20 {
+    h2 {
+      background-color: $sepia5;
+    }
+
+    .coefficient {
+      border-top: 3px solid $sepia5;
+    }
+  }
+
+  .list {
+    width: 100%;
+
+    & > ul,
+    h2 {
+      padding: 14px;
+      margin: 0;
+    }
+  }
+}

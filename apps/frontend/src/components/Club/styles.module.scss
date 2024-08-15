@@ -1,0 +1,16 @@
+.club {
+  max-width: 100%;
+
+  .flag {
+    margin-right: 4px;
+    display: inline-block !important;
+  }
+
+  .city {
+    margin-left: 4px;
+  }
+
+  &.expelled {
+    text-decoration: line-through;
+  }
+}

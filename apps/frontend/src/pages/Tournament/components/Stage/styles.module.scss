@@ -1,0 +1,82 @@
+@import "@blueprintjs/core/lib/scss/variables";
+@import "../../../../variables.scss";
+
+.stage {
+  background-color: $light-gray5;
+  margin: 16px auto;
+
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 1px solid $sepia1;
+    padding: 0 16px;
+
+    h3 {
+      margin-right: 4px;
+    }
+  }
+
+  &-container {
+    display: flex;
+    justify-content: start;
+    flex-direction: row;
+    width: 100%;
+    padding: 16px 0 30px 16px;
+  }
+
+  &-participants {
+    width: 30%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+
+    .seeded,
+    .winners {
+      width: 50%;
+    }
+
+    .from-another-tournament {
+      color: $blue3;
+    }
+
+    .mine {
+      background-color: $lime5;
+    }
+
+    .highlighted {
+      &-UCL {
+        background-color: $ucl;
+      }
+
+      &-UEL {
+        background-color: $uel;
+      }
+
+      &-UECL {
+        background-color: $uecl;
+      }
+
+      &-CWC {
+        background-color: $cwc;
+      }
+
+      &-ICFC {
+        background-color: $icfc;
+      }
+    }
+
+    &-wide {
+      width: 25%;
+    }
+  }
+
+  &-table {
+    width: 70%;
+
+    &-wide {
+      width: 75%;
+    }
+  }
+}

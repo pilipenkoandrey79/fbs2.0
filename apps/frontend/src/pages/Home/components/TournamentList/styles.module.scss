@@ -1,0 +1,24 @@
+ul.list {
+  list-style-type: none;
+  padding: 0;
+
+  li {
+    margin: 0;
+
+    .tournament {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+
+      .badges {
+        width: 30%;
+      }
+
+      .winner {
+        max-width: 218px;
+        width: 70%;
+      }
+    }
+  }
+}

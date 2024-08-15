@@ -1,0 +1,51 @@
+@import "@blueprintjs/core/lib/scss/variables";
+
+.popover-content {
+  position: relative;
+
+  .popover-close-button {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+  }
+
+  .remove-block {
+    padding: 30px 0 1px 0;
+
+    &-content,
+    &-footer {
+      border-top: 1px solid $light-gray2;
+      padding: 10px 20px;
+    }
+  }
+}
+
+.dialog {
+  width: 1000px;
+}
+
+span.club-name,
+span.country-name {
+  display: inline-block;
+  color: $blue3;
+  margin: 0 4px;
+  border-bottom: 1px dashed $blue3;
+  cursor: pointer;
+
+  .flag,
+  .flag span {
+    display: inline-block;
+  }
+}
+
+:global {
+  .bp5-tree-node-selected > div > span {
+    :local {
+      .club-name,
+      .country-name {
+        color: $white;
+        border-color: $white;
+      }
+    }
+  }
+}

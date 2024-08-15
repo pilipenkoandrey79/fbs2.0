@@ -1,0 +1,42 @@
+@import "@blueprintjs/core/lib/scss/variables";
+
+$min-width: 1024px;
+$max-width: 1680px;
+
+$ucl: $green5;
+$uel: $gold5;
+$uecl: $cerulean5;
+$cwc: $rose5;
+$icfc: $gray5;
+
+@mixin highlighted {
+  .winner {
+    font-weight: bold;
+  }
+
+  .mine {
+    background-color: $lime5;
+  }
+
+  .highlighted {
+    &-UCL {
+      background-color: $ucl !important;
+    }
+
+    &-UEL {
+      background-color: $uel !important;
+    }
+
+    &-UECL {
+      background-color: $uecl !important;
+    }
+
+    &-CWC {
+      background-color: $cwc !important;
+    }
+
+    &-ICFC {
+      background-color: $icfc !important;
+    }
+  }
+}

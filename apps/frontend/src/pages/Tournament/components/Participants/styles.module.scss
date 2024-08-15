@@ -1,0 +1,39 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  padding: 5px 0;
+
+  .country-selector {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    padding: 5px 0;
+
+    &-dropdown {
+      width: 200px;
+
+      label {
+        margin-bottom: 0;
+        height: 100%;
+
+        & > div {
+          margin-top: 0;
+        }
+      }
+
+      &-button {
+        width: 100%;
+
+        &-empty {
+          color: #aaa;
+          font-style: italic;
+        }
+      }
+    }
+
+    &-reset {
+      margin-left: 1px;
+    }
+  }
+}

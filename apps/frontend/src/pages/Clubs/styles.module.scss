@@ -1,0 +1,61 @@
+@import "@blueprintjs/core/lib/scss/variables";
+
+.clubs {
+  background-color: $light-gray5;
+  min-height: calc(100vh - 50px);
+
+  h1 {
+    width: 100%;
+    padding: 16px;
+    margin: 0;
+    color: $dark-gray5;
+  }
+
+  .create-buttons {
+    padding: 0 32px;
+
+    button {
+      margin: 0 16px;
+    }
+  }
+
+  .container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    height: 100%;
+
+    .flag,
+    .flag span {
+      display: inline-block;
+    }
+
+    .panel {
+      width: calc((100% - 33px) / 2);
+
+      &.right {
+        padding-right: 16px;
+        border-right: 1px solid $light-gray1;
+
+        .graph {
+          width: 700px;
+          height: 450px;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+
+      &.left {
+        padding-left: 16px;
+
+        .tree {
+          padding: 16px 32px;
+        }
+      }
+    }
+  }
+}

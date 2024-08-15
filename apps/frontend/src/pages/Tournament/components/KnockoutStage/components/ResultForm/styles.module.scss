@@ -1,0 +1,85 @@
+@import "@blueprintjs/core/lib/scss/variables";
+
+.form {
+  display: block;
+  padding-top: 30px;
+
+  .header,
+  .pen,
+  .container,
+  .footer {
+    border-top: 1px solid $light-gray2;
+    padding: 10px 20px;
+  }
+
+  .header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .available-dates {
+      max-width: 250px;
+
+      .available-date {
+        display: inline-block;
+        color: $blue3;
+        margin: 0 4px;
+        border-bottom: 1px dashed $blue3;
+        cursor: pointer;
+
+        &:hover {
+          color: $blue5;
+          border-bottom: 1px solid $blue5;
+        }
+
+        &-selected {
+          pointer-events: none;
+          border-bottom: none;
+          color: $dark-gray5;
+        }
+      }
+    }
+
+    .answer {
+      height: 100%;
+    }
+  }
+
+  .container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 400px;
+
+    .panel {
+      height: 100%;
+      width: calc(50% - 20px);
+      min-width: 150px;
+      padding: 0 5px;
+      overflow: hidden;
+
+      .name {
+        text-overflow: ellipsis;
+        max-width: 100%;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .pen-switcher {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+}

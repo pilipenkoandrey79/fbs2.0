@@ -1,0 +1,29 @@
+@import "@blueprintjs/core/lib/scss/variables";
+
+tbody.coefficient-table-body {
+  tr td {
+    border: 1px solid $light-gray1;
+
+    &.club-cell {
+      .club {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bold;
+
+        .participations {
+          font-weight: normal;
+        }
+      }
+    }
+  }
+
+  tr.highlighted td {
+    background-color: $lime5;
+  }
+}
+
+.flag {
+  margin-right: 4px;
+}

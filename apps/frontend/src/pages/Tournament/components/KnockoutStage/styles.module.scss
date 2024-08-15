@@ -1,0 +1,91 @@
+@import "@blueprintjs/core/lib/scss/variables";
+@import "../../../../variables.scss";
+
+.stage {
+  &-header {
+    display: flex;
+    justify-content: start;
+    flex-direction: row;
+    align-items: center;
+
+    h3 {
+      margin-right: 4px;
+    }
+  }
+
+  &-container {
+    display: flex;
+    justify-content: start;
+    flex-direction: row;
+    width: 100%;
+  }
+
+  &-participants {
+    width: 30%;
+  }
+
+  &-table {
+    width: 70%;
+  }
+}
+
+.participant-selector {
+  &-button {
+    min-height: 24px;
+    min-width: 150px;
+    line-height: 24px;
+    font-size: 12px;
+    padding: 1px 5px;
+  }
+}
+
+@include highlighted;
+
+.relegated {
+  font-style: italic;
+}
+
+.result-cell {
+  text-align: center;
+  word-wrap: break-word;
+  overflow: hidden;
+
+  .button-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 24px;
+
+    .edit-result-button {
+      display: none;
+
+      &:hover {
+        background: none;
+      }
+    }
+
+    &:hover {
+      .edit-result-button {
+        display: block;
+      }
+    }
+
+    .is-open {
+      display: block;
+    }
+  }
+}
+
+.tools-cell {
+  padding: 0 1px;
+}
+
+.popover-content {
+  position: relative;
+
+  .popover-close-button {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+  }
+}

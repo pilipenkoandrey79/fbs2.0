@@ -1,0 +1,28 @@
+@import "@blueprintjs/core/lib/scss/variables";
+
+.balance {
+  font-size: 20px;
+  font-weight: 600;
+  display: inline-block;
+
+  .value {
+    margin: 0 2px;
+    cursor: pointer;
+  }
+
+  .win {
+    color: $green3;
+  }
+
+  .drw {
+    color: $orange3;
+  }
+
+  .los {
+    color: $red3;
+  }
+
+  .und {
+    color: $indigo3;
+  }
+}

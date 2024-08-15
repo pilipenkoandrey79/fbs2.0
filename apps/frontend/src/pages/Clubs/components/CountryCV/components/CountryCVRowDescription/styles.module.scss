@@ -1,0 +1,9 @@
+.mono-final {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+
+  li:nth-child(2) {
+    font-weight: normal;
+  }
+}

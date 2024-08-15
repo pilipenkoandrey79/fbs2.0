@@ -1,0 +1,36 @@
+@import "@blueprintjs/core/lib/scss/variables";
+
+$season-width: 220px;
+$season-margin: 6px;
+
+.top {
+  background-color: $light-gray4;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: stretch;
+
+  h1 {
+    margin: 0;
+  }
+
+  .controls {
+    button {
+      height: 100%;
+    }
+  }
+}
+
+.container {
+  min-height: calc(100vh - 50px - 56px - 18px);
+  height: calc(100vh - 50px - 56px - 18px);
+  margin: 0 auto;
+
+  &::after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+  }
+}

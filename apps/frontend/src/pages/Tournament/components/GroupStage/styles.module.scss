@@ -1,0 +1,78 @@
+@import "@blueprintjs/core/lib/scss/variables";
+
+.group-pair {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+
+  &-group {
+    width: calc(50% - 5px);
+  }
+}
+
+.first-color-group-1 {
+  &-club {
+    background-color: $rose5;
+    border-color: $rose5;
+  }
+
+  &-divider {
+    background-color: $rose2;
+  }
+}
+
+.second-color-group-1 {
+  &-club {
+    background-color: $cerulean5;
+    border-color: $cerulean5;
+  }
+
+  &-divider {
+    background-color: $cerulean2;
+  }
+}
+
+.first-color-group-3 {
+  &-club {
+    background-color: $orange5;
+    border-color: $orange5;
+  }
+
+  &-divider {
+    background-color: $orange2;
+  }
+}
+
+.second-color-group-3 {
+  &-club {
+    background-color: $green5;
+    border-color: $green5;
+  }
+
+  &-divider {
+    background-color: $green2;
+  }
+}
+
+.first-color-group-4 {
+  &-club {
+    background-color: $forest5;
+    border-color: $forest5;
+  }
+
+  &-divider {
+    background-color: $forest2;
+  }
+}
+
+.second-color-group-4 {
+  &-club {
+    background-color: $vermilion5;
+    border-color: $vermilion5;
+  }
+
+  &-divider {
+    background-color: $vermilion2;
+  }
+}

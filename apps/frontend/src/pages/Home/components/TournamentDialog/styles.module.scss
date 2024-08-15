@@ -1,0 +1,40 @@
+@import "@blueprintjs/core/lib/scss/variables";
+
+.tournament-dialog {
+  min-width: 1000px;
+  height: 80vh;
+
+  .tournament {
+    border-bottom: 1px solid $light-gray2;
+    padding: 6px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+
+    .season {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      width: 300px;
+      border: 1px solid transparent;
+
+      &.invalid {
+        border-color: $red3;
+      }
+    }
+
+    .type {
+      margin-left: 10px;
+    }
+
+    .copy {
+      margin-bottom: 0;
+      margin-left: 6px;
+    }
+  }
+
+  .stages {
+    margin-top: 6px;
+  }
+}

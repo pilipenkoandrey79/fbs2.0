@@ -1,0 +1,24 @@
+@import "@blueprintjs/core/lib/scss/variables";
+
+.empty-stage {
+  width: 100px;
+  height: 30px;
+  background-color: $light-gray4;
+  border: 4px dashed $light-gray2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $light-gray3;
+    border: 4px dashed $light-gray1;
+  }
+
+  &.disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    background-color: $light-gray5;
+    border: 4px dashed $light-gray3;
+  }
+}

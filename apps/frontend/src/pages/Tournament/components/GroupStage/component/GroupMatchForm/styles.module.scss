@@ -1,0 +1,86 @@
+@import "@blueprintjs/core/lib/scss/variables";
+
+.form {
+  display: block;
+  padding-top: 30px;
+
+  .container,
+  .header,
+  .result,
+  .footer {
+    border-top: 1px solid $light-gray2;
+    padding: 10px 20px;
+  }
+
+  .header,
+  .container,
+  .scores {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .container {
+    max-width: 500px;
+
+    .tour {
+      width: 20%;
+
+      label {
+        margin: 0;
+      }
+    }
+
+    .participants {
+      width: calc(80% - 5px);
+
+      .combination {
+        display: inline-block;
+        color: $blue3;
+        margin: 0 4px;
+        border-bottom: 1px dashed $blue3;
+        cursor: pointer;
+
+        &:hover {
+          color: $blue5;
+          border-bottom: 1px solid $blue5;
+        }
+
+        &-selected {
+          pointer-events: none;
+          border-bottom: none;
+          color: $dark-gray5;
+        }
+      }
+
+      &-selectors {
+        margin-top: 6px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .participant {
+        max-width: 200px;
+        overflow-x: hidden;
+
+        &:first-of-type {
+          margin-right: 5px;
+        }
+
+        & button {
+          width: 100%;
+          display: inline;
+        }
+      }
+    }
+  }
+
+  .scores {
+    .participant {
+      width: 100px;
+    }
+  }
+}

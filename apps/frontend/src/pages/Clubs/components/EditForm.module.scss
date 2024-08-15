@@ -1,0 +1,78 @@
+@import "@blueprintjs/core/lib/scss/variables";
+
+.form {
+  padding-top: 30px;
+  padding-bottom: 1px;
+
+  .header,
+  .controls,
+  .footer,
+  .history {
+    border-top: 1px solid $light-gray2;
+    padding: 10px 20px;
+  }
+}
+
+.controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+
+  .control:not(:last-of-type) {
+    margin-right: 16px;
+  }
+
+  .name {
+    height: 40px;
+  }
+
+  .country {
+    button {
+      height: 40px;
+      min-width: 200px;
+    }
+  }
+
+  .city {
+    input {
+      height: 40px;
+    }
+  }
+}
+
+.history {
+  margin-top: 16px;
+  border-top: 1px solid $light-gray2;
+  padding-top: 16px;
+
+  &-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+
+    h4 {
+      margin-right: 16px;
+    }
+  }
+
+  &-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: stretch;
+
+    &-value {
+      margin: 0 10px;
+
+      b {
+        margin-right: 5px;
+      }
+    }
+  }
+
+  .old-name-close-button {
+    margin-right: 16px;
+  }
+}

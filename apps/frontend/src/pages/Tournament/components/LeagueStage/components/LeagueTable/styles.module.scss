@@ -1,0 +1,23 @@
+@import "../../../../../../variables.scss";
+
+@include highlighted;
+
+.table {
+  .winners {
+    &-UCL {
+      background-color: $green5 !important;
+    }
+
+    &-UEL {
+      background-color: $gold5 !important;
+    }
+
+    &-UECL {
+      background-color: $cerulean5 !important;
+    }
+  }
+
+  .promoted {
+    background-color: $light-gray1 !important;
+  }
+}

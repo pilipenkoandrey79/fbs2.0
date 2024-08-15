@@ -16,8 +16,8 @@ async function bootstrap() {
   });
 
   const config: ConfigService = app.get(ConfigService);
-  const port = config.get<number>("NX_BACKEND_PORT") || 3333;
-  const globalPrefix = config.get<string | undefined>("NX_API_PREFIX");
+  const port = config.get<number>("VITE_BACKEND_PORT") || 3333;
+  const globalPrefix = config.get<string | undefined>("VITE_API_PREFIX");
 
   const swaggerConfig = new DocumentBuilder()
     .addServer(globalPrefix)
