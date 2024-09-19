@@ -46,4 +46,4 @@ Thumbs.db
 openapi.json
 openapitools.json
 
-apps/client/src/mono-api
+/apps/frontend/src/mono-api
