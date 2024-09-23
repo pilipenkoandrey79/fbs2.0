@@ -14,7 +14,14 @@ interface Props extends StageProps {
 const LeagueResults: FC<Props> = ({ matches, ...props }) => (
   <div className={styles.matches}>
     {Object.keys(matches).map((tour) => (
-      <KnockoutStage key={tour} {...props} matches={matches[Number(tour)]} />
+      <div className={styles.matchday}>
+        <KnockoutStage
+          key={tour}
+          {...props}
+          matches={matches[Number(tour)]}
+          matchDay={Number(tour)}
+        />
+      </div>
     ))}
   </div>
 );

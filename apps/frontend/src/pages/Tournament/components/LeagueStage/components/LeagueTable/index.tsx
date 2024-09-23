@@ -1,6 +1,7 @@
 import { Cell, Column, Table2 } from "@blueprintjs/table";
 import {
   DEFAULT_SWISS_LENGTH,
+  GroupRow,
   LeagueStageData,
   Stage,
   TABLE_ROW_HEIGHT,
@@ -51,16 +52,30 @@ const LeagueTable: FC<Props> = ({
   );
 
   const scoreCellRenderer = useCallback(
-    (rowIndex: number) => (
-      <Cell>
-        {table[rowIndex]?.score}
-        {table[rowIndex]?.results?.some(
-          ({ hasDeductedPoints, tech }) => !!hasDeductedPoints || !!tech
-        )
-          ? "*"
-          : ""}
-      </Cell>
-    ),
+    (
+        field: keyof Pick<
+          GroupRow,
+          "defeat" | "draw" | "games" | "score" | "win"
+        >
+      ) =>
+      (rowIndex: number) =>
+        (
+          <Cell>
+            {table[rowIndex]?.[field]}
+            {field === "score"
+              ? table[rowIndex]?.results?.some(
+                  ({ hasDeductedPoints, tech }) => !!hasDeductedPoints || !!tech
+                )
+                ? "*"
+                : ""
+              : ""}
+          </Cell>
+        ),
+    [table]
+  );
+
+  const goalsCellRenderer = useCallback(
+    (rowIndex: number) => <Cell>{table[rowIndex]?.goals?.join(" - ")}</Cell>,
     [table]
   );
 
@@ -68,14 +83,19 @@ const LeagueTable: FC<Props> = ({
     <div className={styles.table}>
       <Table2
         numRows={stage.stageScheme.swissNum || DEFAULT_SWISS_LENGTH}
-        columnWidths={[150, 40]}
+        columnWidths={[150, 32, 32, 32, 32, 60, 40]}
         rowHeights={new Array(
           stage.stageScheme.swissNum || DEFAULT_SWISS_LENGTH
         ).fill(TABLE_ROW_HEIGHT)}
         cellRendererDependencies={[version, user?.isEditor, highlightedClubId]}
       >
         <Column key="t" name="" cellRenderer={clubCellRenderer} />
-        <Column key="s" name="О" cellRenderer={scoreCellRenderer} />
+        <Column key="m" name="І" cellRenderer={scoreCellRenderer("games")} />
+        <Column key="w" name="В" cellRenderer={scoreCellRenderer("win")} />
+        <Column key="d" name="Н" cellRenderer={scoreCellRenderer("draw")} />
+        <Column key="l" name="П" cellRenderer={scoreCellRenderer("defeat")} />
+        <Column key="g" name="М" cellRenderer={goalsCellRenderer} />
+        <Column key="s" name="О" cellRenderer={scoreCellRenderer("score")} />
       </Table2>
     </div>
   );

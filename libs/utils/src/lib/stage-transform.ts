@@ -1,9 +1,9 @@
-import { DeductedPoints, GROUP_STAGES, TournamentPart } from '@fbs2.0/types';
-import { isLeagueStage } from '@fbs2.0/utils';
+import { DeductedPoints, GROUP_STAGES, TournamentPart } from "@fbs2.0/types";
+import { isLeagueStage } from "./common";
 
-import { transformGroupStage } from './group-stage-tarnsform';
-import { transformLeagueStage } from './league-stage-tarnsform';
-import { transformKnockoutStage } from './knockout-stage-transform';
+import { transformGroupStage } from "./group-stage-tarnsform";
+import { transformLeagueStage } from "./league-stage-tarnsform";
+import { transformKnockoutStage } from "./knockout-stage-transform";
 
 export const getPointsToSubtract = (
   deductedPoints: DeductedPoints[],
@@ -17,12 +17,9 @@ export const getPointsToSubtract = (
     return acc;
   }, 0);
 
-export const transformTournamentPart = (tournamentPart: TournamentPart) => {
-  if (GROUP_STAGES.includes(tournamentPart.stage.stageScheme.type)) {
-    return transformGroupStage(tournamentPart);
-  } else {
-    return isLeagueStage(tournamentPart.stage)
-      ? transformLeagueStage(tournamentPart)
-      : transformKnockoutStage(tournamentPart);
-  }
-};
+export const transformTournamentPart = (tournamentPart: TournamentPart) =>
+  GROUP_STAGES.includes(tournamentPart.stage.stageScheme.type)
+    ? transformGroupStage(tournamentPart)
+    : isLeagueStage(tournamentPart.stage)
+    ? transformLeagueStage(tournamentPart)
+    : transformKnockoutStage(tournamentPart);

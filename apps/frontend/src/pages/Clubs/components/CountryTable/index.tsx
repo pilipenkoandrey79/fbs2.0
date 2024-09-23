@@ -23,7 +23,7 @@ const CountryTable: FC<Props> = ({ country, onSelect }) => (
     <tbody>
       {country.cities.map((city) => (
         <tr key={city.city.id}>
-          <td>
+          <td style={{ whiteSpace: "nowrap" }}>
             <CityLabel city={city.city} removable={city.clubs.length === 0} />
           </td>
           <td>

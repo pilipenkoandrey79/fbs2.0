@@ -74,6 +74,10 @@ export const getGroupWinnersQuantity = (stageSchemeType: StageSchemeType) => {
     return 3;
   }
 
+  if (stageSchemeType === StageSchemeType.LEAGUE) {
+    return 24;
+  }
+
   return 1;
 };
 
@@ -108,6 +112,13 @@ export const getPreviousStageWinners = (
               previousStageWinnersClubIds.push(team?.club.id)
           )
     );
+  } else if (previousStage?.stage.stageType === StageType.LEAGUE) {
+    (previousStage.matches as LeagueStageData).table
+      .slice(0, getGroupWinnersQuantity(previousStage?.stage.stageScheme.type))
+      .forEach(
+        ({ team }) =>
+          isNotEmpty(team) && previousStageWinnersClubIds.push(team?.club.id)
+      );
   } else {
     ((previousStage?.matches as StageTableData)?.rows || []).forEach(
       ({ host, guest }) => {
@@ -127,10 +138,13 @@ export const getPreviousStageWinners = (
     .sort(sortByClubName);
 };
 
-const getExistedParticipantsIds = (
+export const getExistedParticipantsIds = (
   existedMatches: TournamentDataRow["matches"] | undefined
 ) => {
-  if (existedMatches === undefined) {
+  if (
+    existedMatches === undefined ||
+    (existedMatches as LeagueStageData).table
+  ) {
     return [];
   }
 
@@ -145,11 +159,7 @@ const getExistedParticipantsIds = (
 
   const existedParticipantsIds: number[] = [];
 
-  const groups = Array.isArray((existedMatches as LeagueStageData).table)
-    ? [(existedMatches as LeagueStageData).table]
-    : Object.values(existedMatches as Record<Group, GroupRow[]>);
-
-  groups.forEach((rows) =>
+  Object.values(existedMatches as Record<Group, GroupRow[]>).forEach((rows) =>
     rows.forEach(({ team }) => existedParticipantsIds.push(team.id))
   );
 

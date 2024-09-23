@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon';
+import { DateTime } from "luxon";
 import {
   Balance,
   City,
@@ -21,8 +21,9 @@ import {
   TournamentSeason,
   Winner,
   Years,
-} from '@fbs2.0/types';
-import { FormEvent } from 'react';
+  DEFAULT_SWISS_LENGTH,
+} from "@fbs2.0/types";
+import { FormEvent } from "react";
 
 export const handleStringChange =
   (handler: (value: string) => void) => (event: FormEvent<HTMLElement>) =>
@@ -31,13 +32,13 @@ export const handleStringChange =
 export const isNotEmpty = (value: unknown, shouldValidateEmptyString = false) =>
   value !== null &&
   value !== undefined &&
-  (shouldValidateEmptyString ? value !== '' : true);
+  (shouldValidateEmptyString ? value !== "" : true);
 
 export const isSeasonLabelValid = (
   season?: string,
   validateFinishInFuture = true
 ) => {
-  if (!season || !SEASON_REGEXP.test(season || '')) {
+  if (!season || !SEASON_REGEXP.test(season || "")) {
     return false;
   }
 
@@ -45,7 +46,7 @@ export const isSeasonLabelValid = (
     return true;
   }
 
-  const seasonBoundaries = season.split('-');
+  const seasonBoundaries = season.split("-");
   const start = Number(seasonBoundaries[0]);
   const finish = Number(seasonBoundaries[1]);
 
@@ -77,40 +78,40 @@ export const getTournamentTitle = (
   showSeason = true,
   short = false
 ) => {
-  let title = '';
-  const seasonBoundaries = (season || '').split('-').map((v) => Number(v));
+  let title = "";
+  const seasonBoundaries = (season || "").split("-").map((v) => Number(v));
 
   switch (tournament) {
     case Tournament.CHAMPIONS_LEAGUE:
       title = short
         ? seasonBoundaries[0] < Years.START_OF_CHAMPIONS_LEAGUE
-          ? 'КЄЧ'
-          : 'ЛЧ'
+          ? "КЄЧ"
+          : "ЛЧ"
         : seasonBoundaries[0] < Years.START_OF_CHAMPIONS_LEAGUE
-        ? 'Кубок Європейських Чемпіонів'
-        : 'Ліга Чемпіонів УЄФА';
+        ? "Кубок Європейських Чемпіонів"
+        : "Ліга Чемпіонів УЄФА";
       break;
     case Tournament.CUP_WINNERS_CUP:
-      title = short ? 'КВК' : 'Кубок Володарів Кубків';
+      title = short ? "КВК" : "Кубок Володарів Кубків";
       break;
     case Tournament.EUROPE_LEAGUE:
       title = short
         ? seasonBoundaries[0] < Years.START_OF_EUROPA_LEAGUE
-          ? 'КУЄФА'
-          : 'ЛЄ'
+          ? "КУЄФА"
+          : "ЛЄ"
         : seasonBoundaries[0] < Years.START_OF_EUROPA_LEAGUE
-        ? 'Кубок УЄФА'
-        : 'Ліга Європи';
+        ? "Кубок УЄФА"
+        : "Ліга Європи";
       break;
     case Tournament.EUROPE_CONFERENCE_LEAGUE:
-      title = short ? 'ЛК' : 'Ліга Конференцій';
+      title = short ? "ЛК" : "Ліга Конференцій";
       break;
     case Tournament.FAIRS_CUP:
-      title = short ? 'КЯ' : 'Кубок Ярмарок';
+      title = short ? "КЯ" : "Кубок Ярмарок";
       break;
   }
 
-  return `${title} ${showSeason && season ? season : ''}`;
+  return `${title} ${showSeason && season ? season : ""}`;
 };
 
 export const getStageLabel = (stageType: StageType | null, group?: Group) => {
@@ -132,9 +133,9 @@ export const getStageLabel = (stageType: StageType | null, group?: Group) => {
     case StageType.LEAGUE:
       return `Етап ліги`;
     case StageType.GROUP:
-      return `Груповий раунд${group ? `: група ${group}` : ''}`;
+      return `Груповий раунд${group ? `: група ${group}` : ""}`;
     case StageType.GROUP_2:
-      return `Другий груповий раунд${group ? `: група ${group}` : ''}`;
+      return `Другий груповий раунд${group ? `: група ${group}` : ""}`;
     case StageType.KNOCKOUT_PLAYOFF:
       return `Плей-офф`;
     case StageType.FIRST_ROUND:
@@ -152,24 +153,24 @@ export const getStageLabel = (stageType: StageType | null, group?: Group) => {
     case StageType.FINAL:
       return `Фінал`;
     default:
-      return '';
+      return "";
   }
 };
 
 export const getStageSchemeTypeLabel = (type: StageSchemeType) => {
   switch (type) {
     case StageSchemeType.OLYMPIC_1_MATCH:
-      return 'Одноматчевий на виліт';
+      return "Одноматчевий на виліт";
     case StageSchemeType.OLYMPIC_2_MATCH:
-      return 'Двоматчевий на виліт';
+      return "Двоматчевий на виліт";
     case StageSchemeType.GROUP_4_2_MATCH:
-      return 'Груповий двоматчевий';
+      return "Груповий двоматчевий";
     case StageSchemeType.GROUP_5_1_MATCH:
-      return 'Груповий одноматчевий';
+      return "Груповий одноматчевий";
     case StageSchemeType.GROUP_SEMI_FINAL:
       return 'Груповий "півфінальний"';
     case StageSchemeType.GROUP_ICFC:
-      return 'Груповий раунд (Кубок Ярмарків)';
+      return "Груповий раунд (Кубок Ярмарків)";
     case StageSchemeType.LEAGUE:
       return '"Швейцарська" схема';
   }
@@ -191,7 +192,7 @@ const renderResultLabel = (
   }: ResultLabelOptions
 ) => {
   if (unplayed) {
-    return '-';
+    return "-";
   }
 
   return isNotEmpty(hs) && isNotEmpty(gs)
@@ -200,11 +201,11 @@ const renderResultLabel = (
           ? afterMatchPenalties
             ? ` (пен. ${hp}:${gp})`
             : ` (перегравання${
-                replayDate ? ` (${replayDate})` : ''
+                replayDate ? ` (${replayDate})` : ""
               } ${hp}:${gp})`
-          : ''
-      }${tech ? ' *' : ''}`
-    : '';
+          : ""
+      }${tech ? " *" : ""}`
+    : "";
 };
 
 export interface ResultLabelOptions {
@@ -236,6 +237,8 @@ export const getTeamsQuantityInGroup = (stageSchemeType: StageSchemeType) => {
       return 5;
     case StageSchemeType.GROUP_ICFC:
       return 3;
+    case StageSchemeType.LEAGUE:
+      return DEFAULT_SWISS_LENGTH;
     default:
       return 0;
   }
@@ -280,7 +283,7 @@ export const prepareClub = (club: Club, year: string) => {
 
     city = {
       ...club.city,
-      name: name || club.city?.name || '',
+      name: name || club.city?.name || "",
       country: country || club.city?.country,
     } as City;
   }
@@ -322,7 +325,7 @@ export const howMany = (number: number, noun: string) => {
   const lastDigit = number % 10;
 
   if (number === 0) {
-    return '';
+    return "";
   }
 
   if (number > 20 || number < 10) {
@@ -354,7 +357,7 @@ export const isGroupFinished = (
 export const getSeasonsForCoefficientcalculation = (
   season: string | undefined
 ) => {
-  const [start, finish] = (season || '').split('-').map((v) => Number(v));
+  const [start, finish] = (season || "").split("-").map((v) => Number(v));
 
   return [0, 1, 2, 3, 4]
     .map((_, index) => ({
@@ -418,11 +421,11 @@ export const getWinners = (matches: Match[]) =>
         isNotEmpty(forceWinner)
           ? answer
             ? forceWinner?.id === host?.id
-              ? 'guest'
-              : 'host'
+              ? "guest"
+              : "host"
             : forceWinner?.id === host?.id
-            ? 'host'
-            : 'guest'
+            ? "host"
+            : "guest"
           : undefined
       );
 
@@ -446,7 +449,7 @@ export const getWinners = (matches: Match[]) =>
           : host
         : undefined;
 
-      const year = tournament.season.split('-')[0];
+      const year = tournament.season.split("-")[0];
 
       return {
         tournament,
@@ -481,7 +484,7 @@ export const getCVBalance = (cv: ClubCV[] | undefined) => {
 export const getWinner = (
   results: KnockoutStageTableRowResult[],
   awayGoalRule: boolean,
-  forceWinner?: 'host' | 'guest'
+  forceWinner?: "host" | "guest"
 ): { host: boolean; guest: boolean } => {
   const totalHostScore = results.reduce<number>(
     (acc, { hostScore, hostPen }) => acc + (hostScore ?? 0) + (hostPen ?? 0),
@@ -518,11 +521,11 @@ export const getWinner = (
     }
   }
 
-  if (forceWinner === 'host') {
+  if (forceWinner === "host") {
     return { host: true, guest: false };
   }
 
-  if (forceWinner === 'guest') {
+  if (forceWinner === "guest") {
     return { host: false, guest: true };
   }
 

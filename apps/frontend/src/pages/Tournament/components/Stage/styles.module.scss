@@ -70,6 +70,17 @@
     &-wide {
       width: 25%;
     }
+
+    &-league-stage {
+      width: 15%;
+      flex-direction: column;
+      justify-content: flex-start;
+
+      .seeded,
+      .winners {
+        width: auto;
+      }
+    }
   }
 
   &-table {

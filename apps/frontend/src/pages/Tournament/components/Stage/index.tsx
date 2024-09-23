@@ -11,6 +11,7 @@ import {
   USSR,
   GROUP_STAGES,
   LeagueStageData,
+  StageType,
 } from "@fbs2.0/types";
 import { FC, useContext, useMemo, useState } from "react";
 import { isLeagueStage, isNotEmpty } from "@fbs2.0/utils";
@@ -132,6 +133,8 @@ const Stage: FC<Props> = ({
         <div
           className={classNames(styles["stage-participants"], {
             [styles["stage-participants-wide"]]: widePanel,
+            [styles["stage-participants-league-stage"]]:
+              stage.stageType === StageType.LEAGUE,
           })}
         >
           {seededParticipants.length > 0 && (

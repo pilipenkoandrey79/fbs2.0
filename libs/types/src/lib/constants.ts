@@ -5,8 +5,8 @@ export const HIGHLIGHTED_CLUB_ID_SEARCH_PARAM = "highlight-club";
 
 export const SEASON_REGEXP = /^\d{4}-\d{4}$/;
 export const TABLE_ROW_HEIGHT = 26;
-export const UKRAINE = "Україна";
-export const USSR = "СРСР";
+export const UKRAINE = "Ukraine";
+export const USSR = "USSR";
 export const DEFAULT_GROUPS_QUANTITY = 8;
 export const DEFAULT_SWISS_LENGTH = 36;
 

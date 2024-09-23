@@ -20,7 +20,7 @@ import { Club } from "../../../../components/Club";
 import { ResultForm } from "./components/ResultForm";
 import { ParticipantSelector } from "../../../../components/selectors/ParticipantSelector";
 import { StageProps } from "../../types";
-import { getResultsInPair } from "../../utils";
+import { getExistedParticipantsIds, getResultsInPair } from "../../utils";
 import { useCreateMatch } from "../../../../react-query-hooks/matches/useCreateMatch";
 import { useDeleteMatch } from "../../../../react-query-hooks/matches/useDeleteMatch";
 
@@ -29,15 +29,17 @@ import styles from "./styles.module.scss";
 interface Props extends StageProps {
   stage: Stage;
   matches: StageTableData;
+  matchDay?: number;
 }
 
 const KnockoutStage: FC<Props> = ({
   stage,
   matches,
-  participants,
+  participants: allParticipants,
   version,
   isRefetching,
   highlightedClubId,
+  matchDay,
 }) => {
   const { user } = useContext(UserContext);
 
@@ -61,6 +63,15 @@ const KnockoutStage: FC<Props> = ({
   const oneMatch = ONE_MATCH_STAGES.includes(stage.stageScheme.type);
   const replayInsteadOfPenalties = !stage.stageScheme.pen;
   const awayGoalRule = !!stage.stageScheme.awayGoal;
+
+  const existedParticipantsIds = isNotEmpty(matchDay)
+    ? getExistedParticipantsIds(matches)
+    : [];
+
+  const participants =
+    existedParticipantsIds.length > 0
+      ? allParticipants.filter(({ id }) => !existedParticipantsIds.includes(id))
+      : allParticipants;
 
   const clubCellRenderer = (rowIndex: number, columnIndex: number) => {
     const accessor = columnIndex < 1 ? "host" : "guest";
@@ -340,10 +351,12 @@ const KnockoutStage: FC<Props> = ({
         guestId: newGuestId,
         stageType: stage.stageType,
         answer: false,
+        tour: matchDay ?? undefined,
       },
     });
   }, [
     addMatch,
+    matchDay,
     newGuestId,
     newHostId,
     stage.stageType,
@@ -360,6 +373,7 @@ const KnockoutStage: FC<Props> = ({
 
   return (
     <>
+      {isNotEmpty(matchDay) && <h3>{`Ігровий день ${matchDay}`}</h3>}
       {user?.isEditor && participants.length > 0 && (
         <Button
           icon="plus"

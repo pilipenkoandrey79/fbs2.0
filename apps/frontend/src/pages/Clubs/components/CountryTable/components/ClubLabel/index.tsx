@@ -39,7 +39,7 @@ const ClubLabel: FC<Props> = ({ club, onSelect }) => {
   );
 
   return (
-    <>
+    <span style={{ whiteSpace: "nowrap" }}>
       <span className={styles["club-name"]} onClick={onSelect}>
         {club.name}{" "}
       </span>
@@ -104,7 +104,7 @@ const ClubLabel: FC<Props> = ({ club, onSelect }) => {
           />
         </Popover>
       )}
-    </>
+    </span>
   );
 };
 
