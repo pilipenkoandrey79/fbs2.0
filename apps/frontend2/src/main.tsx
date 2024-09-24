@@ -1,16 +1,17 @@
 import { StrictMode } from "react";
-import * as ReactDOM from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
+import { createRoot } from "react-dom/client";
 
-import App from "./app/app";
+import "./i18n/config";
+import { App } from "./components/App";
 
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
-);
-root.render(
-  <StrictMode>
-    <BrowserRouter>
+const container = document.getElementById("root");
+
+if (container) {
+  const root = createRoot(container);
+
+  root.render(
+    <StrictMode>
       <App />
-    </BrowserRouter>
-  </StrictMode>
-);
+    </StrictMode>
+  );
+}
