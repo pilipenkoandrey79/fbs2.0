@@ -1,0 +1,53 @@
+@import "../../style/mixins.scss";
+@import "../../style/colors.module.scss";
+
+.layout {
+  @include flex(column, flex-start, center);
+
+  header,
+  main,
+  footer {
+    width: 100%;
+  }
+
+  h1 {
+    padding: 0;
+    margin: 0;
+
+    .home {
+      pointer-events: none;
+    }
+  }
+
+  header {
+    @include flex(row, space-between, center);
+
+    .language-swaitcher {
+      margin-right: 4px;
+    }
+
+    .link {
+      margin: 0 24px;
+
+      span[role] {
+        margin-right: 2px;
+      }
+    }
+  }
+
+  main {
+    height: calc(100vh - 64px - 69px);
+    padding: 4px;
+    background-color: $contentBg;
+
+    .spinner {
+      width: 100%;
+      height: 100%;
+      @include flex(column, center, center);
+    }
+  }
+
+  footer {
+    text-align: center;
+  }
+}

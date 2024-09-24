@@ -1,6 +1,7 @@
-import { Layout } from "antd";
 import { FC } from "react";
 
-const Home: FC = () => <Layout>Home</Layout>;
+import { Page } from "../../components/Page";
+
+const Home: FC = () => <Page>Home</Page>;
 
 export { Home };

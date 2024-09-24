@@ -1,6 +1,7 @@
-import { Layout } from "antd";
 import { FC } from "react";
 
-const Coefficient: FC = () => <Layout>Coefficient</Layout>;
+import { Page } from "../../components/Page";
+
+const Coefficient: FC = () => <Page>Coefficient</Page>;
 
 export { Coefficient };

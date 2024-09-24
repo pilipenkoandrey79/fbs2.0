@@ -1,6 +1,7 @@
-import { Layout } from "antd";
 import { FC } from "react";
 
-const Clubs: FC = () => <Layout>Clubs</Layout>;
+import { Page } from "../../components/Page";
+
+const Clubs: FC = () => <Page>Clubs</Page>;
 
 export { Clubs };

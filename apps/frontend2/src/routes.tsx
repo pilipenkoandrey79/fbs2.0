@@ -12,7 +12,9 @@ export enum Paths {
   AUTH_REDIRECT = `${AUTH_REDIRECT_PATH}/:accessToken/:refreshToken`,
 }
 
-const getLocalizedPath = (path: Paths) => `/:lang?${path}`;
+export const LANG_SEGMENT = "/:lang?";
+
+const getLocalizedPath = (path: Paths) => `${LANG_SEGMENT}${path}`;
 
 export const routes: RouteObject[] = [
   {

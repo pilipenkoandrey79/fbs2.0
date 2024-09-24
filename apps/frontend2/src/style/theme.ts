@@ -4,7 +4,19 @@ import colors from "./colors.module.scss";
 
 const theme: ThemeConfig = {
   token: {
-    colorPrimary: colors.colorPrimaryBase,
+    colorPrimary: colors.primaryBase,
+    colorLink: colors.link,
+    colorLinkActive: colors.linkActive,
+    colorLinkHover: colors.linkHover,
+  },
+  components: {
+    Layout: {
+      headerColor: colors.headerColor,
+      headerPadding: "0 10px",
+    },
+    Button: {
+      defaultBg: colors.contentBg,
+    },
   },
 };
 

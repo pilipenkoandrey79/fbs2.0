@@ -1,6 +1,16 @@
 // -- Primary --
-$colorPrimaryBase: #318167;
+$primaryBase: #3b3c4e;
+$headerColor: #f1f1f1;
+$contentBg: #fefefe;
+$link: #2eaf88;
+$linkActive: #09d99b;
+$linkHover: #69ffb9;
 
 :export {
-  colorPrimaryBase: $colorPrimaryBase;
+  primaryBase: $primaryBase;
+  headerColor: $headerColor;
+  linkActive: $linkActive;
+  linkHover: $linkHover;
+  link: $link;
+  contentBg: $contentBg;
 }

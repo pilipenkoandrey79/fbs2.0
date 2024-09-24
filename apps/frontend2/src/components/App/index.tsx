@@ -4,6 +4,7 @@ import { ConfigProvider } from "antd";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import { Fallback } from "../Fallback";
 import { routes } from "../../routes";
@@ -28,6 +29,7 @@ const App: FC = () => {
         <ConfigProvider theme={theme} locale={locales[lang]}>
           <RouterProvider router={router} fallbackElement={<Fallback />} />
         </ConfigProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </Suspense>
   );
