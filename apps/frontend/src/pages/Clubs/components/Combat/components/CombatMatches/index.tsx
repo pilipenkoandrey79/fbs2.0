@@ -4,7 +4,7 @@ import { Classes } from "@blueprintjs/core";
 import {
   getResultLabel,
   getStageLabel,
-  getTournamentTitle,
+  _getTournamentTitle,
   prepareClub,
 } from "@fbs2.0/utils";
 import { Link } from "react-router-dom";
@@ -114,7 +114,7 @@ const CombatMatches: FC<Props> = ({ country, rival }) => {
                     <Link
                       to={`/tournaments/${tournamentSeason.season}/${tournamentSeason.tournament}`}
                     >
-                      {getTournamentTitle(
+                      {_getTournamentTitle(
                         tournamentSeason.season,
                         tournamentSeason.tournament,
                         true,

@@ -1,7 +1,7 @@
 import { Button, MenuItem } from "@blueprintjs/core";
 import { ItemRendererProps, Select } from "@blueprintjs/select";
 import { Tournament } from "@fbs2.0/types";
-import { getTournamentTitle, isNotEmpty } from "@fbs2.0/utils";
+import { _getTournamentTitle, isNotEmpty } from "@fbs2.0/utils";
 import { FC, useEffect } from "react";
 
 interface Props {
@@ -51,7 +51,7 @@ const TournamentSelector: FC<Props> = ({
     })
     .map((tournament) => ({
       value: tournament,
-      label: getTournamentTitle(`${year}-`, tournament, false),
+      label: _getTournamentTitle(`${year}-`, tournament, false),
     }));
 
   const onItemSelect = (item: Item) => onSelect(item.value);

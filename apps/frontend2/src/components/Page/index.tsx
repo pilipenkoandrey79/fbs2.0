@@ -1,72 +1,62 @@
-import { Button, Layout, message, Spin } from "antd";
-import { FC, ReactNode, useContext, useEffect } from "react";
-import {
-  DatabaseOutlined,
-  LoginOutlined,
-  LogoutOutlined,
-} from "@ant-design/icons";
-import { ApiEntities } from "@fbs2.0/types";
+import { Layout, message, Spin } from "antd";
+import { FC, ReactNode, useEffect, useState } from "react";
+import { DatabaseOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
+import { AxiosError } from "axios";
+import { Helmet } from "react-helmet-async";
 
 import { LanguageSwitcher } from "../LanguageSwitcher";
-import { UserContext } from "../../context/userContext";
-import backendUrl from "../../api/backend-url";
-import { removeApiToken } from "../../utils/api-token";
-import { removeRefreshToken } from "../../utils/refresh-token";
+import { LoginButton } from "./components/LoginButton";
 import { Paths } from "../../routes";
 import { useCurrentPath } from "../../hooks/useCurrentPath";
-import { usePrevious } from "../../hooks/usePrevious";
 
 import styles from "./styles.module.scss";
 
 interface Props {
   children: ReactNode | ReactNode[];
+  title: string;
   isLoading?: boolean;
-  error?: Error | null;
+  errors?: (Error | AxiosError | null)[] | null;
 }
 
-const Page: FC<Props> = ({ children, isLoading, error }) => {
+const Page: FC<Props> = (props) => {
   const { t } = useTranslation();
   const [messageApi, contextHolder] = message.useMessage();
-  const { user, setUser } = useContext(UserContext);
-  const previousError = usePrevious(error);
-  const currentPath = useCurrentPath();
 
+  const [errors, setErrors] = useState<(Error | AxiosError | null)[] | null>(
+    null
+  );
+
+  const currentPath = useCurrentPath();
   const isHome = currentPath === Paths.HOME;
   const isClubsPage = currentPath === Paths.CLUBS;
 
-  const login = async () => {
-    try {
-      window.open(`${backendUrl}${ApiEntities.Auth}/google`, "_self");
-    } catch (error) {
-      messageApi.error(
-        typeof error === "string" ? error : (error as Error).message || "Error"
-      );
-    }
-  };
-
-  const logout = () => {
-    removeApiToken();
-    removeRefreshToken();
-    setUser(undefined);
-  };
+  useEffect(() => {
+    setErrors(
+      props.errors && props.errors.length > 0
+        ? props.errors?.filter((error) => !!error)
+        : null
+    );
+  }, [props.errors]);
 
   useEffect(() => {
-    if (!!error && !previousError) {
-      messageApi.error(error.message);
+    if (errors && errors.length > 0) {
+      errors
+        .filter((error) => !!error)
+        .forEach((error) => messageApi.error(error.message));
     }
-  }, [error, messageApi, previousError]);
+  }, [errors, messageApi]);
 
   return (
     <Layout className={styles.layout}>
+      <Helmet>
+        <title>{props.title}</title>
+      </Helmet>
       <Layout.Header>
         <h1>
-          <Link
-            to={Paths.HOME}
-            className={classNames({ [styles.home]: isHome })}
-          >
+          <Link to={Paths.HOME} className={classNames({ disabled: isHome })}>
             FBS2
           </Link>
         </h1>
@@ -78,22 +68,17 @@ const Page: FC<Props> = ({ children, isLoading, error }) => {
             </Link>
           )}
           <LanguageSwitcher className={styles["language-swaitcher"]} />
-          <Button
-            type="default"
-            shape="circle"
-            icon={user ? <LogoutOutlined /> : <LoginOutlined />}
-            onClick={user ? logout : login}
-          />
+          <LoginButton setErrors={setErrors} />
         </div>
       </Layout.Header>
       <Layout.Content>
         {contextHolder}
-        {isLoading || error ? (
+        {props.isLoading ? (
           <div className={styles.spinner}>
             <Spin size="large" />
           </div>
         ) : (
-          children
+          props.children
         )}
       </Layout.Content>
       <Layout.Footer>FBS ©{new Date().getFullYear()}</Layout.Footer>

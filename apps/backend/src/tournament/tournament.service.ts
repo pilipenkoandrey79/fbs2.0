@@ -39,12 +39,20 @@ export class TournamentService {
   @InjectRepository(Participant)
   private readonly participantRepository: Repository<Participant>;
 
-  public async getAvailableTournaments() {
+  public async getAvailableTournaments(simplified?: boolean) {
     const rawTournamentSeasons = await this.tournamentSeasonRepository.find();
 
     const tournamentSeasons = await Promise.all(
       rawTournamentSeasons.map(async (tournamentSeason) => {
         const { season, tournament, id } = tournamentSeason;
+
+        if (simplified) {
+          return {
+            id,
+            season,
+            type: tournament,
+          } as AvailableTournament;
+        }
 
         const linkedStages = await this.stageRepository.find({
           where: { tournamentSeason: { season }, linkedTournament: tournament },

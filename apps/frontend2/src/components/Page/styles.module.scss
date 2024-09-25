@@ -3,6 +3,7 @@
 
 .layout {
   @include flex(column, flex-start, center);
+  min-width: 400px;
 
   header,
   main,
@@ -13,10 +14,6 @@
   h1 {
     padding: 0;
     margin: 0;
-
-    .home {
-      pointer-events: none;
-    }
   }
 
   header {

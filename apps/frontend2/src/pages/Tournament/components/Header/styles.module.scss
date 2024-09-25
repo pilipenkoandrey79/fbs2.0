@@ -1,0 +1,50 @@
+@import "../../../../style/mixins.scss";
+@import "../../../../style/colors.module.scss";
+@import "../../../../style/variables.module.scss";
+
+.header {
+  @include flex(column);
+
+  .title,
+  .panel {
+    width: 100%;
+  }
+
+  h1 {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .panel {
+    @include flex(row, space-between, center);
+
+    .nav {
+      a {
+        margin: 0 4px;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .highlight {
+    border: 1px $border dashed;
+    width: 200px;
+    height: 32px;
+    margin: 4px;
+    align-self: flex-end;
+    flex-shrink: 0;
+  }
+
+  @media (min-width: $screen-lg) {
+    @include flex(row);
+
+    .panel {
+      .nav {
+        a {
+          margin: 0 18px;
+        }
+      }
+    }
+  }
+}

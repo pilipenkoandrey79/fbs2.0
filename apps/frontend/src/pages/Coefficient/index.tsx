@@ -3,7 +3,7 @@ import { useParams } from "react-router";
 import {
   SortBy,
   getSeasonsForCoefficientcalculation,
-  getTournamentTitle,
+  _getTournamentTitle,
   handleStringChange,
   sortCoefficientData,
 } from "@fbs2.0/utils";
@@ -50,7 +50,7 @@ const Coefficient: FC = () => {
 
     return availableTournaments?.[season]?.map(({ type }) => ({
       to: `/tournaments/${season}/${type}`,
-      label: getTournamentTitle(season, type, true, true),
+      label: _getTournamentTitle(season, type, true, true),
     }));
   }, [availableTournaments, season]);
 

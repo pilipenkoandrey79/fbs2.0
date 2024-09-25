@@ -1,6 +1,6 @@
 import { TournamentSeason } from "@fbs2.0/types";
 import { FC } from "react";
-import { getTournamentTitle } from "@fbs2.0/utils";
+import { _getTournamentTitle } from "@fbs2.0/utils";
 import classNames from "classnames";
 import { Classes, Tooltip } from "@blueprintjs/core";
 import { Link, To } from "react-router-dom";
@@ -16,8 +16,8 @@ const TournamentBadge: FC<Props> = ({
   tournamentSeason: { tournament, season },
   linkTo,
 }) => {
-  const title = getTournamentTitle(season, tournament, false, true);
-  const fullTitle = getTournamentTitle(season, tournament, true, false);
+  const title = _getTournamentTitle(season, tournament, false, true);
+  const fullTitle = _getTournamentTitle(season, tournament, true, false);
 
   return (
     <div

@@ -1,7 +1,7 @@
 import { Club as ClubType, Winner } from "@fbs2.0/types";
 import { FC } from "react";
 import { Tooltip } from "@blueprintjs/core";
-import { getTournamentTitle } from "@fbs2.0/utils";
+import { _getTournamentTitle } from "@fbs2.0/utils";
 
 import { Club } from "../../../../components/Club";
 
@@ -19,7 +19,7 @@ const ClubCell: FC<Props> = ({ club, winners }) => {
 
   return wonTournament ? (
     <Tooltip
-      content={`Переможець ${getTournamentTitle(
+      content={`Переможець ${_getTournamentTitle(
         wonTournament?.season,
         wonTournament?.tournament
       )}`}

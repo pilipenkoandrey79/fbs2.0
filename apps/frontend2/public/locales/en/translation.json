@@ -2,5 +2,46 @@
   "test": "test",
   "common": {
     "clubs": "Clubs"
+  },
+  "tournament": {
+    "title": {
+      "UCL": {
+        "full": {
+          "new": "Champoins League",
+          "old": "European Cup"
+        },
+        "short": {
+          "new": "UCL",
+          "old": "EC"
+        }
+      },
+      "UEL": {
+        "full": {
+          "new": "Europe League",
+          "old": "UEFA Cup"
+        },
+        "short": {
+          "new": "UEL",
+          "old": "UEFAC"
+        }
+      },
+      "CWC": {
+        "full": "Cup Winner's Cup",
+        "short": "CWC"
+      },
+      "UECL": {
+        "full": "Conference League",
+        "short": "UECL"
+      },
+      "ICFC": {
+        "full": "Intercities Fairs Cup",
+        "short": "ICFC"
+      }
+    },
+    "nav": {
+      "next": "Next season",
+      "back": "Previous season"
+    },
+    "participants": "Participants"
   }
 }

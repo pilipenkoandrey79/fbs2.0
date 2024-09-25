@@ -8,6 +8,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Query,
   UseGuards,
 } from "@nestjs/common";
 import { ApiEntities, Tournament } from "@fbs2.0/types";
@@ -26,7 +27,6 @@ import { TournamentService } from "./tournament.service";
 import { StageDto } from "./entities/stage.dto";
 import { StageSubstitutionDto } from "./entities/stage-substitution.dto";
 import { AccessTokenGuard } from "../auth/guards/access-token.guard";
-import { AvailableTournament } from "./entities/available-tournament";
 import { Stage } from "../match/entities/stage.entity";
 import { TournamentSeason } from "../shared/entities/tournament-season.entity";
 import { StageSubstitution } from "./entities/stage-substitution.entity";
@@ -38,9 +38,9 @@ export class TournamentController {
   private readonly service: TournamentService;
 
   @Get("seasons")
-  @ApiOkResponse({ type: AvailableTournament })
-  public getSeasons() {
-    return this.service.getAvailableTournaments();
+  // @ApiOkResponse({ type: AvailableTournament })
+  public getSeasons(@Query("simplified") simplified: boolean) {
+    return this.service.getAvailableTournaments(simplified);
   }
 
   @Get("/:season/:tournament")

@@ -15,7 +15,7 @@ import {
 } from "@fbs2.0/types";
 import { DateTime } from "luxon";
 import {
-  getTournamentTitle,
+  _getTournamentTitle,
   isNotEmpty,
   isSeasonLabelValid,
 } from "@fbs2.0/utils";
@@ -228,7 +228,7 @@ const TournamentDialog: FC<Props> = ({
     <Dialog
       title={
         readonly
-          ? getTournamentTitle(tournament?.season, tournament?.tournament)
+          ? _getTournamentTitle(tournament?.season, tournament?.tournament)
           : "Новий турнір"
       }
       canEscapeKeyClose={false}

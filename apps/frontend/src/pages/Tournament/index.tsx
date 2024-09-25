@@ -19,7 +19,7 @@ import {
   Icon,
 } from "@blueprintjs/core";
 import {
-  getTournamentTitle,
+  _getTournamentTitle,
   isNotEmpty,
   transformTournamentPart,
 } from "@fbs2.0/utils";
@@ -96,7 +96,7 @@ const Tournament = () => {
       ?.filter((availableTournament) => tournament !== availableTournament.type)
       ?.map<HeaderNavLink>(({ type }) => ({
         to: `/tournaments/${season}/${type}`,
-        label: getTournamentTitle(season, type, true, true),
+        label: _getTournamentTitle(season, type, true, true),
       }));
 
     return [
@@ -172,7 +172,7 @@ const Tournament = () => {
                 </a>
               )}
               <h1>
-                {getTournamentTitle(season, tournament as TournamentType)}
+                {_getTournamentTitle(season, tournament as TournamentType)}
               </h1>
               {nextLink && (
                 <a

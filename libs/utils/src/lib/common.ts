@@ -72,7 +72,7 @@ export const isSeasonLabelValid = (
 export const isTournamentValid = (tournament?: string) =>
   Object.values(Tournament).includes(tournament as Tournament);
 
-export const getTournamentTitle = (
+export const _getTournamentTitle = (
   season?: string,
   tournament?: Tournament,
   showSeason = true,
