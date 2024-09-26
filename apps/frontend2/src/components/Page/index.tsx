@@ -1,4 +1,4 @@
-import { Layout, message, Spin } from "antd";
+import { Layout, message } from "antd";
 import { FC, ReactNode, useEffect, useState } from "react";
 import { DatabaseOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
@@ -7,6 +7,7 @@ import classNames from "classnames";
 import { AxiosError } from "axios";
 import { Helmet } from "react-helmet-async";
 
+import { Fallback } from "../Fallback";
 import { LanguageSwitcher } from "../LanguageSwitcher";
 import { LoginButton } from "./components/LoginButton";
 import { Paths } from "../../routes";
@@ -73,13 +74,7 @@ const Page: FC<Props> = (props) => {
       </Layout.Header>
       <Layout.Content>
         {contextHolder}
-        {props.isLoading ? (
-          <div className={styles.spinner}>
-            <Spin size="large" />
-          </div>
-        ) : (
-          props.children
-        )}
+        {props.isLoading ? <Fallback /> : props.children}
       </Layout.Content>
       <Layout.Footer>FBS ©{new Date().getFullYear()}</Layout.Footer>
     </Layout>

@@ -5,3 +5,11 @@ $screen-md: 768px;
 $screen-lg: 992px;
 $screen-xl: 1200px;
 $screen-xxl: 1600px;
+
+:export {
+  screenSm: $screen-sm;
+  screenMd: $screen-md;
+  screenLg: $screen-lg;
+  screenXl: $screen-xl;
+  screenXxl: $screen-xxl;
+}

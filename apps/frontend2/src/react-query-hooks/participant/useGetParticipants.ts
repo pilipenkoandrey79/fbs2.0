@@ -2,6 +2,7 @@ import { ApiEntities, Participant, Tournament } from "@fbs2.0/types";
 import { useQuery } from "@tanstack/react-query";
 import { prepareClub } from "@fbs2.0/utils";
 import { AxiosError } from "axios";
+import { useTranslation } from "react-i18next";
 
 import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
@@ -18,10 +19,11 @@ export const useGetParticipants = (
   season: string | undefined,
   tournament: string | undefined
 ) => {
+  const { i18n } = useTranslation();
   const startOfSeason = (season || "").split("-")[0];
 
   return useQuery<Participant[], AxiosError>({
-    queryKey: [QUERY_KEY.participants],
+    queryKey: [QUERY_KEY.participants, season, tournament],
     queryFn: async () =>
       (await fetchParticipants(season, tournament as Tournament))
         .map((participant) => ({
@@ -29,7 +31,7 @@ export const useGetParticipants = (
           club: prepareClub(participant.club, startOfSeason),
         }))
         .sort((a, b) => {
-          const collator = new Intl.Collator("uk");
+          const collator = new Intl.Collator(i18n.resolvedLanguage);
 
           return collator.compare(
             a.club.city.country.name,

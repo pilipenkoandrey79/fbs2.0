@@ -46,17 +46,18 @@ export class TournamentService {
       rawTournamentSeasons.map(async (tournamentSeason) => {
         const { season, tournament, id } = tournamentSeason;
 
+        const linkedStages = await this.stageRepository.find({
+          where: { tournamentSeason: { season }, linkedTournament: tournament },
+        });
+
         if (simplified) {
           return {
             id,
             season,
             type: tournament,
+            hasLinkedTournaments: linkedStages.length > 0,
           } as AvailableTournament;
         }
-
-        const linkedStages = await this.stageRepository.find({
-          where: { tournamentSeason: { season }, linkedTournament: tournament },
-        });
 
         const matches = await this.matchRepository.find({
           where: { stage: { tournamentSeason: { season, tournament } } },

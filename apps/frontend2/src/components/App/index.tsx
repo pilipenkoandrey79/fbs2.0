@@ -28,7 +28,7 @@ const App: FC = () => {
   }, [i18n.resolvedLanguage, setLang]);
 
   return (
-    <Suspense fallback={<Fallback />}>
+    <Suspense fallback={<Fallback page />}>
       <QueryClientProvider client={queryClient}>
         <HelmetProvider>
           <ConfigProvider theme={theme} locale={locales[lang]}>

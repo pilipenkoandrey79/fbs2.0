@@ -23,7 +23,7 @@ const AuthSuccessRedirect: FC = () => {
     }
   }, [accessToken, navigate, refreshToken, setUser]);
 
-  return <Fallback />;
+  return <Fallback page />;
 };
 
 export { AuthSuccessRedirect };

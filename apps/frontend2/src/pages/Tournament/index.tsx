@@ -10,6 +10,7 @@ import { Header } from "./components/Header";
 import { UserContext } from "../../context/userContext";
 import { useGetMatches } from "../../react-query-hooks/match/useGetMatches";
 import { useGetParticipants } from "../../react-query-hooks/participant/useGetParticipants";
+import { Participants } from "./components/Participants";
 
 const Tournament: FC = () => {
   const { t } = useTranslation();
@@ -46,6 +47,9 @@ const Tournament: FC = () => {
         tournament={tournament}
         onParticipants={() => setParticipantsDialogOpened(true)}
       />
+      {participantsDialogOpened && (
+        <Participants onClose={() => setParticipantsDialogOpened(false)} />
+      )}
     </Page>
   );
 };

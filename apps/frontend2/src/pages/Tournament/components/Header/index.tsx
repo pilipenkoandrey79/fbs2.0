@@ -1,11 +1,12 @@
 import { FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { generatePath, Link } from "react-router-dom";
 import { LeftOutlined, RightOutlined, TeamOutlined } from "@ant-design/icons";
 import classNames from "classnames";
 import { Button } from "antd";
 
 import { useGetTournamentSeasons } from "../../../../react-query-hooks/tournament/useGetTournamentSeasons";
+import { Paths } from "../../../../routes";
 
 import styles from "./styles.module.scss";
 
@@ -35,11 +36,17 @@ const Header: FC<Props> = ({ title, season, tournament, onParticipants }) => {
     );
 
     const previousLink = prevSeasonTournament
-      ? `/tournaments/${prevSeason}/${prevSeasonTournament.type}`
+      ? generatePath(Paths.TOURNAMENT, {
+          season: prevSeason,
+          tournament: prevSeasonTournament.type,
+        })
       : undefined;
 
     const nextLink = nextSeasonTournament
-      ? `/tournaments/${nextSeason}/${nextSeasonTournament.type}`
+      ? generatePath(Paths.TOURNAMENT, {
+          season: nextSeason,
+          tournament: nextSeasonTournament.type,
+        })
       : undefined;
 
     return { previousLink, nextLink };
@@ -70,10 +77,10 @@ const Header: FC<Props> = ({ title, season, tournament, onParticipants }) => {
         </div>
         <Button
           icon={<TeamOutlined />}
-          title={t("tournament.participants")}
+          title={t("tournament.participants.title")}
           onClick={onParticipants}
         >
-          {t("tournament.participants")}
+          {t("tournament.participants.title")}
         </Button>
       </div>
       <div className={styles.highlight}></div>

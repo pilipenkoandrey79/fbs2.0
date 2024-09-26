@@ -7,7 +7,7 @@
     "title": {
       "UCL": {
         "full": {
-          "new": "Champoins League",
+          "new": "Champions League",
           "old": "European Cup"
         },
         "short": {
@@ -42,6 +42,16 @@
       "next": "Next season",
       "back": "Previous season"
     },
-    "participants": "Participants"
+    "participants": {
+      "title": "Participants",
+      "list": {
+        "columns": {
+          "country": "Country",
+          "club": "Club",
+          "start": "Start",
+          "from": "Came from"
+        }
+      }
+    }
   }
 }

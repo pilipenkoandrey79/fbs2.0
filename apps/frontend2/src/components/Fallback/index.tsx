@@ -1,10 +1,15 @@
 import { Layout, Spin } from "antd";
 import { FC } from "react";
+import classNames from "classnames";
 
 import styles from "./styles.module.scss";
 
-const Fallback: FC = () => (
-  <Layout className={styles.fallback}>
+interface Props {
+  page?: boolean;
+}
+
+const Fallback: FC<Props> = ({ page }) => (
+  <Layout className={classNames(styles.fallback, { [styles.page]: page })}>
     <Spin size="large" />
   </Layout>
 );
