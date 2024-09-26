@@ -5,7 +5,7 @@ import {
   DEFAULT_SWISS_LENGTH,
   StageTableData,
 } from "@fbs2.0/types";
-import { getStageLabel } from "./common";
+import { _getStageLabel } from "./common";
 
 import { prepareGroupTeamsStanding } from "./prepare-group-standing";
 import { transformKnockoutStage } from "./knockout-stage-transform";
@@ -49,7 +49,7 @@ const prepareMatchesData = ({ matches, stage }: TournamentPart) =>
 export const transformLeagueStage = (tournamentPart: TournamentPart) => ({
   stage: {
     ...tournamentPart.stage,
-    label: getStageLabel(tournamentPart.stage.stageType),
+    label: _getStageLabel(tournamentPart.stage.stageType),
   },
   matches: prepareMatchesData(tournamentPart),
 });

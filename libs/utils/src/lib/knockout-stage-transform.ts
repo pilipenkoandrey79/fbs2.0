@@ -3,15 +3,15 @@ import {
   StageTableData,
   StageTableRow,
   TournamentPart,
-} from '@fbs2.0/types';
-import { DateTime } from 'luxon';
+} from "@fbs2.0/types";
+import { DateTime } from "luxon";
 import {
   getResultLabel,
-  getStageLabel,
+  _getStageLabel,
   getWinner,
   isNotEmpty,
   prepareClub,
-} from '@fbs2.0/utils';
+} from "@fbs2.0/utils";
 
 export const transformKnockoutStage = (tournamentPart: TournamentPart) => {
   const resultHeaders: string[] = [];
@@ -30,7 +30,7 @@ export const transformKnockoutStage = (tournamentPart: TournamentPart) => {
   });
 
   const matches: StageTableData = {
-    headers: ['', '', ...resultHeaders],
+    headers: ["", "", ...resultHeaders],
     rows: [],
   };
 
@@ -54,7 +54,7 @@ export const transformKnockoutStage = (tournamentPart: TournamentPart) => {
       tech,
     }) => {
       const resultIndex = date ? matches.headers.indexOf(date) : -1;
-      const year = tournamentPart.stage.tournamentSeason.season.split('-')[0];
+      const year = tournamentPart.stage.tournamentSeason.season.split("-")[0];
 
       if (answer) {
         const rowIndex = rows.findIndex(
@@ -82,7 +82,7 @@ export const transformKnockoutStage = (tournamentPart: TournamentPart) => {
               ? `. Переможець: ${
                   prepareClub((forceWinner as Participant)?.club, year).name
                 } за жеребом.`
-              : ''),
+              : ""),
           hostScore: guestScore,
           guestScore: hostScore,
           hostPen: guestPen,
@@ -139,8 +139,8 @@ export const transformKnockoutStage = (tournamentPart: TournamentPart) => {
         awayGoalRule,
         isNotEmpty(forceWinnerId)
           ? forceWinnerId === host.id
-            ? 'host'
-            : 'guest'
+            ? "host"
+            : "guest"
           : undefined
       );
 
@@ -161,7 +161,7 @@ export const transformKnockoutStage = (tournamentPart: TournamentPart) => {
   return {
     stage: {
       ...tournamentPart.stage,
-      label: getStageLabel(tournamentPart.stage.stageType),
+      label: _getStageLabel(tournamentPart.stage.stageType),
     },
     matches,
   };

@@ -114,7 +114,7 @@ export const _getTournamentTitle = (
   return `${title} ${showSeason && season ? season : ""}`;
 };
 
-export const getStageLabel = (stageType: StageType | null, group?: Group) => {
+export const _getStageLabel = (stageType: StageType | null, group?: Group) => {
   switch (stageType) {
     case StageType.PRE_QUALIFY_HALF:
       return `Попередній кваліфікаційний раунд (півфінал)`;

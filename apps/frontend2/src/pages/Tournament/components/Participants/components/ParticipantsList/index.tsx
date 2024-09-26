@@ -1,32 +1,30 @@
-import { Participant } from "@fbs2.0/types";
-import { Table, TableProps } from "antd";
+import { Participant, StageType } from "@fbs2.0/types";
+import { Table, TableProps, Typography } from "antd";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { useMediaQuery } from "react-responsive";
+import { getTournamentTitle } from "@fbs2.0/utils";
+import { useParams } from "react-router";
 
 import { Flag } from "../../../../../../components/Flag";
 import { Club } from "../../../../../../components/Club";
 
 import styles from "./styles.module.scss";
-import variables from "../../../../../../style/variables.module.scss";
 
 interface Props {
   participants: Participant[] | undefined;
+  condensed?: boolean;
 }
 
-const ParticipantsList: FC<Props> = ({ participants }) => {
+const ParticipantsList: FC<Props> = ({ participants, condensed = true }) => {
+  const { season } = useParams();
   const { t } = useTranslation();
-
-  const isMdScreen = useMediaQuery({
-    query: `(min-width: ${variables.screenMd})`,
-  });
 
   const columns: TableProps<Participant>["columns"] = [
     {
       key: "country",
       title: t("tournament.participants.list.columns.country"),
       dataIndex: "club",
-      width: isMdScreen ? 120 : 50,
+      width: condensed ? 50 : 120,
       ellipsis: true,
       render: (club: Participant["club"]) => (
         <span className={styles.country}>
@@ -41,13 +39,73 @@ const ParticipantsList: FC<Props> = ({ participants }) => {
       key: "club",
       title: t("tournament.participants.list.columns.club"),
       dataIndex: "club",
-      width: isMdScreen ? 300 : 120,
+      width: condensed ? 120 : 300,
       render: (club: Participant["club"], { fromStage }: Participant) => (
         <Club club={club} dimmed={!!fromStage} showCountry={false} />
       ),
     },
-    { key: "start", title: t("tournament.participants.list.columns.start") },
-    { key: "from", title: t("tournament.participants.list.columns.from") },
+    {
+      key: "start",
+      title: t("tournament.participants.list.columns.start"),
+      dataIndex: "startingStage",
+      width: condensed ? 70 : 120,
+      render: (startingStage: string, { fromStage }: Participant) => {
+        const text = t(
+          `tournament.stage.${startingStage}${
+            startingStage === StageType.GROUP ||
+            startingStage === StageType.GROUP_2
+              ? ".short"
+              : ""
+          }`
+        );
+
+        return (
+          <Typography.Text
+            type={fromStage ? "secondary" : undefined}
+            ellipsis={{ tooltip: text }}
+          >
+            {text}
+          </Typography.Text>
+        );
+      },
+    },
+    {
+      key: "from",
+      title: t("tournament.participants.list.columns.from"),
+      dataIndex: "fromStage",
+      width: condensed ? 90 : 150,
+      render: (fromStage: Participant["fromStage"]) => {
+        if (!fromStage) {
+          return null;
+        }
+
+        const text =
+          t(
+            getTournamentTitle(
+              {
+                season,
+                tournament: fromStage.tournamentSeason.tournament,
+              },
+              { short: true }
+            )
+          ) +
+          ": " +
+          t(
+            `tournament.stage.${fromStage?.stageType}${
+              fromStage?.stageType === StageType.GROUP ||
+              fromStage?.stageType === StageType.GROUP_2
+                ? ".short"
+                : ""
+            }`
+          );
+
+        return (
+          <Typography.Text type="secondary" ellipsis={{ tooltip: text }}>
+            {text}
+          </Typography.Text>
+        );
+      },
+    },
     { key: "actions" },
   ];
 

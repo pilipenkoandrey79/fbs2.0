@@ -1,7 +1,7 @@
 import { Button, MenuItem } from "@blueprintjs/core";
 import { ItemRendererProps, Select } from "@blueprintjs/select";
 import { Stage, StageType } from "@fbs2.0/types";
-import { getStageLabel } from "@fbs2.0/utils";
+import { _getStageLabel } from "@fbs2.0/utils";
 import { FC, useCallback, useEffect } from "react";
 
 interface Props {
@@ -28,7 +28,7 @@ const StageTypeSelector: FC<Props> = ({
 }) => {
   const items = stages.map(({ stageType }) => ({
     value: stageType as StageType,
-    label: getStageLabel(stageType as StageType),
+    label: _getStageLabel(stageType as StageType),
   }));
 
   function itemRenderer(

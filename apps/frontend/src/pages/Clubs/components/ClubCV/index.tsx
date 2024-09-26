@@ -4,7 +4,7 @@ import {
   HIGHLIGHTED_CLUB_ID_SEARCH_PARAM,
 } from "@fbs2.0/types";
 import { FC } from "react";
-import { getCVBalance, getStageLabel } from "@fbs2.0/utils";
+import { getCVBalance, _getStageLabel } from "@fbs2.0/utils";
 import classNames from "classnames";
 import { Classes } from "@blueprintjs/core";
 
@@ -86,9 +86,9 @@ const ClubCV: FC<Props> = ({ club }) => {
                       linkTo={`/tournaments/${season}/${tournament}?${HIGHLIGHTED_CLUB_ID_SEARCH_PARAM}=${club.id}`}
                     />
                   </td>
-                  <td>{getStageLabel(start)}</td>
+                  <td>{_getStageLabel(start)}</td>
                   <td>
-                    {isWinner ? "Переможець турніру" : getStageLabel(finish)}
+                    {isWinner ? "Переможець турніру" : _getStageLabel(finish)}
                   </td>
                 </tr>
               )

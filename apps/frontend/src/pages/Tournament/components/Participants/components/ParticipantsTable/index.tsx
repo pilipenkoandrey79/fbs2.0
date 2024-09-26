@@ -16,7 +16,7 @@ import {
   TABLE_ROW_HEIGHT,
   Tournament,
 } from "@fbs2.0/types";
-import { getStageLabel, _getTournamentTitle, isNotEmpty } from "@fbs2.0/utils";
+import { _getStageLabel, _getTournamentTitle, isNotEmpty } from "@fbs2.0/utils";
 import { Button } from "@blueprintjs/core";
 import classNames from "classnames";
 
@@ -242,7 +242,7 @@ const ParticipantsTable: FC<Props> = ({
               [styles["from-another-tournament"]]: !!row.fromStage,
             })}
           >
-            {getStageLabel(row.startingStage)}
+            {_getStageLabel(row.startingStage)}
           </Cell>
         );
       }
@@ -298,7 +298,7 @@ const ParticipantsTable: FC<Props> = ({
             row.fromStage.tournamentSeason.tournament,
             false,
             true
-          )}: ${getStageLabel(row.fromStage.stageType)}`}
+          )}: ${_getStageLabel(row.fromStage.stageType)}`}
         </Cell>
       );
     },

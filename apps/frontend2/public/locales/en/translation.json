@@ -38,6 +38,32 @@
         "short": "ICFC"
       }
     },
+    "stage": {
+      "PQ1/2F": "Preliminary qualify (half-final)",
+      "PQF": "Preliminary qualify (final)",
+      "PR": "Preliminary qualify",
+      "1Q": "1 qualify",
+      "2Q": "2 qualify",
+      "3Q": "3 qualify",
+      "POQ": "Qualify play-off",
+      "LG": "League stage",
+      "G": {
+        "full": "Group stage: {{group}} group",
+        "short": "Group stage"
+      },
+      "G_2": {
+        "full": "Second group stage: {{group}} group",
+        "short": "Second group stage"
+      },
+      "KPO": "Play-off",
+      "1R": "First round",
+      "2R": "Second round",
+      "3R": "Third round",
+      "R16": "Round of 16",
+      "1/4F": "1/4 final",
+      "1/2F": "1/2 final",
+      "F": "Final"
+    },
     "nav": {
       "next": "Next season",
       "back": "Previous season"

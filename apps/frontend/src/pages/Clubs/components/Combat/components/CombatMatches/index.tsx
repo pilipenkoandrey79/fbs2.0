@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { Classes } from "@blueprintjs/core";
 import {
   getResultLabel,
-  getStageLabel,
+  _getStageLabel,
   _getTournamentTitle,
   prepareClub,
 } from "@fbs2.0/utils";
@@ -135,7 +135,7 @@ const CombatMatches: FC<Props> = ({ country, rival }) => {
                       <tbody>
                         {stages.map(({ stage, matches }) => (
                           <tr key={stage.id}>
-                            <td>{getStageLabel(stage.stageType)}</td>
+                            <td>{_getStageLabel(stage.stageType)}</td>
                             <td>
                               <table
                                 className={classNames(

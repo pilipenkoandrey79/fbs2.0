@@ -25,18 +25,18 @@ export const useGetParticipants = (
   return useQuery<Participant[], AxiosError>({
     queryKey: [QUERY_KEY.participants, season, tournament],
     queryFn: async () =>
-      (await fetchParticipants(season, tournament as Tournament))
+      await fetchParticipants(season, tournament as Tournament),
+    select: (data) => {
+      const collator = new Intl.Collator(i18n.resolvedLanguage);
+
+      return data
         .map((participant) => ({
           ...participant,
           club: prepareClub(participant.club, startOfSeason),
         }))
-        .sort((a, b) => {
-          const collator = new Intl.Collator(i18n.resolvedLanguage);
-
-          return collator.compare(
-            a.club.city.country.name,
-            b.club.city.country.name
-          );
-        }),
+        .sort((a, b) =>
+          collator.compare(a.club.city.country.name, b.club.city.country.name)
+        );
+    },
   });
 };
