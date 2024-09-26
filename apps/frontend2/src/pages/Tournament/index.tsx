@@ -47,9 +47,11 @@ const Tournament: FC = () => {
         tournament={tournament}
         onParticipants={() => setParticipantsDialogOpened(true)}
       />
-      {participantsDialogOpened && (
-        <Participants onClose={() => setParticipantsDialogOpened(false)} />
-      )}
+
+      <Participants
+        onClose={() => setParticipantsDialogOpened(false)}
+        open={participantsDialogOpened}
+      />
     </Page>
   );
 };

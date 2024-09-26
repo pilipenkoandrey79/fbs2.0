@@ -12,10 +12,11 @@ import styles from "./style.module.scss";
 import variables from "../../../../style/variables.module.scss";
 
 interface Props {
+  open: boolean;
   onClose: () => void;
 }
 
-const Participants: FC<Props> = ({ onClose }) => {
+const Participants: FC<Props> = ({ open, onClose }) => {
   const { season, tournament } = useParams();
   const { t } = useTranslation();
 
@@ -27,7 +28,7 @@ const Participants: FC<Props> = ({ onClose }) => {
 
   return (
     <Modal
-      open
+      open={open}
       className={styles.modal}
       title={t("tournament.participants.title")}
       onClose={onClose}

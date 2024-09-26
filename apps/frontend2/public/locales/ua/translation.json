@@ -1,7 +1,8 @@
 {
   "test": "тест",
   "common": {
-    "clubs": "Клуби"
+    "clubs": "Клуби",
+    "total": "{{from, number}} - {{to, number}} з {{total, number}}"
   },
   "tournament": {
     "title": {
