@@ -2,7 +2,8 @@
   "test": "test",
   "common": {
     "clubs": "Clubs",
-    "total": "{{from, number}} - {{to, number}} of {{total, number}} items"
+    "total": "{{from, number}} - {{to, number}} of {{total, number}} items",
+    "remove": "Remove"
   },
   "tournament": {
     "title": {
@@ -78,7 +79,9 @@
           "start": "Start",
           "from": "Came from"
         },
-        "replaced": "Participant is replaced"
+        "replaced": "Participant is replaced",
+        "remove_confirm": "Remove the participant?",
+        "removed": "Participant is removed"
       }
     }
   }

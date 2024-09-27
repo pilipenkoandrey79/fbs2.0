@@ -1,0 +1,21 @@
+@import "../../../../../../../../style/variables.module.scss";
+
+.country {
+  .code {
+    text-transform: uppercase;
+  }
+
+  .name {
+    display: none;
+  }
+
+  @media (min-width: $screen-md) {
+    .code {
+      display: none;
+    }
+
+    .name {
+      display: inline;
+    }
+  }
+}

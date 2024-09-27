@@ -2,7 +2,8 @@
   "test": "тест",
   "common": {
     "clubs": "Клуби",
-    "total": "{{from, number}} - {{to, number}} з {{total, number}}"
+    "total": "{{from, number}} - {{to, number}} з {{total, number}}",
+    "remove": "Видалення"
   },
   "tournament": {
     "title": {
@@ -78,7 +79,9 @@
           "start": "Старт з",
           "from": "Прийшов з"
         },
-        "replaced": "Учасника замінено"
+        "replaced": "Учасника замінено",
+        "remove_confirm": "Видалити учасника",
+        "removed": "Учасника видалено"
       }
     }
   }
