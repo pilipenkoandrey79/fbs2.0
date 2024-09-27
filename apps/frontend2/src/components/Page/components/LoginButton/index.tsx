@@ -1,6 +1,6 @@
 import { Button } from "antd";
 import { FC, useContext } from "react";
-import { LoginOutlined, LogoutOutlined } from "@ant-design/icons";
+import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { ApiEntities } from "@fbs2.0/types";
 import { AxiosError } from "axios";
 
@@ -32,10 +32,8 @@ const LoginButton: FC<Props> = ({ setErrors }) => {
 
   return (
     <Button
-      type="default"
-      shape="circle"
-      ghost={!!user}
-      icon={user ? <LogoutOutlined /> : <LoginOutlined />}
+      type="link"
+      icon={user ? <LogoutOutlined /> : <UserOutlined />}
       onClick={user ? logout : login}
     />
   );

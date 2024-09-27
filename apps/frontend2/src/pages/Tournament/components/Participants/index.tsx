@@ -35,6 +35,7 @@ const Participants: FC<Props> = ({ open, onClose }) => {
       onCancel={onClose}
       width={800}
       maskClosable={false}
+      footer={[]}
     >
       <div className={styles.content}>
         {participants.isLoading ? (

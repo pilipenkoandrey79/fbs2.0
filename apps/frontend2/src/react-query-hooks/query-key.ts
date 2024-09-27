@@ -4,4 +4,5 @@ export const QUERY_KEY = {
   tournaments: "tournaments",
   tournaments_simplified: "tournaments-simplified",
   countries: "countries",
+  clubs: "clubs",
 };

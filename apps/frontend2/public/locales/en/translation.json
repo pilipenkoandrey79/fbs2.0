@@ -77,7 +77,8 @@
           "club": "Club",
           "start": "Start",
           "from": "Came from"
-        }
+        },
+        "replaced": "Participant is replaced"
       }
     }
   }

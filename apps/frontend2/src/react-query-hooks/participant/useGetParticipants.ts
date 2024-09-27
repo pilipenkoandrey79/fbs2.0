@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ApiEntities, Participant, Tournament } from "@fbs2.0/types";
 import { useQuery } from "@tanstack/react-query";
 import { prepareClub } from "@fbs2.0/utils";
@@ -15,28 +16,31 @@ const fetchParticipants = async (
     `${ApiEntities.Participant}/${season}/${tournament}`
   );
 
-export const useGetParticipants = (
+export const useGetParticipants = <T extends any[] = Participant[]>(
   season: string | undefined,
-  tournament: string | undefined
+  tournament: string | undefined,
+  select?: (data: Participant[]) => T
 ) => {
   const { i18n } = useTranslation();
   const startOfSeason = (season || "").split("-")[0];
+
+  const defaultSelect = (data: Participant[]): Participant[] => {
+    const collator = new Intl.Collator(i18n.resolvedLanguage);
+
+    return data
+      .map((participant) => ({
+        ...participant,
+        club: prepareClub(participant.club, startOfSeason),
+      }))
+      .sort((a, b) =>
+        collator.compare(a.club.city.country.name, b.club.city.country.name)
+      );
+  };
 
   return useQuery<Participant[], AxiosError>({
     queryKey: [QUERY_KEY.participants, season, tournament],
     queryFn: async () =>
       await fetchParticipants(season, tournament as Tournament),
-    select: (data) => {
-      const collator = new Intl.Collator(i18n.resolvedLanguage);
-
-      return data
-        .map((participant) => ({
-          ...participant,
-          club: prepareClub(participant.club, startOfSeason),
-        }))
-        .sort((a, b) =>
-          collator.compare(a.club.city.country.name, b.club.city.country.name)
-        );
-    },
+    select: select || defaultSelect,
   });
 };
