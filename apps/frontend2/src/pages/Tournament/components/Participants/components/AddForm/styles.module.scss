@@ -1,0 +1,19 @@
+@import "../../../../../../style/mixins.scss";
+@import "../../../../../../style/variables.module.scss";
+
+@media (min-width: $screen-sm) {
+  .selectors {
+    @include flex(row, space-between, center);
+    margin: 0 10px;
+
+    & > div {
+      width: 50%;
+      margin-left: 5px;
+
+      &:first-of-type {
+        margin-right: 5px;
+        margin-left: 0;
+      }
+    }
+  }
+}

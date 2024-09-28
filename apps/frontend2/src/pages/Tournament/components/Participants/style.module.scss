@@ -9,6 +9,11 @@
     .list {
       max-height: calc(100vh - 130px);
       overflow-y: scroll;
+      padding: 0 4px;
+
+      .add-form {
+        padding: 4px;
+      }
     }
   }
 

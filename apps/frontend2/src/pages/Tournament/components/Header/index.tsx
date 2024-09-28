@@ -3,9 +3,10 @@ import { useTranslation } from "react-i18next";
 import { generatePath, Link } from "react-router-dom";
 import { LeftOutlined, RightOutlined, TeamOutlined } from "@ant-design/icons";
 import classNames from "classnames";
-import { Button } from "antd";
+import { Button, Typography } from "antd";
 
 import { useGetTournamentSeasons } from "../../../../react-query-hooks/tournament/useGetTournamentSeasons";
+import { ParticipantSelector } from "../../../../components/selectors/ParticipantSelector";
 import { Paths } from "../../../../routes";
 
 import styles from "./styles.module.scss";
@@ -14,12 +15,20 @@ interface Props {
   title: string;
   season: string | undefined;
   tournament: string | undefined;
+  highlightedClubId: number | null;
   onParticipants: () => void;
+  setHighlightedClubId: (id: number | null) => void;
 }
 
-const Header: FC<Props> = ({ title, season, tournament, onParticipants }) => {
+const Header: FC<Props> = ({
+  title,
+  season,
+  tournament,
+  highlightedClubId,
+  onParticipants,
+  setHighlightedClubId,
+}) => {
   const { t } = useTranslation();
-
   const { data: availableTournaments } = useGetTournamentSeasons(true);
 
   const { previousLink, nextLink } = useMemo(() => {
@@ -83,7 +92,16 @@ const Header: FC<Props> = ({ title, season, tournament, onParticipants }) => {
           {t("tournament.participants.title")}
         </Button>
       </div>
-      <div className={styles.highlight}></div>
+      <div className={styles.highlight}>
+        <Typography.Text>{t("tournament.highlight")}</Typography.Text>
+        <ParticipantSelector
+          formItem={false}
+          allowClear
+          value={highlightedClubId}
+          onChange={(value) => setHighlightedClubId(value ?? null)}
+          onClear={() => setHighlightedClubId(null)}
+        />
+      </div>
     </div>
   );
 };

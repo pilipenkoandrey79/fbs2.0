@@ -70,6 +70,7 @@
       "next": "Next season",
       "back": "Previous season"
     },
+    "highlight": "Highlight a participant",
     "participants": {
       "title": "Participants",
       "list": {
@@ -80,8 +81,10 @@
           "from": "Came from"
         },
         "replaced": "Participant is replaced",
+        "added": "Participant is added",
         "remove_confirm": "Remove the participant?",
-        "removed": "Participant is removed"
+        "removed": "Participant is removed",
+        "add": "Add participant"
       }
     }
   }

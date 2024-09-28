@@ -1,7 +1,7 @@
 import { Participant, StageType } from "@fbs2.0/types";
 import { Form, Table, TableProps } from "antd";
 import { FilterValue, TablePaginationConfig } from "antd/es/table/interface";
-import { FC, useState } from "react";
+import { FC, useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
 
@@ -15,18 +15,27 @@ import {
   getYearSelector,
   useGetCountries,
 } from "../../../../../../react-query-hooks/country/useGetCountries";
+import { UserContext } from "../../../../../../context/userContext";
+
+import "./styles.module.scss";
 
 interface Props {
   participants: Participant[] | undefined;
   condensed?: boolean;
+  adding: boolean;
 }
 
 type Filters = Record<"country" | "start", FilterValue | null> | null;
 
-const ParticipantsList: FC<Props> = ({ participants, condensed = true }) => {
+const ParticipantsList: FC<Props> = ({
+  participants,
+  condensed = true,
+  adding,
+}) => {
   const { season } = useParams();
   const { t } = useTranslation();
   const [form] = Form.useForm();
+  const { user } = useContext(UserContext);
 
   const { data: countries } = useGetCountries(
     getYearSelector(season?.split("-")?.[0])
@@ -39,7 +48,7 @@ const ParticipantsList: FC<Props> = ({ participants, condensed = true }) => {
   const onCell = (dataIndex: string) => (record: Participant) =>
     ({
       record,
-      editing: record.id === editingId,
+      editing: record.id === editingId && !adding,
       dataIndex,
     } as EditableCellProps);
 
@@ -102,16 +111,17 @@ const ParticipantsList: FC<Props> = ({ participants, condensed = true }) => {
     {
       key: "actions",
       width: 60,
-      render: (_: string, record: Participant) => (
-        <ActionsCell
-          record={record}
-          form={form}
-          pristine={pristine}
-          editingId={editingId}
-          setEditingId={setEditingId}
-          setPristine={setPristine}
-        />
-      ),
+      render: (_: string, record: Participant) =>
+        adding || !user?.isEditor ? null : (
+          <ActionsCell
+            record={record}
+            form={form}
+            pristine={pristine}
+            editingId={editingId}
+            setEditingId={setEditingId}
+            setPristine={setPristine}
+          />
+        ),
     },
   ];
 
@@ -147,6 +157,7 @@ const ParticipantsList: FC<Props> = ({ participants, condensed = true }) => {
         }
         onChange={(_: TablePaginationConfig, filters: Filters) => {
           setFilterInfo(filters);
+          setEditingId(null);
         }}
       />
     </Form>

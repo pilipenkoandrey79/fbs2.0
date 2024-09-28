@@ -28,16 +28,21 @@
   }
 
   .highlight {
-    border: 1px $border dashed;
-    width: 200px;
-    height: 32px;
-    margin: 4px;
+    @include flex(row, space-between, center);
+    width: 400px;
     align-self: flex-end;
     flex-shrink: 0;
+    margin: 4px;
+    white-space: nowrap;
+
+    & > div {
+      width: 100%;
+      margin-left: 4px;
+    }
   }
 
   @media (min-width: $screen-lg) {
-    @include flex(row);
+    @include flex(row, flex-start, stretch);
 
     .panel {
       .nav {
@@ -45,6 +50,10 @@
           margin: 0 18px;
         }
       }
+    }
+
+    .highlight {
+      align-self: unset;
     }
   }
 }

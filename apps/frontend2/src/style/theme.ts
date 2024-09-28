@@ -8,6 +8,7 @@ const theme: ThemeConfig = {
     colorLink: colors.link,
     colorLinkActive: colors.linkActive,
     colorLinkHover: colors.linkHover,
+    borderRadius: 3,
   },
   components: {
     Layout: {
@@ -16,6 +17,9 @@ const theme: ThemeConfig = {
     },
     Button: {
       defaultBg: colors.contentBg,
+    },
+    Form: {
+      itemMarginBottom: 0,
     },
   },
 };
