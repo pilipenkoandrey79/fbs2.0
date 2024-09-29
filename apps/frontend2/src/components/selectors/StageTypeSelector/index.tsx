@@ -45,7 +45,15 @@ const StageTypeSelector: FC<Props> = ({
 
   return (
     <Form.Item name={name} rules={[{ required: true }]}>
-      <Select size="small" showSearch options={options} className={className} />
+      <Select
+        size="small"
+        showSearch
+        options={options}
+        className={className}
+        placeholder={t(
+          `common.placeholder.${startingStages ? "starting_" : ""}stage`
+        )}
+      />
     </Form.Item>
   );
 };

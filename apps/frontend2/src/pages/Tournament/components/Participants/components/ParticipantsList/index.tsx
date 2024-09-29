@@ -23,6 +23,7 @@ interface Props {
   participants: Participant[] | undefined;
   condensed?: boolean;
   adding: boolean;
+  setSelectedCountryId: (countryId: number | undefined) => void;
 }
 
 type Filters = Record<"country" | "start", FilterValue | null> | null;
@@ -31,6 +32,7 @@ const ParticipantsList: FC<Props> = ({
   participants,
   condensed = true,
   adding,
+  setSelectedCountryId,
 }) => {
   const { season } = useParams();
   const { t } = useTranslation();
@@ -157,6 +159,7 @@ const ParticipantsList: FC<Props> = ({
         }
         onChange={(_: TablePaginationConfig, filters: Filters) => {
           setFilterInfo(filters);
+          setSelectedCountryId(filters?.country?.[0] as number);
           setEditingId(null);
         }}
       />

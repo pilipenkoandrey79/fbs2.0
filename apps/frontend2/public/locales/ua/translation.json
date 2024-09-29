@@ -3,7 +3,16 @@
   "common": {
     "clubs": "Клуби",
     "total": "{{from, number}} - {{to, number}} з {{total, number}}",
-    "remove": "Видалення"
+    "remove": "Видалення",
+    "close": "Закрити",
+    "placeholder": {
+      "country": "Оберіть країну",
+      "club": "Оберіть клуб",
+      "city": "Оберіть місто",
+      "stage": "Оберіть стадію",
+      "starting_stage": "Оберіть стартову стадію",
+      "enter_name": "Введіть назву"
+    }
   },
   "tournament": {
     "title": {
@@ -84,7 +93,9 @@
         "added": "Учасника додано",
         "remove_confirm": "Видалити учасника",
         "removed": "Учасника видалено",
-        "add": "Додати учасника"
+        "add": "Додати учасника",
+        "add_club": "Додати клуб",
+        "club_added": "Клуб додано"
       }
     }
   }

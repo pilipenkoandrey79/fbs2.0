@@ -1,10 +1,22 @@
 @import "../../../../../../style/mixins.scss";
 @import "../../../../../../style/variables.module.scss";
 
+.selectors {
+  margin: 4px 0;
+
+  .country {
+    @include flex;
+  }
+}
+
+.buttons {
+  @include flex(row, space-between, center);
+}
+
 @media (min-width: $screen-sm) {
-  .selectors {
+  .selectors,
+  .selectors .participant {
     @include flex(row, space-between, center);
-    margin: 0 10px;
 
     & > div {
       width: 50%;
@@ -14,6 +26,24 @@
         margin-right: 5px;
         margin-left: 0;
       }
+    }
+  }
+
+  .selectors {
+    & > div:first-of-type {
+      width: 75%;
+    }
+
+    & > div:last-of-type {
+      width: 25%;
+    }
+  }
+
+  .add-club {
+    @include flex(row, space-between, center);
+
+    & > div {
+      width: 33%;
     }
   }
 }

@@ -32,7 +32,7 @@ const ParticipantSelector: FC<Props> = ({
   onChange,
   onClear,
 }) => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const { season, tournament } = useParams();
   const { data: clubs } = useGetClubs(getYearSelector(season?.split("-")?.[0]));
 
@@ -66,6 +66,7 @@ const ParticipantSelector: FC<Props> = ({
       }
       className={className}
       allowClear={allowClear}
+      placeholder={t("common.placeholder.club")}
       {...(formItem
         ? {}
         : {

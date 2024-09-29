@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { createSearchParams, useSearchParams } from "react-router-dom";
-import { getTournamentTitle, isNotEmpty } from "@fbs2.0/utils";
+import { getTournamentTitle } from "@fbs2.0/utils";
 import {
   HIGHLIGHTED_CLUB_ID_SEARCH_PARAM,
   Tournament as TournamentType,

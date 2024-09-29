@@ -31,6 +31,7 @@ const Participants: FC<Props> = ({ open, onClose }) => {
   const participants = useGetParticipants(season, tournament);
 
   const [isAddFormOpen, setIsAddFormOpen] = useState(false);
+  const [selectedCountryId, setSelectedCountryId] = useState<number>();
 
   return (
     <Modal
@@ -60,7 +61,10 @@ const Participants: FC<Props> = ({ open, onClose }) => {
                   onClick={() => setIsAddFormOpen(!isAddFormOpen)}
                 />
                 {isAddFormOpen && (
-                  <AddForm close={() => setIsAddFormOpen(false)} />
+                  <AddForm
+                    close={() => setIsAddFormOpen(false)}
+                    selectedCountryId={selectedCountryId}
+                  />
                 )}
               </div>
             )}
@@ -68,6 +72,7 @@ const Participants: FC<Props> = ({ open, onClose }) => {
               participants={participants.data}
               condensed={!isMdScreen}
               adding={isAddFormOpen}
+              setSelectedCountryId={setSelectedCountryId}
             />
           </div>
         )}

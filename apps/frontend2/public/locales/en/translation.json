@@ -1,9 +1,17 @@
 {
-  "test": "test",
   "common": {
     "clubs": "Clubs",
     "total": "{{from, number}} - {{to, number}} of {{total, number}} items",
-    "remove": "Remove"
+    "remove": "Remove",
+    "close": "Close",
+    "placeholder": {
+      "country": "Select country",
+      "club": "Select club",
+      "city": "Select city",
+      "stage": "Select stage",
+      "starting_stage": "Select starting stage",
+      "enter_name": "Enter name"
+    }
   },
   "tournament": {
     "title": {
@@ -84,7 +92,9 @@
         "added": "Participant is added",
         "remove_confirm": "Remove the participant?",
         "removed": "Participant is removed",
-        "add": "Add participant"
+        "add": "Add participant",
+        "add_club": "Add club",
+        "club_added": "Club is added"
       }
     }
   }
