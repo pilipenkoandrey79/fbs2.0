@@ -1,4 +1,5 @@
 @import "../../../../style/variables.module.scss";
+@import "../../../../style/mixins.scss";
 
 .modal {
   top: 0;
@@ -13,6 +14,16 @@
 
       .add-form {
         padding: 4px;
+
+        .buttons {
+          @include flex(row, space-between, center);
+
+          .additional-buttons {
+            button {
+              margin: 0 4px;
+            }
+          }
+        }
       }
     }
   }

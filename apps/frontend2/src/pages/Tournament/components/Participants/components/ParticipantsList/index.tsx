@@ -4,6 +4,7 @@ import { FilterValue, TablePaginationConfig } from "antd/es/table/interface";
 import { FC, useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
+import { useMediaQuery } from "react-responsive";
 
 import { CountryCell } from "./components/CountryCell";
 import { StartCell } from "./components/StartCell";
@@ -18,10 +19,10 @@ import {
 import { UserContext } from "../../../../../../context/userContext";
 
 import "./styles.module.scss";
+import variables from "../../../../../../style/variables.module.scss";
 
 interface Props {
   participants: Participant[] | undefined;
-  condensed?: boolean;
   adding: boolean;
   setSelectedCountryId: (countryId: number | undefined) => void;
 }
@@ -30,7 +31,6 @@ type Filters = Record<"country" | "start", FilterValue | null> | null;
 
 const ParticipantsList: FC<Props> = ({
   participants,
-  condensed = true,
   adding,
   setSelectedCountryId,
 }) => {
@@ -38,6 +38,10 @@ const ParticipantsList: FC<Props> = ({
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const { user } = useContext(UserContext);
+
+  const isMdScreen = useMediaQuery({
+    query: `(min-width: ${variables.screenMd})`,
+  });
 
   const { data: countries } = useGetCountries(
     getYearSelector(season?.split("-")?.[0])
@@ -59,7 +63,7 @@ const ParticipantsList: FC<Props> = ({
       key: "country",
       title: t("tournament.participants.list.columns.country"),
       dataIndex: "club",
-      width: condensed ? 50 : 120,
+      width: isMdScreen ? 120 : 50,
       ellipsis: true,
       render: (club) => <CountryCell club={club} />,
       filters:
@@ -72,7 +76,7 @@ const ParticipantsList: FC<Props> = ({
       key: "club",
       title: t("tournament.participants.list.columns.club"),
       dataIndex: "club",
-      width: condensed ? 120 : 300,
+      width: isMdScreen ? 300 : 120,
       render: (club: Participant["club"], { fromStage }: Participant) => (
         <Club club={club} dimmed={!!fromStage} showCountry={false} />
       ),
@@ -82,7 +86,7 @@ const ParticipantsList: FC<Props> = ({
       key: "start",
       title: t("tournament.participants.list.columns.start"),
       dataIndex: "startingStage",
-      width: condensed ? 80 : 120,
+      width: isMdScreen ? 120 : 80,
       render: (startingStage: string, { fromStage }: Participant) => (
         <StartCell startingStage={startingStage} fromStage={fromStage} />
       ),
@@ -105,7 +109,7 @@ const ParticipantsList: FC<Props> = ({
       key: "from",
       title: t("tournament.participants.list.columns.from"),
       dataIndex: "fromStage",
-      width: condensed ? 80 : 150,
+      width: isMdScreen ? 150 : 80,
       render: (fromStage: Participant["fromStage"]) => (
         <FromCell fromStage={fromStage} />
       ),

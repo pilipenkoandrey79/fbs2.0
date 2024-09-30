@@ -93,6 +93,11 @@
         "remove_confirm": "Remove the participant?",
         "removed": "Participant is removed",
         "add": "Add participant",
+        "transfer": "Transfer participants from another tournaments",
+        "transfered": "{{count}} participants are added to {{season}} {{tournament}}",
+        "zero_transfered": "Nothing to add",
+        "load": "Load participants from previous season",
+        "loaded": "{{count}} participants are loaded from previous season",
         "add_club": "Add club",
         "club_added": "Club is added"
       }

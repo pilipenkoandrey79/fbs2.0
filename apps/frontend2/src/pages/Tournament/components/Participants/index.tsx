@@ -1,18 +1,24 @@
-import { Button, Modal } from "antd";
+import { Button, message, Modal } from "antd";
 import { FC, useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
-import { useMediaQuery } from "react-responsive";
-import { AppstoreAddOutlined, CloseOutlined } from "@ant-design/icons";
+import {
+  AppstoreAddOutlined,
+  CloseOutlined,
+  FileAddOutlined,
+  ImportOutlined,
+} from "@ant-design/icons";
 
 import { AddForm } from "./components/AddForm";
 import { Fallback } from "../../../../components/Fallback";
 import { ParticipantsList } from "./components/ParticipantsList";
 import { useGetParticipants } from "../../../../react-query-hooks/participant/useGetParticipants";
+import { useGetTournamentSeasons } from "../../../../react-query-hooks/tournament/useGetTournamentSeasons";
+import { useTransferParticipants } from "../../../../react-query-hooks/participant/useTransferParticipants";
+import { useLoadParticipants } from "../../../../react-query-hooks/participant/useLoadParticipants";
 import { UserContext } from "../../../../context/userContext";
 
 import styles from "./style.module.scss";
-import variables from "../../../../style/variables.module.scss";
 
 interface Props {
   open: boolean;
@@ -23,15 +29,58 @@ const Participants: FC<Props> = ({ open, onClose }) => {
   const { season, tournament } = useParams();
   const { t } = useTranslation();
   const { user } = useContext(UserContext);
-
-  const isMdScreen = useMediaQuery({
-    query: `(min-width: ${variables.screenMd})`,
-  });
+  const [messageApi, contextHolder] = message.useMessage();
 
   const participants = useGetParticipants(season, tournament);
+  const { data: availableTournaments } = useGetTournamentSeasons(true);
 
   const [isAddFormOpen, setIsAddFormOpen] = useState(false);
   const [selectedCountryId, setSelectedCountryId] = useState<number>();
+
+  const hasLinkedTournament =
+    availableTournaments?.[season ?? ""]?.find(
+      (availableTournament) => tournament === availableTournament.type
+    )?.hasLinkedTournaments || false;
+
+  const transferParticipants = useTransferParticipants();
+  const loadParticipants = useLoadParticipants();
+
+  const transfer = async () => {
+    try {
+      const count = await transferParticipants.mutateAsync();
+
+      messageApi.open({
+        type: "success",
+        content: t(
+          `tournament.participants.list.${
+            count === 0 ? "zero_" : ""
+          }transfered`,
+          { count, season, tournament }
+        ),
+      });
+    } catch (error) {
+      messageApi.open({
+        type: "error",
+        content: typeof error === "string" ? error : (error as Error).message,
+      });
+    }
+  };
+
+  const load = async () => {
+    try {
+      const count = await loadParticipants.mutateAsync();
+
+      messageApi.open({
+        type: "success",
+        content: t("tournament.participants.list.loaded", { count }),
+      });
+    } catch (error) {
+      messageApi.open({
+        type: "error",
+        content: typeof error === "string" ? error : (error as Error).message,
+      });
+    }
+  };
 
   return (
     <Modal
@@ -45,21 +94,54 @@ const Participants: FC<Props> = ({ open, onClose }) => {
       footer={[]}
     >
       <div className={styles.content}>
+        {contextHolder}
         {participants.isLoading ? (
           <Fallback />
         ) : (
           <div className={styles.list}>
             {user?.isEditor && (
               <div className={styles["add-form"]}>
-                <Button
-                  type="primary"
-                  size="small"
-                  icon={
-                    isAddFormOpen ? <CloseOutlined /> : <AppstoreAddOutlined />
-                  }
-                  title={t("tournament.participants.list.add")}
-                  onClick={() => setIsAddFormOpen(!isAddFormOpen)}
-                />
+                <div className={styles.buttons}>
+                  <Button
+                    type="primary"
+                    size="small"
+                    icon={
+                      isAddFormOpen ? (
+                        <CloseOutlined />
+                      ) : (
+                        <AppstoreAddOutlined />
+                      )
+                    }
+                    title={t("tournament.participants.list.add")}
+                    onClick={() => setIsAddFormOpen(!isAddFormOpen)}
+                  />
+                  <div className={styles["additional-buttons"]}>
+                    {hasLinkedTournament && (
+                      <Button
+                        type="primary"
+                        size="small"
+                        icon={<FileAddOutlined />}
+                        title={t("tournament.participants.list.transfer")}
+                        disabled={
+                          transferParticipants.isPending || isAddFormOpen
+                        }
+                        loading={transferParticipants.isPending}
+                        onClick={transfer}
+                      />
+                    )}
+                    {participants.data?.length === 0 && (
+                      <Button
+                        type="primary"
+                        size="small"
+                        icon={<ImportOutlined />}
+                        title={t("tournament.participants.list.load")}
+                        disabled={loadParticipants.isPending || isAddFormOpen}
+                        loading={loadParticipants.isPending}
+                        onClick={load}
+                      />
+                    )}
+                  </div>
+                </div>
                 {isAddFormOpen && (
                   <AddForm
                     close={() => setIsAddFormOpen(false)}
@@ -70,7 +152,6 @@ const Participants: FC<Props> = ({ open, onClose }) => {
             )}
             <ParticipantsList
               participants={participants.data}
-              condensed={!isMdScreen}
               adding={isAddFormOpen}
               setSelectedCountryId={setSelectedCountryId}
             />

@@ -73,7 +73,13 @@ const AddForm: FC<Props> = ({ close, selectedCountryId }) => {
         </div>
         <div className={styles.buttons}>
           <span>
-            {!isAddClubOpen && <SubmitButton form={form} size="small" />}
+            {!isAddClubOpen && (
+              <SubmitButton
+                form={form}
+                size="small"
+                loading={createParticipant.isPending}
+              />
+            )}
           </span>
           <Button
             type="link"
