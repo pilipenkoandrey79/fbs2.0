@@ -6,6 +6,7 @@ import classNames from "classnames";
 import { Button, Typography } from "antd";
 
 import { useGetTournamentSeasons } from "../../../../react-query-hooks/tournament/useGetTournamentSeasons";
+import { TournamentLogo } from "../../../../components/TournamentLogo";
 import { ParticipantSelector } from "../../../../components/selectors/ParticipantSelector";
 import { Paths } from "../../../../routes";
 
@@ -64,6 +65,7 @@ const Header: FC<Props> = ({
   return (
     <div className={styles.header}>
       <div className={styles.title}>
+        <TournamentLogo />
         <h1>{title}</h1>
       </div>
       <div className={styles.panel}>

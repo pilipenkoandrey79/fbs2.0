@@ -5,6 +5,15 @@
 .header {
   @include flex(column);
 
+  .title {
+    @include flex(row, flex-start);
+
+    img {
+      display: none;
+      margin-right: 8px;
+    }
+  }
+
   .title,
   .panel {
     width: 100%;
@@ -38,6 +47,12 @@
     & > div {
       width: 100%;
       margin-left: 4px;
+    }
+  }
+
+  @media (min-width: $screen-md) {
+    .title img {
+      display: inline-block;
     }
   }
 
