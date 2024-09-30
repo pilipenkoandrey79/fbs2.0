@@ -1,5 +1,6 @@
 @import "../../style/mixins.scss";
 @import "../../style/colors.module.scss";
+@import "../../style/variables.module.scss";
 
 .layout {
   @include flex(column, flex-start, center);
@@ -23,11 +24,36 @@
       margin-right: 4px;
     }
 
-    .link {
-      margin: 0 24px;
+    .menu {
+      flex: 1;
+      width: 100%;
+    }
 
-      span[role] {
-        margin-right: 2px;
+    .tools {
+      @include flex(row, flex-start, center);
+    }
+
+    .link {
+      margin: 0 6px;
+      font-size: 20px;
+
+      &-text {
+        display: none;
+      }
+    }
+
+    @media (min-width: $screen-sm) {
+      .link {
+        margin-right: 24px;
+        font-size: 14px;
+
+        &-text {
+          display: inline;
+        }
+
+        span[role] {
+          margin-right: 2px;
+        }
       }
     }
   }

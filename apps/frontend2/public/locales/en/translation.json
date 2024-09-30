@@ -99,7 +99,8 @@
         "load": "Load participants from previous season",
         "loaded": "{{count}} participants are loaded from previous season",
         "add_club": "Add club",
-        "club_added": "Club is added"
+        "club_added": "Club is added",
+        "city_added": "City is added"
       }
     }
   }

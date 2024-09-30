@@ -21,6 +21,9 @@ const theme: ThemeConfig = {
     Form: {
       itemMarginBottom: 0,
     },
+    Menu: {
+      itemPaddingInline: 12,
+    },
   },
 };
 

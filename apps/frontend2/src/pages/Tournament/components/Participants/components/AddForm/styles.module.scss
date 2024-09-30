@@ -40,7 +40,7 @@
   }
 
   .add-club {
-    @include flex(row, space-between, center);
+    @include flex(row, space-between, flex-start);
 
     & > div {
       width: 33%;

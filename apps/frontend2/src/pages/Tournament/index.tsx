@@ -1,18 +1,23 @@
-import { FC, useEffect, useState } from "react";
-import { useParams } from "react-router";
-import { createSearchParams, useSearchParams } from "react-router-dom";
+import { FC, useEffect, useMemo, useState } from "react";
+import { generatePath, useParams } from "react-router";
+import { createSearchParams, Link, useSearchParams } from "react-router-dom";
 import { getTournamentTitle } from "@fbs2.0/utils";
 import {
+  AvailableTournaments,
   HIGHLIGHTED_CLUB_ID_SEARCH_PARAM,
   Tournament as TournamentType,
 } from "@fbs2.0/types";
 import { useTranslation } from "react-i18next";
+import { OrderedListOutlined } from "@ant-design/icons";
+import { Menu } from "antd";
 
 import { Page } from "../../components/Page";
+import { Participants } from "./components/Participants";
 import { Header } from "./components/Header";
 import { useGetMatches } from "../../react-query-hooks/match/useGetMatches";
 import { useGetParticipants } from "../../react-query-hooks/participant/useGetParticipants";
-import { Participants } from "./components/Participants";
+import { useGetTournamentSeasons } from "../../react-query-hooks/tournament/useGetTournamentSeasons";
+import { Paths } from "../../routes";
 
 const Tournament: FC = () => {
   const { t } = useTranslation();
@@ -21,6 +26,7 @@ const Tournament: FC = () => {
 
   const matches = useGetMatches(season, tournament);
   const participants = useGetParticipants(season, tournament);
+  const { data: availableTournaments } = useGetTournamentSeasons(true);
 
   const [participantsDialogOpened, setParticipantsDialogOpened] =
     useState(false);
@@ -41,6 +47,40 @@ const Tournament: FC = () => {
       tournament: tournament as TournamentType,
     })
   )} ${season}`;
+
+  const navLinks = useMemo(() => {
+    const tournaments = (availableTournaments as AvailableTournaments)?.[
+      season || ""
+    ]
+      ?.filter((availableTournament) => tournament !== availableTournament.type)
+      ?.map(({ type }) => ({
+        key: type,
+        label: (
+          <Link
+            to={generatePath(Paths.TOURNAMENT, {
+              tournament: type,
+              season: season || "",
+            })}
+          >
+            {t(
+              getTournamentTitle({ season, tournament: type }, { short: true })
+            )}
+          </Link>
+        ),
+      }));
+
+    return [
+      {
+        key: "coeff",
+        label: (
+          <Link to={generatePath(Paths.COEFFICIENT, { season: season || "" })}>
+            <OrderedListOutlined />
+          </Link>
+        ),
+      },
+      ...(tournaments || []),
+    ];
+  }, [availableTournaments, season, t, tournament]);
 
   useEffect(() => {
     const currentSearchParam = searchParams.get(
@@ -70,6 +110,7 @@ const Tournament: FC = () => {
         participants.isError ? participants.error : null,
       ]}
       title={title}
+      menu={<Menu items={navLinks} mode="horizontal" theme="dark" />}
     >
       <Header
         title={title}

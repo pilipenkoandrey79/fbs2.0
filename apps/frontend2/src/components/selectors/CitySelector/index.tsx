@@ -1,11 +1,16 @@
 import { Form, Select } from "antd";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
+import classNames from "classnames";
+import { BaseOptionType } from "rc-select/lib/Select";
+import { isNotEmpty } from "@fbs2.0/utils";
 
 import {
   getCitiesByCountry,
   useGetCities,
 } from "../../../react-query-hooks/city/useGetCities";
+
+import styles from "./styles.module.scss";
 
 interface Props {
   countryId?: number;
@@ -20,14 +25,23 @@ const CitySelector: FC<Props> = ({ countryId, name = "cityId", className }) => {
     countryId ? getCitiesByCountry(countryId, i18n.resolvedLanguage) : undefined
   );
 
+  const [isNew, setIsNew] = useState(false);
+
   return (
-    <Form.Item name={name} rules={[{ required: true }]}>
+    <Form.Item name={name} rules={[{ required: true, message: "" }]}>
       <Select
         size="small"
-        showSearch
-        options={data?.map(({ id, name }) => ({ value: id, label: name }))}
-        className={className}
+        mode="tags"
+        maxCount={1}
+        options={data?.map(({ id, name }) => ({
+          value: id,
+          label: name,
+        }))}
+        className={classNames(className, { [styles.new]: isNew })}
         placeholder={t("common.placeholder.city")}
+        onChange={(_, option) => {
+          setIsNew(!isNotEmpty((option as BaseOptionType[])[0].value));
+        }}
       />
     </Form.Item>
   );

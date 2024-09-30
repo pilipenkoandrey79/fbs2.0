@@ -6,21 +6,56 @@ import { useTranslation } from "react-i18next";
 import { CitySelector } from "../../../../../../../../components/selectors/CitySelector";
 import { SubmitButton } from "../../../../../../../../components/SubmitButton";
 import { useCreateClub } from "../../../../../../../../react-query-hooks/club/useCreateClub";
+import { useCreateCity } from "../../../../../../../../react-query-hooks/city/useCreateCity";
 
 interface Props {
   countryId: number;
   className?: string;
 }
 
+interface CustomizedClubDto extends Omit<ClubDto, "cityId"> {
+  cityId: (number | string)[];
+}
+
 const AddClubForm: FC<Props> = ({ countryId, className }) => {
   const { t } = useTranslation();
   const [messageApi, contextHolder] = message.useMessage();
-  const [form] = Form.useForm<ClubDto>();
+  const [form] = Form.useForm<CustomizedClubDto>();
+  const createCity = useCreateCity();
   const createClub = useCreateClub();
 
-  const submit = async (values: ClubDto) => {
+  const addCity = async (name: string) => {
     try {
-      await createClub.mutateAsync(values);
+      const city = await createCity.mutateAsync({
+        countryId,
+        name,
+      });
+
+      messageApi.open({
+        type: "success",
+        content: t("tournament.participants.list.city_added"),
+      });
+
+      return city.id;
+    } catch (error) {
+      messageApi.open({
+        type: "error",
+        content: typeof error === "string" ? error : (error as Error).message,
+      });
+    }
+  };
+
+  const submit = async (values: CustomizedClubDto) => {
+    try {
+      const cityId = Number(
+        typeof values.cityId[0] === "string"
+          ? await addCity(values.cityId[0])
+          : values.cityId[0]
+      );
+
+      const clubDto: ClubDto = { name: values.name, cityId };
+
+      await createClub.mutateAsync(clubDto);
 
       form.resetFields();
 

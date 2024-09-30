@@ -18,6 +18,7 @@ import styles from "./styles.module.scss";
 interface Props {
   children: ReactNode | ReactNode[];
   title: string;
+  menu?: ReactNode;
   isLoading?: boolean;
   errors?: (Error | AxiosError | null)[] | null;
 }
@@ -61,11 +62,12 @@ const Page: FC<Props> = (props) => {
             FBS2
           </Link>
         </h1>
+        <div className={styles.menu}>{props.menu}</div>
         <div className={styles.tools}>
           {!isClubsPage && (
             <Link to={Paths.CLUBS} className={styles.link}>
               <DatabaseOutlined />
-              {t("common.clubs")}
+              <span className={styles["link-text"]}>{t("common.clubs")}</span>
             </Link>
           )}
           <LanguageSwitcher className={styles["language-swaitcher"]} />
