@@ -102,6 +102,10 @@
         "club_added": "Club is added",
         "city_added": "City is added"
       }
+    },
+    "stages": {
+      "participants": "Participants",
+      "results": "Results"
     }
   }
 }

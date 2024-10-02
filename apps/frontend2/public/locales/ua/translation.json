@@ -103,6 +103,10 @@
         "club_added": "Клуб додано",
         "city_added": "Місто додано"
       }
+    },
+    "stages": {
+      "participants": "Учасники",
+      "results": "Результати"
     }
   }
 }

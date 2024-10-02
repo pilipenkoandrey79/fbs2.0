@@ -2,7 +2,7 @@ import { Cell, Column, Table2 } from "@blueprintjs/table";
 import {
   DEFAULT_SWISS_LENGTH,
   GroupRow,
-  LeagueStageData,
+  _LeagueStageData,
   Stage,
   TABLE_ROW_HEIGHT,
   UKRAINE,
@@ -18,7 +18,7 @@ import styles from "./styles.module.scss";
 
 interface Props {
   stage: Stage;
-  table: LeagueStageData["table"];
+  table: _LeagueStageData["table"];
   version: number;
   highlightedClubId: number | undefined;
 }

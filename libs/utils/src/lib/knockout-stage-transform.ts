@@ -1,8 +1,9 @@
 import {
   Participant,
-  StageTableData,
-  StageTableRow,
   TournamentPart,
+  StageTableRow,
+  _StageTableRow,
+  _StageTableData,
 } from "@fbs2.0/types";
 import { DateTime } from "luxon";
 import {
@@ -13,7 +14,120 @@ import {
   prepareClub,
 } from "@fbs2.0/utils";
 
-export const transformKnockoutStage = (tournamentPart: TournamentPart) => {
+export const getKnockoutStageMatchesData = (tournamentPart: TournamentPart) => {
+  const year = tournamentPart.stage.tournamentSeason.season.split("-")[0];
+  const afterMatchPenalties = !!tournamentPart.stage.stageScheme.pen;
+  const awayGoalRule = !!tournamentPart.stage.stageScheme.awayGoal;
+
+  return tournamentPart.matches
+    .reduce<StageTableRow[]>(
+      (
+        acc,
+        {
+          id,
+          answer,
+          date,
+          host,
+          guest,
+          hostScore,
+          guestScore,
+          hostPen,
+          guestPen,
+          replayDate,
+          forceWinner,
+          unplayed,
+          tech,
+        }
+      ) => {
+        if (answer) {
+          const rowIndex = acc.findIndex(
+            ({ host: { id: hostId }, guest: { id: guestId } }) =>
+              hostId === guest.id && guestId === host.id
+          );
+
+          acc[rowIndex].answerMatchId = id;
+          acc[rowIndex].forceWinnerId = forceWinner?.id ?? null;
+
+          acc[rowIndex].results.push({
+            hostScore: guestScore,
+            guestScore: hostScore,
+            hostPen: afterMatchPenalties ? guestPen : undefined,
+            guestPen: afterMatchPenalties ? hostPen : undefined,
+            answer: true,
+            unplayed: unplayed ?? false,
+            tech: tech ?? false,
+            date: date ?? "",
+            isReplay: false,
+          });
+
+          if (isNotEmpty(replayDate) && !afterMatchPenalties) {
+            acc[rowIndex].results.push({
+              hostScore: guestPen,
+              guestScore: hostPen,
+              answer: true,
+              unplayed: unplayed ?? false,
+              tech: tech ?? false,
+              date: replayDate ?? "",
+              isReplay: true,
+            });
+          }
+
+          return acc;
+        } else {
+          return [
+            ...acc,
+            {
+              id,
+              host: { ...host, club: prepareClub(host.club, year) },
+              guest: { ...guest, club: prepareClub(guest.club, year) },
+              forceWinnerId: forceWinner?.id ?? null,
+              results: [
+                {
+                  hostScore,
+                  guestScore,
+                  hostPen: hostPen,
+                  guestPen: guestPen,
+                  answer: false,
+                  unplayed: unplayed ?? false,
+                  tech: tech ?? false,
+                  date: date ?? "",
+                },
+              ],
+            },
+          ];
+        }
+      },
+      []
+    )
+    .map((row) => {
+      const { results, host, guest, forceWinnerId } = row;
+
+      const winner = getWinner(
+        results,
+        awayGoalRule,
+        isNotEmpty(forceWinnerId)
+          ? forceWinnerId === host.id
+            ? "host"
+            : "guest"
+          : undefined
+      );
+
+      return {
+        ...row,
+        host: {
+          ...host,
+          isWinner: winner.host,
+        },
+        guest: {
+          ...guest,
+          isWinner: winner.guest,
+        },
+      };
+    })
+    .sort((a, b) => a.id - b.id);
+};
+
+export const _transformKnockoutStage = (tournamentPart: TournamentPart) => {
   const resultHeaders: string[] = [];
 
   tournamentPart.matches.forEach(({ date }) => {
@@ -29,12 +143,12 @@ export const transformKnockoutStage = (tournamentPart: TournamentPart) => {
     return aDate < bDate ? -1 : aDate === bDate ? 0 : 1;
   });
 
-  const matches: StageTableData = {
+  const matches: _StageTableData = {
     headers: ["", "", ...resultHeaders],
     rows: [],
   };
 
-  const rows: StageTableRow[] = [];
+  const rows: _StageTableRow[] = [];
   const afterMatchPenalties = !!tournamentPart.stage.stageScheme.pen;
 
   tournamentPart.matches.forEach(
@@ -92,7 +206,7 @@ export const transformKnockoutStage = (tournamentPart: TournamentPart) => {
           tech: tech ?? false,
         };
       } else {
-        const row: StageTableRow = {
+        const row: _StageTableRow = {
           id,
           host: { ...host, club: prepareClub(host.club, year) },
           guest: { ...guest, club: prepareClub(guest.club, year) },

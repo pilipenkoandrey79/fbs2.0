@@ -1,7 +1,7 @@
 import { FC, useEffect, useMemo, useState } from "react";
 import { generatePath, useParams } from "react-router";
 import { createSearchParams, Link, useSearchParams } from "react-router-dom";
-import { getTournamentTitle } from "@fbs2.0/utils";
+import { getStageTransKey, getTournamentTitle } from "@fbs2.0/utils";
 import {
   AvailableTournaments,
   HIGHLIGHTED_CLUB_ID_SEARCH_PARAM,
@@ -9,9 +9,10 @@ import {
 } from "@fbs2.0/types";
 import { useTranslation } from "react-i18next";
 import { OrderedListOutlined } from "@ant-design/icons";
-import { Menu } from "antd";
+import { Collapse, Menu } from "antd";
 
 import { Page } from "../../components/Page";
+import { Stage } from "./components/Stage";
 import { Participants } from "./components/Participants";
 import { Header } from "./components/Header";
 import { useGetMatches } from "../../react-query-hooks/match/useGetMatches";
@@ -124,6 +125,14 @@ const Tournament: FC = () => {
       <Participants
         onClose={() => setParticipantsDialogOpened(false)}
         open={participantsDialogOpened}
+      />
+      <Collapse
+        bordered={false}
+        items={matches.data?.map((tournamentPart) => ({
+          key: tournamentPart.stage.id,
+          children: <Stage tournamentPart={tournamentPart} />,
+          label: t(getStageTransKey(tournamentPart.stage.stageType)),
+        }))}
       />
     </Page>
   );

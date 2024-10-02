@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ApiEntities, DeleteMatchDto, StageTableRow } from "@fbs2.0/types";
+import { ApiEntities, DeleteMatchDto, _StageTableRow } from "@fbs2.0/types";
 import { AxiosError } from "axios";
 
 import ApiClient from "../../api/api.client";
@@ -13,7 +13,7 @@ export const useDeleteMatch = (successCallback?: () => void) => {
     unknown,
     AxiosError,
     {
-      match: Pick<StageTableRow, "host" | "guest" | "id" | "answerMatchId">;
+      match: Pick<_StageTableRow, "host" | "guest" | "id" | "answerMatchId">;
       onlyResults: boolean;
     }
   >({

@@ -5,6 +5,7 @@ import { FC, useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
 import { useMediaQuery } from "react-responsive";
+import { getStageTransKey } from "@fbs2.0/utils";
 
 import { CountryCell } from "./components/CountryCell";
 import { StartCell } from "./components/StartCell";
@@ -92,13 +93,7 @@ const ParticipantsList: FC<Props> = ({
       ),
       onCell: onCell("startingStage"),
       filters: Object.values(StageType).map((stageType) => ({
-        text: t(
-          `tournament.stage.${stageType}${
-            stageType === StageType.GROUP || stageType === StageType.GROUP_2
-              ? ".short"
-              : ""
-          }`
-        ),
+        text: t(getStageTransKey(stageType)),
         value: stageType,
       })),
       onFilter: (value, record) => record.startingStage === value,

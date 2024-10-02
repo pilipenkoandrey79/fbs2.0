@@ -1,5 +1,5 @@
-import { Stage, StageType } from "@fbs2.0/types";
-import { getTournamentTitle } from "@fbs2.0/utils";
+import { Stage } from "@fbs2.0/types";
+import { getStageTransKey, getTournamentTitle } from "@fbs2.0/utils";
 import { Typography } from "antd";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
@@ -28,14 +28,7 @@ const FromCell: FC<Props> = ({ fromStage }) => {
       )
     ) +
     ": " +
-    t(
-      `tournament.stage.${fromStage?.stageType}${
-        fromStage?.stageType === StageType.GROUP ||
-        fromStage?.stageType === StageType.GROUP_2
-          ? ".short"
-          : ""
-      }`
-    );
+    t(getStageTransKey(fromStage.stageType));
 
   return (
     <Typography.Text type="secondary" ellipsis={{ tooltip: text }}>

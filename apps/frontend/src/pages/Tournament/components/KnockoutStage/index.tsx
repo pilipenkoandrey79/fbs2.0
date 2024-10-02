@@ -5,8 +5,8 @@ import { isNotEmpty } from "@fbs2.0/utils";
 import {
   ONE_MATCH_STAGES,
   Stage,
-  StageTableData,
-  StageTableRow,
+  _StageTableData,
+  _StageTableRow,
   StageType,
   TABLE_ROW_HEIGHT,
   UKRAINE,
@@ -28,7 +28,7 @@ import styles from "./styles.module.scss";
 
 interface Props extends StageProps {
   stage: Stage;
-  matches: StageTableData;
+  matches: _StageTableData;
   matchDay?: number;
 }
 
@@ -97,7 +97,7 @@ const KnockoutStage: FC<Props> = ({
       );
     }
 
-    const { club, isWinner } = match[accessor] || ({} as StageTableRow);
+    const { club, isWinner } = match[accessor] || ({} as _StageTableRow);
 
     return (
       <Cell
@@ -365,7 +365,7 @@ const KnockoutStage: FC<Props> = ({
   ]);
 
   const clearResults = useCallback(
-    (match: StageTableRow) => {
+    (match: _StageTableRow) => {
       deleteMatch({ match, onlyResults: true });
     },
     [deleteMatch]

@@ -3,7 +3,10 @@ import { isLeagueStage } from "./common";
 
 import { transformGroupStage } from "./group-stage-tarnsform";
 import { transformLeagueStage } from "./league-stage-tarnsform";
-import { transformKnockoutStage } from "./knockout-stage-transform";
+import {
+  _transformKnockoutStage,
+  getKnockoutStageMatchesData,
+} from "./knockout-stage-transform";
 
 export const getPointsToSubtract = (
   deductedPoints: DeductedPoints[],
@@ -22,4 +25,9 @@ export const transformTournamentPart = (tournamentPart: TournamentPart) =>
     ? transformGroupStage(tournamentPart)
     : isLeagueStage(tournamentPart.stage)
     ? transformLeagueStage(tournamentPart)
-    : transformKnockoutStage(tournamentPart);
+    : _transformKnockoutStage(tournamentPart);
+
+export { transformGroupStage };
+export { _transformKnockoutStage };
+export { getKnockoutStageMatchesData };
+export { transformLeagueStage };

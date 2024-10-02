@@ -3,7 +3,7 @@ import {
   Group as GroupName,
   GroupRow,
   Tournament,
-  TournamentDataRow,
+  _TournamentDataRow,
 } from "@fbs2.0/types";
 import { isGroupFinished, isNotEmpty } from "@fbs2.0/utils";
 
@@ -27,7 +27,7 @@ const getColorClasses = (tournament: Tournament) => {
   ];
 };
 
-const GroupStage: FC<TournamentDataRow & StageProps> = ({
+const GroupStage: FC<_TournamentDataRow & StageProps> = ({
   stage,
   matches,
   version,

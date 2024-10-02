@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { LeagueStageData, Stage } from "@fbs2.0/types";
+import { _LeagueStageData, Stage } from "@fbs2.0/types";
 
 import { StageProps } from "../../types";
 import { LeagueTable } from "./components/LeagueTable";
@@ -9,7 +9,7 @@ import styles from "./styles.module.scss";
 
 interface Props extends StageProps {
   stage: Stage;
-  matches: LeagueStageData;
+  matches: _LeagueStageData;
 }
 
 const LeagueStage: FC<Props> = ({

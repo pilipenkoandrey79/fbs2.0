@@ -3,14 +3,14 @@ import {
   GroupRow,
   Participant,
   StageSchemeType,
-  StageTableData,
+  _StageTableData,
   Tournament,
-  TournamentDataRow,
+  _TournamentDataRow,
   Stage as StageIntrface,
   UKRAINE,
   USSR,
   GROUP_STAGES,
-  LeagueStageData,
+  _LeagueStageData,
   StageType,
 } from "@fbs2.0/types";
 import { FC, useContext, useMemo, useState } from "react";
@@ -35,7 +35,7 @@ import { LeagueStage } from "../LeagueStage";
 import styles from "./styles.module.scss";
 
 interface Props extends StageProps {
-  matchesBystages: TournamentDataRow[] | undefined;
+  matchesBystages: _TournamentDataRow[] | undefined;
   index: number;
 }
 
@@ -206,9 +206,9 @@ const Stage: FC<Props> = ({
               matches={matches as Record<Group, GroupRow[]>}
             />
           ) : isLeagueStage(stage) ? (
-            <LeagueStage {...props} matches={matches as LeagueStageData} />
+            <LeagueStage {...props} matches={matches as _LeagueStageData} />
           ) : (
-            <KnockoutStage {...props} matches={matches as StageTableData} />
+            <KnockoutStage {...props} matches={matches as _StageTableData} />
           )}
         </div>
       </div>

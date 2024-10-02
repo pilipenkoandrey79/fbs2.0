@@ -7,7 +7,7 @@ import {
   FIRST_ICFC_SEASONS,
   Group,
   GroupRow,
-  KnockoutStageTableRowResult,
+  _KnockoutStageTableRowResult,
   Match,
   BaseMatch,
   ONE_MATCH_STAGES,
@@ -113,6 +113,13 @@ export const _getTournamentTitle = (
 
   return `${title} ${showSeason && season ? season : ""}`;
 };
+
+export const getStageTransKey = (stageType: StageType) =>
+  `tournament.stage.${stageType}${
+    stageType === StageType.GROUP || stageType === StageType.GROUP_2
+      ? ".short"
+      : ""
+  }`;
 
 export const _getStageLabel = (stageType: StageType | null, group?: Group) => {
   switch (stageType) {
@@ -401,7 +408,7 @@ export const getWinners = (matches: Match[]) =>
       []
     )
     .map<Winner>(({ tournament, matches }) => {
-      const finalResults = matches.map<KnockoutStageTableRowResult>(
+      const finalResults = matches.map<_KnockoutStageTableRowResult>(
         ({ hostScore, guestScore, hostPen, guestPen, answer }) => ({
           hostScore: answer ? guestScore : hostScore,
           guestScore: answer ? hostScore : guestScore,
@@ -482,7 +489,7 @@ export const getCVBalance = (cv: ClubCV[] | undefined) => {
 };
 
 export const getWinner = (
-  results: KnockoutStageTableRowResult[],
+  results: _KnockoutStageTableRowResult[],
   awayGoalRule: boolean,
   forceWinner?: "host" | "guest"
 ): { host: boolean; guest: boolean } => {

@@ -22,7 +22,7 @@ export interface JWTTokensPair {
 
 export type ClubWithWinner = Participant & { isWinner?: boolean };
 
-export interface BaseMatchResult {
+export interface _BaseMatchResult {
   hostScore: number | null;
   guestScore: number | null;
   label?: string;
@@ -30,34 +30,34 @@ export interface BaseMatchResult {
   tech?: boolean;
 }
 
-export interface KnockoutStageTableRowResult extends BaseMatchResult {
+export interface _KnockoutStageTableRowResult extends _BaseMatchResult {
   hostPen?: number | null;
   guestPen?: number | null;
   answer: boolean;
 }
 
-export interface GroupStageTableRowResult extends BaseMatchResult {
+export interface _GroupStageTableRowResult extends _BaseMatchResult {
   hasDeductedPoints?: boolean;
 }
 
-export interface StageTableRow {
+export interface _StageTableRow {
   id: number;
   answerMatchId?: number;
   replayDate?: string;
   host: ClubWithWinner;
   guest: ClubWithWinner;
   forceWinnerId?: number | null;
-  results: KnockoutStageTableRowResult[];
+  results: _KnockoutStageTableRowResult[];
 }
 
-export interface StageTableData {
+export interface _StageTableData {
   headers: string[];
-  rows: StageTableRow[];
+  rows: _StageTableRow[];
 }
 
-export interface LeagueStageData {
+export interface _LeagueStageData {
   table: Omit<GroupRow, "chessCells">[];
-  tours: Record<number, StageTableData>;
+  tours: Record<number, _StageTableData>;
 }
 
 export type ChessCell = {
@@ -68,7 +68,7 @@ export type ChessCell = {
 
 export interface GroupRow {
   team: Participant;
-  results: GroupStageTableRowResult[];
+  results: _GroupStageTableRowResult[];
   chessCells: ChessCell[];
   games: number;
   win: number;
@@ -78,14 +78,14 @@ export interface GroupRow {
   score: number;
 }
 
-export type MatchesByStages = {
+export type _MatchesByStages = {
   stage: Stage;
-  matches: StageTableData | Record<Group, GroupRow[]>;
+  matches: _StageTableData | Record<Group, GroupRow[]>;
 };
 
-export interface TournamentDataRow {
+export interface _TournamentDataRow {
   stage: Stage;
-  matches: StageTableData | LeagueStageData | Record<Group, GroupRow[]>;
+  matches: _StageTableData | _LeagueStageData | Record<Group, GroupRow[]>;
 }
 
 export interface SeasonParticipantsClubParticipation {

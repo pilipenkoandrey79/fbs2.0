@@ -1,20 +1,20 @@
 import {
-  LeagueStageData,
+  _LeagueStageData,
   BaseMatch,
   TournamentPart,
   DEFAULT_SWISS_LENGTH,
-  StageTableData,
+  _StageTableData,
 } from "@fbs2.0/types";
 import { _getStageLabel } from "./common";
 
 import { prepareGroupTeamsStanding } from "./prepare-group-standing";
-import { transformKnockoutStage } from "./knockout-stage-transform";
+import { _transformKnockoutStage } from "./knockout-stage-transform";
 
 const getLeagueResultsTemplate = () =>
   new Array(DEFAULT_SWISS_LENGTH / 4 - 1).fill(1).reduce(
     (acc, _, index) => ({
       ...acc,
-      [index + 1]: { headers: ["", ""], rows: [] } as StageTableData,
+      [index + 1]: { headers: ["", ""], rows: [] } as _StageTableData,
     }),
     {}
   );
@@ -36,15 +36,15 @@ const prepareMatchesData = ({ matches, stage }: TournamentPart) =>
 
               return acc;
             }, [])
-            .reduce<LeagueStageData["tours"]>(
+            .reduce<_LeagueStageData["tours"]>(
               (acc, { tour, matches }) => ({
                 ...acc,
-                [tour]: transformKnockoutStage({ stage, matches }).matches,
+                [tour]: _transformKnockoutStage({ stage, matches }).matches,
               }),
               getLeagueResultsTemplate()
             )
         : getLeagueResultsTemplate(),
-  } as LeagueStageData);
+  } as _LeagueStageData);
 
 export const transformLeagueStage = (tournamentPart: TournamentPart) => ({
   stage: {
