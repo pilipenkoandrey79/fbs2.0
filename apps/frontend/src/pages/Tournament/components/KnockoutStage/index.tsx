@@ -11,6 +11,7 @@ import {
   TABLE_ROW_HEIGHT,
   UKRAINE,
   USSR,
+  StageSchemeType,
 } from "@fbs2.0/types";
 import classNames from "classnames";
 import { DateTime } from "luxon";
@@ -193,7 +194,11 @@ const KnockoutStage: FC<Props> = ({
       isNotEmpty(match) &&
       !isNotEmpty(match.forceWinnerId) &&
       results.length <
-        (ONE_MATCH_STAGES.includes(stage.stageScheme.type) ? 1 : 2);
+        ([...ONE_MATCH_STAGES, StageSchemeType.LEAGUE].includes(
+          stage.stageScheme.type
+        )
+          ? 1
+          : 2);
 
     const availableDates = matches.headers.filter((value) =>
       isNotEmpty(value, true)

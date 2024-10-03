@@ -21,7 +21,7 @@ import {
 import {
   _getTournamentTitle,
   isNotEmpty,
-  transformTournamentPart,
+  _transformTournamentPart,
 } from "@fbs2.0/utils";
 import classNames from "classnames";
 
@@ -55,7 +55,7 @@ const Tournament = () => {
     useGetMatches(season, tournament as TournamentType);
 
   const tournamentMatches = useMemo(() => {
-    const matchesByStages = data?.map(transformTournamentPart);
+    const matchesByStages = data?.map(_transformTournamentPart);
 
     return {
       matchesByStages,

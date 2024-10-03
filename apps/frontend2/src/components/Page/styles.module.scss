@@ -59,7 +59,7 @@
   }
 
   main {
-    height: calc(100vh - 64px - 69px);
+    min-height: calc(100vh - 64px - 69px);
     padding: 4px;
     background-color: $contentBg;
   }

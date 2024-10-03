@@ -1,0 +1,16 @@
+@import "../../../../../../style/mixins.scss";
+
+.participants {
+  .panels {
+    @include flex(row, flex-start, flex-start);
+
+    .panel {
+      width: 50%;
+    }
+
+    .divider {
+      align-self: stretch;
+      height: unset;
+    }
+  }
+}

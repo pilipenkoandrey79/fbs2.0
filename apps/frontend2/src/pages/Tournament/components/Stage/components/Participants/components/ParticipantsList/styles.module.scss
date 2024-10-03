@@ -1,0 +1,10 @@
+@import "../../../../../../../../style/mixins.scss";
+
+:global {
+  .ant-table-tbody th.ant-table-cell {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
+@include highlighted;

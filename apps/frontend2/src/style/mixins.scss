@@ -7,3 +7,39 @@
   justify-content: $justify;
   align-items: $align;
 }
+
+@mixin highlighted {
+  .winner {
+    font-weight: bold;
+  }
+
+  .mine {
+    background-color: $mine;
+  }
+
+  .from-another-tournament {
+    color: $from-another-tournament;
+  }
+
+  .highlighted {
+    &-UCL {
+      background-color: $ucl !important;
+    }
+
+    &-UEL {
+      background-color: $uel !important;
+    }
+
+    &-UECL {
+      background-color: $uecl !important;
+    }
+
+    &-CWC {
+      background-color: $cwc !important;
+    }
+
+    &-ICFC {
+      background-color: $icfc !important;
+    }
+  }
+}

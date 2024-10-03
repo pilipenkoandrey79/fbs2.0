@@ -1,7 +1,7 @@
-import { StageType, Tournament, Match, Group, GroupRow } from '@fbs2.0/types';
+import { StageType, Tournament, Match, Group, GroupRow } from "@fbs2.0/types";
 
-import { isGroupFinished, prepareMatchesList } from './common';
-import { transformTournamentPart } from './stage-transform';
+import { isGroupFinished, prepareMatchesList } from "./common";
+import { _transformTournamentPart } from "./stage-transform";
 
 export interface Bonus {
   stageType: StageType;
@@ -167,7 +167,7 @@ export const getBonuses = (matches: Match[], year: number): Bonus[] =>
       Number.isInteger(template.place) &&
       template.stageType === StageType.GROUP
     ) {
-      const transformedStage = transformTournamentPart(stageMatches);
+      const transformedStage = _transformTournamentPart(stageMatches);
       const clubsIds: number[] = [];
 
       Object.values(

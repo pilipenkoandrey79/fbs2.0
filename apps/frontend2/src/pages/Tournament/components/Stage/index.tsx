@@ -1,16 +1,17 @@
 import { AppstoreOutlined, BarsOutlined } from "@ant-design/icons";
-import { StageSchemeType, TournamentPart } from "@fbs2.0/types";
-import {
-  getKnockoutStageMatchesData,
-  transformGroupStage,
-  transformLeagueStage,
-} from "@fbs2.0/utils";
+import { TournamentDataRow } from "@fbs2.0/types";
 import { Segmented } from "antd";
-import { FC, useMemo, useState } from "react";
+import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { Participants } from "./components/Participants";
+
 interface Props {
-  tournamentPart: TournamentPart;
+  tournamentParts: {
+    current: TournamentDataRow;
+    previous: TournamentDataRow | undefined;
+  };
+  highlightedClubId: number | null;
 }
 
 enum Segments {
@@ -18,33 +19,16 @@ enum Segments {
   participants = "participants",
 }
 
-const Stage: FC<Props> = ({ tournamentPart }) => {
+const Stage: FC<Props> = ({ tournamentParts, highlightedClubId }) => {
   const { t } = useTranslation();
   const [segment, setSegment] = useState(Segments.results);
-
-  const matches = useMemo(() => {
-    switch (tournamentPart.stage.stageScheme.type) {
-      case StageSchemeType.OLYMPIC_1_MATCH:
-      case StageSchemeType.OLYMPIC_2_MATCH:
-        return getKnockoutStageMatchesData(tournamentPart);
-      case StageSchemeType.GROUP_4_2_MATCH:
-      case StageSchemeType.GROUP_5_1_MATCH:
-      case StageSchemeType.GROUP_SEMI_FINAL:
-      case StageSchemeType.GROUP_ICFC:
-        return transformGroupStage(tournamentPart);
-      case StageSchemeType.LEAGUE:
-        return transformLeagueStage(tournamentPart);
-      default:
-        return [];
-    }
-  }, [tournamentPart]);
 
   return (
     <div>
       <Segmented
         options={[
           {
-            label: t("tournament.stages.participants"),
+            label: t("tournament.stages.participants.title"),
             value: Segments.participants,
             icon: <BarsOutlined />,
           },
@@ -58,7 +42,14 @@ const Stage: FC<Props> = ({ tournamentPart }) => {
         value={segment}
       />
       <div>
-        {segment === Segments.participants ? <>Participants</> : <>Results</>}
+        {segment === Segments.participants ? (
+          <Participants
+            tournamentParts={tournamentParts}
+            highlightedClubId={highlightedClubId}
+          />
+        ) : (
+          <>Results</>
+        )}
       </div>
     </div>
   );

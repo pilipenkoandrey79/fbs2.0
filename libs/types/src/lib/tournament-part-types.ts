@@ -29,22 +29,17 @@ export interface StageTableRow {
   results: KnockoutStageTableRowResult[];
 }
 
-export interface StageTableData {
-  headers: string[];
-  rows: StageTableRow[];
-}
-
 export interface LeagueStageData {
   table: Omit<GroupRow, "chessCells">[];
-  tours: Record<number, StageTableData>;
+  tours: Record<number, StageTableRow[]>;
 }
 
 export type MatchesByStages = {
   stage: Stage;
-  matches: StageTableData | Record<Group, GroupRow[]>;
+  matches: StageTableRow[] | Record<Group, GroupRow[]>;
 };
 
 export interface TournamentDataRow {
   stage: Stage;
-  matches: StageTableData | LeagueStageData | Record<Group, GroupRow[]>;
+  matches: StageTableRow[] | LeagueStageData | Record<Group, GroupRow[]>;
 }

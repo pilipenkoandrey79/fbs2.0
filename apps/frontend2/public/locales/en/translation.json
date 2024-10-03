@@ -104,7 +104,14 @@
       }
     },
     "stages": {
-      "participants": "Participants",
+      "participants": {
+        "title": "Participants",
+        "teams": "teams",
+        "team": "Team",
+        "seeded": "Starting from this stage",
+        "winners": "Winners of the previous stage",
+        "skippers": "Skipped the previous stage"
+      },
       "results": "Results"
     }
   }

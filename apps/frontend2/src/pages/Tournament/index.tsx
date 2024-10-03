@@ -1,33 +1,34 @@
 import { FC, useEffect, useMemo, useState } from "react";
-import { generatePath, useParams } from "react-router";
-import { createSearchParams, Link, useSearchParams } from "react-router-dom";
-import { getStageTransKey, getTournamentTitle } from "@fbs2.0/utils";
+import { useParams } from "react-router";
+import { createSearchParams, useSearchParams } from "react-router-dom";
 import {
-  AvailableTournaments,
+  getStageTransKey,
+  getTournamentTitle,
+  transformTournamentPart,
+} from "@fbs2.0/utils";
+import {
   HIGHLIGHTED_CLUB_ID_SEARCH_PARAM,
+  TournamentDataRow,
   Tournament as TournamentType,
 } from "@fbs2.0/types";
 import { useTranslation } from "react-i18next";
-import { OrderedListOutlined } from "@ant-design/icons";
-import { Collapse, Menu } from "antd";
+import { Collapse } from "antd";
 
 import { Page } from "../../components/Page";
 import { Stage } from "./components/Stage";
 import { Participants } from "./components/Participants";
 import { Header } from "./components/Header";
+import { TournamentMenu } from "./components/TournamentMenu";
 import { useGetMatches } from "../../react-query-hooks/match/useGetMatches";
 import { useGetParticipants } from "../../react-query-hooks/participant/useGetParticipants";
-import { useGetTournamentSeasons } from "../../react-query-hooks/tournament/useGetTournamentSeasons";
-import { Paths } from "../../routes";
 
 const Tournament: FC = () => {
   const { t } = useTranslation();
   const { season, tournament } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const matches = useGetMatches(season, tournament);
+  const rawMatches = useGetMatches(season, tournament);
   const participants = useGetParticipants(season, tournament);
-  const { data: availableTournaments } = useGetTournamentSeasons(true);
 
   const [participantsDialogOpened, setParticipantsDialogOpened] =
     useState(false);
@@ -42,46 +43,21 @@ const Tournament: FC = () => {
     }
   );
 
+  const matches = useMemo<TournamentDataRow[] | undefined>(
+    () =>
+      rawMatches.data?.map((tournamentPart) => ({
+        stage: tournamentPart.stage,
+        matches: transformTournamentPart(tournamentPart),
+      })),
+    [rawMatches.data]
+  );
+
   const title = `${t(
     getTournamentTitle({
       season,
       tournament: tournament as TournamentType,
     })
   )} ${season}`;
-
-  const navLinks = useMemo(() => {
-    const tournaments = (availableTournaments as AvailableTournaments)?.[
-      season || ""
-    ]
-      ?.filter((availableTournament) => tournament !== availableTournament.type)
-      ?.map(({ type }) => ({
-        key: type,
-        label: (
-          <Link
-            to={generatePath(Paths.TOURNAMENT, {
-              tournament: type,
-              season: season || "",
-            })}
-          >
-            {t(
-              getTournamentTitle({ season, tournament: type }, { short: true })
-            )}
-          </Link>
-        ),
-      }));
-
-    return [
-      {
-        key: "coeff",
-        label: (
-          <Link to={generatePath(Paths.COEFFICIENT, { season: season || "" })}>
-            <OrderedListOutlined />
-          </Link>
-        ),
-      },
-      ...(tournaments || []),
-    ];
-  }, [availableTournaments, season, t, tournament]);
 
   useEffect(() => {
     const currentSearchParam = searchParams.get(
@@ -105,13 +81,13 @@ const Tournament: FC = () => {
 
   return (
     <Page
-      isLoading={matches.isLoading}
+      isLoading={rawMatches.isLoading}
       errors={[
-        matches.isError ? matches.error : null,
+        rawMatches.isError ? rawMatches.error : null,
         participants.isError ? participants.error : null,
       ]}
       title={title}
-      menu={<Menu items={navLinks} mode="horizontal" theme="dark" />}
+      menu={<TournamentMenu />}
     >
       <Header
         title={title}
@@ -128,11 +104,29 @@ const Tournament: FC = () => {
       />
       <Collapse
         bordered={false}
-        items={matches.data?.map((tournamentPart) => ({
-          key: tournamentPart.stage.id,
-          children: <Stage tournamentPart={tournamentPart} />,
-          label: t(getStageTransKey(tournamentPart.stage.stageType)),
-        }))}
+        items={matches?.map((tournamentPart) => {
+          const previousTournamentPart =
+            tournamentPart.stage.previousStage === null
+              ? undefined
+              : matches.find(
+                  ({ stage }) =>
+                    stage.id === tournamentPart.stage.previousStage?.id
+                );
+
+          return {
+            key: tournamentPart.stage.id,
+            children: (
+              <Stage
+                tournamentParts={{
+                  current: tournamentPart,
+                  previous: previousTournamentPart,
+                }}
+                highlightedClubId={highlightedClubId}
+              />
+            ),
+            label: t(getStageTransKey(tournamentPart.stage.stageType)),
+          };
+        })}
       />
     </Page>
   );

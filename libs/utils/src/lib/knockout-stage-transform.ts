@@ -14,7 +14,9 @@ import {
   prepareClub,
 } from "@fbs2.0/utils";
 
-export const getKnockoutStageMatchesData = (tournamentPart: TournamentPart) => {
+export const getKnockoutStageMatchesData = (
+  tournamentPart: TournamentPart
+): StageTableRow[] => {
   const year = tournamentPart.stage.tournamentSeason.season.split("-")[0];
   const afterMatchPenalties = !!tournamentPart.stage.stageScheme.pen;
   const awayGoalRule = !!tournamentPart.stage.stageScheme.awayGoal;
