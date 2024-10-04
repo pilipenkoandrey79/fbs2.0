@@ -8,6 +8,10 @@
     }
   }
 
+  h3 {
+    display: none;
+  }
+
   table tbody td.results-cell {
     padding: 0 !important;
 
@@ -16,6 +20,7 @@
 
       .match {
         @include flex(row, space-between, stretch);
+        position: relative;
 
         &:not(:last-child) {
           border-bottom: 1px solid $border;
@@ -50,9 +55,21 @@
             border: none;
           }
         }
+
+        .edit-button {
+          position: absolute;
+          top: 0;
+          right: 0;
+        }
       }
     }
   }
 
   @include highlighted;
+
+  @media (min-width: $screen-md) {
+    h3 {
+      display: block;
+    }
+  }
 }

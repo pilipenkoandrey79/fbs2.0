@@ -1,0 +1,17 @@
+@import "../../../../style/mixins.scss";
+
+.panels {
+  @include flex(row, space-between, flex-start);
+
+  .divider {
+    display: none;
+  }
+
+  @media (min-width: $screen-md) {
+    .divider {
+      display: block;
+      align-self: stretch;
+      height: unset;
+    }
+  }
+}

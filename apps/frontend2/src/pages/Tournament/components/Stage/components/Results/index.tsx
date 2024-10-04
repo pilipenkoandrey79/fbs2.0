@@ -1,11 +1,12 @@
 import { StageTableRow, TournamentDataRow, UKRAINE, USSR } from "@fbs2.0/types";
-import { Table, TableProps, Tooltip, Typography } from "antd";
+import { Table, TableProps } from "antd";
 import { FC } from "react";
 import classNames from "classnames";
-import { isNotEmpty, dateRenderer } from "@fbs2.0/utils";
+import { isNotEmpty } from "@fbs2.0/utils";
 import { useTranslation } from "react-i18next";
 
 import { Club } from "../../../../../../components/Club";
+import { ResultsCell } from "./components/ResultsCell";
 
 import styles from "./styles.module.scss";
 
@@ -51,63 +52,12 @@ const Results: FC<Props> = ({ visible, tournamentPart, highlightedClubId }) => {
         results: StageTableRow["results"],
         { forceWinnerId, host, guest }
       ) => (
-        <div className={styles.results}>
-          {results.map(
-            ({
-              date,
-              hostScore,
-              guestScore,
-              replayDate,
-              hostPen,
-              guestPen,
-            }) => (
-              <div
-                key={date}
-                className={classNames(styles.match, {
-                  [styles["only-match"]]: !replayDate,
-                })}
-              >
-                <div className={styles.result}>
-                  <Typography.Text className={styles.date} type="secondary">
-                    {dateRenderer(date)}
-                  </Typography.Text>
-                  <span className={styles.score}>{`${hostScore}:${guestScore} ${
-                    !replayDate && isNotEmpty(hostPen) && isNotEmpty(guestPen)
-                      ? t("tournament.stages.results.pen", {
-                          h: hostPen,
-                          g: guestPen,
-                        })
-                      : ""
-                  }`}</span>
-                </div>
-                {replayDate && (
-                  <div
-                    className={classNames(styles.result, {
-                      [styles.coin]: forceWinnerId,
-                    })}
-                  >
-                    <Typography.Text className={styles.date} type="secondary">
-                      {replayDate}
-                    </Typography.Text>
-                    <span className={styles.score}>
-                      {forceWinnerId ? (
-                        <Tooltip
-                          title={t("tournament.stages.results.coin", {
-                            club: [host, guest].find(
-                              ({ id }) => id === forceWinnerId
-                            )?.club.name,
-                          })}
-                        >{`${hostPen}:${guestPen}`}</Tooltip>
-                      ) : (
-                        `${hostPen}:${guestPen}`
-                      )}
-                    </span>
-                  </div>
-                )}
-              </div>
-            )
-          )}
-        </div>
+        <ResultsCell
+          results={results}
+          forceWinnerId={forceWinnerId}
+          host={host}
+          guest={guest}
+        />
       ),
     },
     getTeamColumn("guest"),
@@ -118,6 +68,7 @@ const Results: FC<Props> = ({ visible, tournamentPart, highlightedClubId }) => {
       style={{ display: visible ? "block" : "none" }}
       className={styles.matches}
     >
+      <h3>{`${t("tournament.stages.results.title")}`}</h3>
       <Table<StageTableRow>
         columns={columns}
         dataSource={tournamentPart.matches as StageTableRow[]}
