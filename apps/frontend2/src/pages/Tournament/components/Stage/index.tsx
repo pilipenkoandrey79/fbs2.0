@@ -1,10 +1,15 @@
-import { AppstoreOutlined, BarsOutlined } from "@ant-design/icons";
+import {
+  AppstoreOutlined,
+  BarsOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
 import { TournamentDataRow } from "@fbs2.0/types";
 import { Segmented } from "antd";
-import { FC, useState } from "react";
+import { FC, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Participants } from "./components/Participants";
+import { Results } from "./components/Results";
 
 interface Props {
   tournamentParts: {
@@ -21,6 +26,7 @@ enum Segments {
 
 const Stage: FC<Props> = ({ tournamentParts, highlightedClubId }) => {
   const { t } = useTranslation();
+  const [isPending, startTransition] = useTransition();
   const [segment, setSegment] = useState(Segments.results);
 
   return (
@@ -30,26 +36,32 @@ const Stage: FC<Props> = ({ tournamentParts, highlightedClubId }) => {
           {
             label: t("tournament.stages.participants.title"),
             value: Segments.participants,
-            icon: <BarsOutlined />,
+            icon: isPending ? <LoadingOutlined /> : <BarsOutlined />,
           },
           {
-            label: t("tournament.stages.results"),
+            label: t("tournament.stages.results.title"),
             value: Segments.results,
-            icon: <AppstoreOutlined />,
+            icon: isPending ? <LoadingOutlined /> : <AppstoreOutlined />,
           },
         ]}
-        onChange={setSegment}
+        onChange={(value: Segments) => {
+          startTransition(() => {
+            setSegment(value);
+          });
+        }}
         value={segment}
       />
       <div>
-        {segment === Segments.participants ? (
-          <Participants
-            tournamentParts={tournamentParts}
-            highlightedClubId={highlightedClubId}
-          />
-        ) : (
-          <>Results</>
-        )}
+        <Participants
+          tournamentParts={tournamentParts}
+          highlightedClubId={highlightedClubId}
+          visible={segment === Segments.participants}
+        />
+        <Results
+          visible={segment === Segments.results}
+          tournamentPart={tournamentParts.current}
+          highlightedClubId={highlightedClubId}
+        />
       </div>
     </div>
   );

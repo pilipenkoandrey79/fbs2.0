@@ -24,6 +24,18 @@ import {
   DEFAULT_SWISS_LENGTH,
 } from "@fbs2.0/types";
 import { FormEvent } from "react";
+import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+
+export const dateRenderer = (time: string | number | null, format?: string) => {
+  if (!time) {
+    return "";
+  }
+
+  dayjs.extend(localizedFormat);
+
+  return dayjs(time).format("ll");
+};
 
 export const handleStringChange =
   (handler: (value: string) => void) => (event: FormEvent<HTMLElement>) =>

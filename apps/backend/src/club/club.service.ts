@@ -2,9 +2,9 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import {
+  _KnockoutStageTableRowResult,
   Balance,
   ClubCV,
-  KnockoutStageTableRowResult,
   OldClubNameDto,
   StageType,
 } from "@fbs2.0/types";
@@ -151,7 +151,7 @@ export class ClubService {
             ({ stage }) => stage.stageType === StageType.FINAL
           );
 
-          const finalResults = finalMatches.map<KnockoutStageTableRowResult>(
+          const finalResults = finalMatches.map<_KnockoutStageTableRowResult>(
             ({ hostScore, guestScore, hostPen, guestPen, answer }) => ({
               hostScore: answer ? guestScore : hostScore,
               guestScore: answer ? hostScore : guestScore,

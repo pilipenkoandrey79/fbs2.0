@@ -10,6 +10,7 @@ import styles from "./styles.module.scss";
 interface Props {
   club: Partial<ClubInterface>;
   showCountry?: boolean;
+  showCity?: boolean;
   expelled?: boolean;
   dimmed?: boolean;
   className?: string;
@@ -18,11 +19,13 @@ interface Props {
 const Club: FC<Props> = ({
   club,
   showCountry = true,
+  showCity = true,
   expelled,
   dimmed,
   className,
 }) => {
-  const city = (club?.name === club?.city?.name ? "" : club?.city?.name) || "";
+  const city =
+    showCity && (club?.name === club?.city?.name ? "" : club?.city?.name);
 
   return (
     <Typography.Text

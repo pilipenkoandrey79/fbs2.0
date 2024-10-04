@@ -1,0 +1,58 @@
+@import "../../../../../../style/mixins.scss";
+@import "../../../../../../style/colors.module.scss";
+
+.matches {
+  :global {
+    .ant-table-tbody th.ant-table-cell {
+      white-space: nowrap;
+    }
+  }
+
+  table tbody td.results-cell {
+    padding: 0 !important;
+
+    .results {
+      @include flex(column, flex-start, stretch);
+
+      .match {
+        @include flex(row, space-between, stretch);
+
+        &:not(:last-child) {
+          border-bottom: 1px solid $border;
+        }
+
+        .result {
+          @include flex(column, flex-start, stretch);
+          flex: 1;
+
+          &:not(:last-child) {
+            border-right: 1px solid $border;
+          }
+
+          .date {
+            font-size: 10px;
+            padding: 1px;
+          }
+
+          .score {
+            text-align: center;
+          }
+
+          &.coin {
+            .score {
+              font-weight: bold;
+            }
+          }
+        }
+
+        &.only-match {
+          .result {
+            border: none;
+          }
+        }
+      }
+    }
+  }
+
+  @include highlighted;
+}

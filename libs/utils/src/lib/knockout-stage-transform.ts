@@ -12,7 +12,7 @@ import {
   getWinner,
   isNotEmpty,
   prepareClub,
-} from "@fbs2.0/utils";
+} from "./common";
 
 export const getKnockoutStageMatchesData = (
   tournamentPart: TournamentPart
@@ -53,26 +53,15 @@ export const getKnockoutStageMatchesData = (
           acc[rowIndex].results.push({
             hostScore: guestScore,
             guestScore: hostScore,
-            hostPen: afterMatchPenalties ? guestPen : undefined,
-            guestPen: afterMatchPenalties ? hostPen : undefined,
+            hostPen: guestPen,
+            guestPen: hostPen,
             answer: true,
             unplayed: unplayed ?? false,
             tech: tech ?? false,
             date: date ?? "",
-            isReplay: false,
+            replayDate:
+              !afterMatchPenalties && replayDate ? replayDate : undefined,
           });
-
-          if (isNotEmpty(replayDate) && !afterMatchPenalties) {
-            acc[rowIndex].results.push({
-              hostScore: guestPen,
-              guestScore: hostPen,
-              answer: true,
-              unplayed: unplayed ?? false,
-              tech: tech ?? false,
-              date: replayDate ?? "",
-              isReplay: true,
-            });
-          }
 
           return acc;
         } else {

@@ -11,7 +11,7 @@ import { Fallback } from "../Fallback";
 import { routes } from "../../routes";
 import { queryClient } from "../../react-query-hooks/client";
 import { theme } from "../../style/theme";
-import { Language, locales } from "../../i18n/locales";
+import { Language, antLocales, dayJsLocales } from "../../i18n/locales";
 import { UserContext } from "../../context/userContext";
 import { useUserContext } from "../../context/useUserContext";
 
@@ -24,14 +24,14 @@ const App: FC = () => {
 
   useEffect(() => {
     setLang(i18n.resolvedLanguage as Language);
-    dayjs.locale(i18n.resolvedLanguage);
+    dayjs.locale(dayJsLocales[i18n.resolvedLanguage as Language]);
   }, [i18n.resolvedLanguage, setLang]);
 
   return (
     <Suspense fallback={<Fallback page />}>
       <QueryClientProvider client={queryClient}>
         <HelmetProvider>
-          <ConfigProvider theme={theme} locale={locales[lang]}>
+          <ConfigProvider theme={theme} locale={antLocales[lang]}>
             <UserContext.Provider value={currentUser}>
               <RouterProvider router={router} fallbackElement={<Fallback />} />
             </UserContext.Provider>

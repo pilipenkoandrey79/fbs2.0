@@ -7,17 +7,17 @@ import {
   GroupRow,
   SeasonParticipants,
   SeasonParticipantsClubParticipation,
-  StageTableData,
+  _StageTableData,
   StageType,
   TORNAMENT_PARTICIPATION_ORDERING,
   Tournament,
 } from "@fbs2.0/types";
 import {
+  _transformTournamentPart,
   isGroupFinished,
   isNotEmpty,
   prepareClub,
   prepareMatchesList,
-  transformTournamentPart,
 } from "@fbs2.0/utils";
 
 import { Participant } from "./entities/participant.entity";
@@ -277,7 +277,7 @@ export class ParticipantService {
           }
         );
       })
-      .map(transformTournamentPart)
+      .map(_transformTournamentPart)
       .find(({ stage }) => stage.stageType === fromStageType);
 
     const clubsToBeAdded: Club[] = [];
@@ -291,7 +291,7 @@ export class ParticipantService {
         }
       });
     } else {
-      (donorStageData.matches as StageTableData).rows.forEach(
+      (donorStageData.matches as _StageTableData).rows.forEach(
         ({ host, guest }) => {
           if (host.isWinner === false) {
             clubsToBeAdded.push(host.club);

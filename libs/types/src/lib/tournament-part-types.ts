@@ -13,7 +13,7 @@ export interface KnockoutStageTableRowResult extends BaseMatchResult {
   hostPen?: number | null;
   guestPen?: number | null;
   answer: boolean;
-  isReplay?: boolean;
+  replayDate?: string;
 }
 
 export interface GroupStageTableRowResult extends BaseMatchResult {

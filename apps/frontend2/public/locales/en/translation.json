@@ -112,7 +112,11 @@
         "winners": "Winners of the previous stage",
         "skippers": "Skipped the previous stage"
       },
-      "results": "Results"
+      "results": {
+        "title": "Results",
+        "pen": "pen. {{h}}:{{g}}",
+        "coin": "{{club}} is winner by coin tossing"
+      }
     }
   }
 }

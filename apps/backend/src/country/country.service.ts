@@ -2,10 +2,10 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, Repository } from "typeorm";
 import {
+  _KnockoutStageTableRowResult,
   ClubWithWinner,
   CountryCV,
   CountryCVStatus,
-  KnockoutStageTableRowResult,
   StageType,
   TournamentSeason,
 } from "@fbs2.0/types";
@@ -142,7 +142,7 @@ export class CountryService {
         return acc;
       }, [])
       .map<CountryCV>((finalData) => {
-        const finalResults = finalData.m.map<KnockoutStageTableRowResult>(
+        const finalResults = finalData.m.map<_KnockoutStageTableRowResult>(
           ({ hostScore, guestScore, hostPen, guestPen, answer }) => ({
             hostScore: answer ? guestScore : hostScore,
             guestScore: answer ? hostScore : guestScore,

@@ -9,7 +9,12 @@ export enum Language {
   ua = "ua",
 }
 
-export const locales = {
+export const antLocales = {
   [Language.en]: enUS,
   [Language.ua]: ukUA,
+};
+
+export const dayJsLocales = {
+  [Language.en]: "en",
+  [Language.ua]: "uk",
 };

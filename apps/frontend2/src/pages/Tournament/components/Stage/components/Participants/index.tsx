@@ -11,6 +11,7 @@ import { prepareStageParticipants } from "./utils";
 import styles from "./styles.module.scss";
 
 interface Props {
+  visible: boolean;
   tournamentParts: {
     current: TournamentDataRow;
     previous: TournamentDataRow | undefined;
@@ -18,7 +19,11 @@ interface Props {
   highlightedClubId: number | null;
 }
 
-const Participants: FC<Props> = ({ tournamentParts, highlightedClubId }) => {
+const Participants: FC<Props> = ({
+  tournamentParts,
+  highlightedClubId,
+  visible,
+}) => {
   const { t } = useTranslation();
   const { season, tournament } = useParams();
   const participants = useGetParticipants(season, tournament);
@@ -34,7 +39,10 @@ const Participants: FC<Props> = ({ tournamentParts, highlightedClubId }) => {
   );
 
   return (
-    <div className={styles.participants}>
+    <div
+      className={styles.participants}
+      style={{ display: visible ? "block" : "none" }}
+    >
       <h3>{`${t("tournament.stages.participants.teams")}: ${
         (seeded || []).length +
         (previousStageWinners || []).length +

@@ -11,6 +11,7 @@ const theme: ThemeConfig = {
     borderRadius: 3,
   },
   components: {
+    Table: { borderColor: colors.border },
     Layout: {
       headerColor: colors.headerColor,
       headerPadding: "0 10px",

@@ -74,7 +74,9 @@ const Page: FC<Props> = (props) => {
           <LoginButton setErrors={setErrors} />
         </div>
       </Layout.Header>
-      <Layout.Content>
+      <Layout.Content
+        className={classNames({ [styles.fallback]: props.isLoading })}
+      >
         {contextHolder}
         {props.isLoading ? <Fallback /> : props.children}
       </Layout.Content>

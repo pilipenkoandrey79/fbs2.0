@@ -1,7 +1,12 @@
-import { FC, useMemo } from "react";
+import { FC, useMemo, useTransition } from "react";
 import { useTranslation } from "react-i18next";
 import { generatePath, Link } from "react-router-dom";
-import { LeftOutlined, RightOutlined, TeamOutlined } from "@ant-design/icons";
+import {
+  LeftOutlined,
+  LoadingOutlined,
+  RightOutlined,
+  TeamOutlined,
+} from "@ant-design/icons";
 import classNames from "classnames";
 import { Button, Typography } from "antd";
 
@@ -30,6 +35,7 @@ const Header: FC<Props> = ({
   setHighlightedClubId,
 }) => {
   const { t } = useTranslation();
+  const [isPending, startTransition] = useTransition();
   const { data: availableTournaments } = useGetTournamentSeasons(true);
 
   const { previousLink, nextLink } = useMemo(() => {
@@ -87,9 +93,13 @@ const Header: FC<Props> = ({
           </Link>
         </div>
         <Button
-          icon={<TeamOutlined />}
+          icon={isPending ? <LoadingOutlined /> : <TeamOutlined />}
           title={t("tournament.participants.title")}
-          onClick={onParticipants}
+          onClick={() =>
+            startTransition(() => {
+              onParticipants();
+            })
+          }
         >
           {t("tournament.participants.title")}
         </Button>
