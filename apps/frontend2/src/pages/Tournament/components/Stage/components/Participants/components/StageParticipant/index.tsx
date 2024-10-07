@@ -1,7 +1,7 @@
 import { Participant, Stage } from "@fbs2.0/types";
 import { FC } from "react";
 
-import { applyStageSubstitutions } from "../../utils";
+import { applyStageSubstitutions } from "../../../../utils";
 import { Club } from "../../../../../../../../components/Club";
 
 interface Props {

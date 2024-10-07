@@ -11,6 +11,14 @@
 
 .buttons {
   @include flex(row, space-between, center);
+
+  .submission {
+    @include flex(row, flex-start, center);
+
+    &-button {
+      margin-right: 4px;
+    }
+  }
 }
 
 @media (min-width: $screen-sm) {

@@ -5,6 +5,7 @@
     "total": "{{from, number}} - {{to, number}} з {{total, number}}",
     "remove": "Видалення",
     "close": "Закрити",
+    "add_more": "Додати ще",
     "placeholder": {
       "country": "Оберіть країну",
       "club": "Оберіть клуб",
@@ -116,7 +117,8 @@
       "results": {
         "title": "Результати",
         "pen": "пен. {{h}}:{{g}}",
-        "coin": "{{club}} - переможець за жеребом"
+        "coin": "{{club}} - переможець за жеребом",
+        "match_added": "Додано матч до {{tournament}} сезону {{season}}"
       }
     }
   }

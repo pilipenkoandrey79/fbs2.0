@@ -4,6 +4,7 @@
     "total": "{{from, number}} - {{to, number}} of {{total, number}} items",
     "remove": "Remove",
     "close": "Close",
+    "add_more": "Add more",
     "placeholder": {
       "country": "Select country",
       "club": "Select club",
@@ -115,7 +116,8 @@
       "results": {
         "title": "Results",
         "pen": "pen. {{h}}:{{g}}",
-        "coin": "{{club}} is winner by coin tossing"
+        "coin": "{{club}} is winner by coin tossing",
+        "match_added": "Added match to {{season}} {{tournament}}"
       }
     }
   }

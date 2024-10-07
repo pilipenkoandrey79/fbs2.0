@@ -7,9 +7,7 @@ import { StageTypeSelector } from "../../../../../../../../components/selectors/
 export interface EditableCellProps extends HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: keyof Participant;
-  title: string;
   record: Participant | undefined;
-  index: number;
 }
 
 const EditableCell: FC<PropsWithChildren<EditableCellProps>> = ({

@@ -1,5 +1,5 @@
 import { ParticipantDto } from "@fbs2.0/types";
-import { Button, Form, message } from "antd";
+import { Button, Checkbox, Form, message } from "antd";
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -25,12 +25,17 @@ const AddForm: FC<Props> = ({ close, selectedCountryId }) => {
 
   const [countryId, setCountryId] = useState<number | undefined>();
   const [isAddClubOpen, setIsAddClubOpen] = useState(false);
+  const [addMore, setAddMore] = useState(true);
 
   const submit = async (values: ParticipantDto) => {
     try {
       await createParticipant.mutateAsync(values);
 
-      close();
+      if (addMore) {
+        form.resetFields();
+      } else {
+        close();
+      }
 
       messageApi.open({
         type: "success",
@@ -74,11 +79,20 @@ const AddForm: FC<Props> = ({ close, selectedCountryId }) => {
         <div className={styles.buttons}>
           <span>
             {!isAddClubOpen && (
-              <SubmitButton
-                form={form}
-                size="small"
-                loading={createParticipant.isPending}
-              />
+              <div className={styles.submission}>
+                <SubmitButton
+                  form={form}
+                  size="small"
+                  loading={createParticipant.isPending}
+                  className={styles["submission-button"]}
+                />
+                <Checkbox
+                  checked={addMore}
+                  onChange={() => setAddMore(!addMore)}
+                >
+                  {t("common.add_more")}
+                </Checkbox>
+              </div>
             )}
           </span>
           <Button

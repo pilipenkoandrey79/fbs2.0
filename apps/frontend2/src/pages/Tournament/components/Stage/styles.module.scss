@@ -14,4 +14,12 @@
       height: unset;
     }
   }
+
+  @media (min-width: $screen-lg) {
+    justify-content: flex-start;
+
+    & > div:first-of-type {
+      max-width: 500px;
+    }
+  }
 }
