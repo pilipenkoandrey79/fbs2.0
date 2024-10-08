@@ -7,13 +7,13 @@ import {
   UKRAINE,
   USSR,
 } from "@fbs2.0/types";
-import { Button, Form, message, Table, TableProps } from "antd";
+import { Button, Form, message, Popconfirm, Table, TableProps } from "antd";
 import { FC, useContext, useEffect, useState } from "react";
 import classNames from "classnames";
 import { isNotEmpty } from "@fbs2.0/utils";
 import { useTranslation } from "react-i18next";
 import { useMediaQuery } from "react-responsive";
-import { PlusOutlined } from "@ant-design/icons";
+import { CloseOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { useParams } from "react-router";
 
 import { UserContext } from "../../../../../../context/userContext";
@@ -21,6 +21,7 @@ import { Club } from "../../../../../../components/Club";
 import { ResultsCell } from "./components/ResultsCell";
 import { EditableCell, EditableCellProps } from "./components/EditableCell";
 import { useCreateMatch } from "../../../../../../react-query-hooks/match/useCreateMatch";
+import { useDeleteMatch } from "../../../../../../react-query-hooks/match/useDeleteMatch";
 
 import styles from "./styles.module.scss";
 import variables from "../../../../../../style/variables.module.scss";
@@ -50,6 +51,7 @@ const Results: FC<Props> = ({
   const [form] = Form.useForm<MatchDto>();
   const { season, tournament } = useParams();
   const createMatch = useCreateMatch();
+  const deleteMatch = useDeleteMatch();
   const [messageApi, contextHolder] = message.useMessage();
   const [adding, setAdding] = useState(false);
   const [addMore, setAddMore] = useState(true);
@@ -87,7 +89,12 @@ const Results: FC<Props> = ({
       ({
         dataIndex: `${key}Id`,
         ...(record.id === templateRow.id
-          ? { editing: true, participants, form }
+          ? {
+              editing: true,
+              participants,
+              form,
+              loading: createMatch.isPending,
+            }
           : { editing: false }),
       } as EditableCellProps),
   });
@@ -115,23 +122,39 @@ const Results: FC<Props> = ({
         ({
           dataIndex: "results",
           ...(record.id === templateRow.id
-            ? { editing: true, form, addMore, setAddMore }
+            ? {
+                editing: true,
+                form,
+                addMore,
+                setAddMore,
+                loading: createMatch.isPending,
+              }
             : { editing: false }),
         } as EditableCellProps),
     },
     getTeamColumn("guest"),
+    {
+      key: "delete",
+      width: 30,
+      className: styles.delete,
+      render: (record: StageTableRow) => (
+        <Popconfirm
+          title={t("common.remove")}
+          description={t("tournament.stages.results.match.remove_confirm")}
+          onConfirm={() => removeMatch(record)}
+        >
+          <Button
+            type="link"
+            size="small"
+            icon={<DeleteOutlined />}
+            disabled={adding}
+          />
+        </Popconfirm>
+      ),
+    },
   ];
 
-  const handleAdd = () => {
-    setDataSource([
-      ...(tournamentPart.matches as StageTableRow[]),
-      templateRow,
-    ]);
-
-    setAdding(true);
-  };
-
-  const submit = async (values: MatchDto) => {
+  const addMatch = async (values: MatchDto) => {
     try {
       await createMatch.mutateAsync({
         ...values,
@@ -147,7 +170,29 @@ const Results: FC<Props> = ({
 
       messageApi.open({
         type: "success",
-        content: t("tournament.stages.results.match_added", {
+        content: t("tournament.stages.results.match.added", {
+          season,
+          tournament,
+        }),
+      });
+    } catch (error) {
+      messageApi.open({
+        type: "error",
+        content: typeof error === "string" ? error : (error as Error).message,
+      });
+    }
+  };
+
+  const removeMatch = async (match: StageTableRow) => {
+    try {
+      await deleteMatch.mutateAsync({
+        matchId: match.id,
+        answerMatchId: match.answerMatchId,
+      });
+
+      messageApi.open({
+        type: "success",
+        content: t("tournament.stages.results.match.removed", {
           season,
           tournament,
         }),
@@ -181,7 +226,7 @@ const Results: FC<Props> = ({
     >
       {contextHolder}
       <h3>{`${t("tournament.stages.results.title")}`}</h3>
-      <Form form={form} onFinish={submit}>
+      <Form form={form} onFinish={addMatch}>
         <Table<StageTableRow>
           components={{ body: { cell: EditableCell } }}
           columns={columns}
@@ -193,8 +238,20 @@ const Results: FC<Props> = ({
           bordered
         />
       </Form>
-      {user?.isEditor && participants.length > 0 && !adding && (
-        <Button icon={<PlusOutlined />} type="primary" onClick={handleAdd} />
+      {user?.isEditor && participants.length > 0 && (
+        <Button
+          icon={adding ? <CloseOutlined /> : <PlusOutlined />}
+          type="primary"
+          size="small"
+          onClick={() => {
+            if (adding) {
+              form.resetFields();
+            }
+
+            setAdding(!adding);
+          }}
+          disabled={createMatch.isPending}
+        />
       )}
     </div>
   );

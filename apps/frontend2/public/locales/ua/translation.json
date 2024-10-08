@@ -118,7 +118,11 @@
         "title": "Результати",
         "pen": "пен. {{h}}:{{g}}",
         "coin": "{{club}} - переможець за жеребом",
-        "match_added": "Додано матч до {{tournament}} сезону {{season}}"
+        "match": {
+          "added": "Додано матч до {{tournament}} сезону {{season}}",
+          "remove_confirm": "Видалити матч?",
+          "removed": "Видалено матч з {{tournament}} сезону {{season}}"
+        }
       }
     }
   }

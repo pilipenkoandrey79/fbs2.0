@@ -12,7 +12,8 @@
     display: none;
   }
 
-  table tbody td.results-cell {
+  table tbody td.results-cell,
+  table tbody td.delete {
     padding: 0 !important;
 
     .results {

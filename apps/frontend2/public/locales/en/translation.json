@@ -117,7 +117,11 @@
         "title": "Results",
         "pen": "pen. {{h}}:{{g}}",
         "coin": "{{club}} is winner by coin tossing",
-        "match_added": "Added match to {{season}} {{tournament}}"
+        "match": {
+          "added": "Added match to {{season}} {{tournament}}",
+          "remove_confirm": "Remove the match?",
+          "removed": "Removed match from {{season}} {{tournament}}"
+        }
       }
     }
   }

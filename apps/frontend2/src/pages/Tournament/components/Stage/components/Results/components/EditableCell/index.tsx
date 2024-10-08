@@ -1,4 +1,4 @@
-import { FC, HTMLAttributes, PropsWithChildren } from "react";
+import { FC, HTMLAttributes, PropsWithChildren, useEffect } from "react";
 import { Checkbox, Form, FormInstance, Select } from "antd";
 import { useTranslation } from "react-i18next";
 import { MatchDto, Participant } from "@fbs2.0/types";
@@ -14,6 +14,7 @@ export interface EditableCellProps extends HTMLAttributes<HTMLElement> {
   participants?: Participant[];
   form?: FormInstance<MatchDto>;
   addMore?: boolean;
+  loading?: boolean;
   setAddMore?: (addMore: boolean) => void;
 }
 
@@ -24,6 +25,7 @@ const EditableCell: FC<PropsWithChildren<EditableCellProps>> = ({
   participants,
   form,
   addMore,
+  loading,
   setAddMore,
   ...restProps
 }) => {
@@ -42,7 +44,7 @@ const EditableCell: FC<PropsWithChildren<EditableCellProps>> = ({
   const node =
     dataIndex === "results" ? (
       <div className={styles.submission}>
-        <SubmitButton form={form} size="small" />
+        <SubmitButton form={form} size="small" loading={loading} />
         <Checkbox checked={addMore} onChange={() => setAddMore?.(!addMore)}>
           {t("common.add_more")}
         </Checkbox>
@@ -72,6 +74,12 @@ const EditableCell: FC<PropsWithChildren<EditableCellProps>> = ({
         </Select>
       </Form.Item>
     );
+
+  useEffect(() => {
+    if (dataIndex !== "results" && options?.length === 1) {
+      form?.setFieldValue(dataIndex, options[0].id);
+    }
+  }, [dataIndex, form, options]);
 
   return <td {...restProps}>{editing ? node : children}</td>;
 };
