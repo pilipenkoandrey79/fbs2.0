@@ -1,28 +1,24 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ApiEntities, DeleteMatchDto } from "@fbs2.0/types";
+import { ApiEntities, Match, MatchResultDto } from "@fbs2.0/types";
 import { AxiosError } from "axios";
 import { useParams } from "react-router";
 
 import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
 
-export const useDeleteMatch = () => {
+export const useUpdateMatchResult = () => {
   const { season, tournament } = useParams();
   const queryClient = useQueryClient();
 
   return useMutation<
-    unknown,
+    Match,
     AxiosError,
-    {
-      matchId: number;
-      answerMatchId: number | undefined;
-      clearResults?: boolean;
-    }
+    { id: number; payload: MatchResultDto }
   >({
-    mutationFn: ({ matchId, answerMatchId, clearResults }) =>
-      ApiClient.getInstance().delete<unknown, DeleteMatchDto>(
-        `${ApiEntities.Match}/${matchId}${clearResults ? "/results" : ""}`,
-        { answerMatchId }
+    mutationFn: ({ id, payload }) =>
+      ApiClient.getInstance().put<Match, MatchResultDto>(
+        `${ApiEntities.Match}/${id}`,
+        payload
       ),
     onSettled: () => {
       queryClient.invalidateQueries({

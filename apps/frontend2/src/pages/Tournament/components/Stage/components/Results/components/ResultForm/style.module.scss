@@ -1,0 +1,70 @@
+@import "../../../../../../../../style/variables.module.scss";
+@import "../../../../../../../../style/mixins.scss";
+
+.modal {
+  .content {
+    :global {
+      .ant-form-item-row {
+        justify-content: space-between;
+
+        & > div {
+          flex: unset !important;
+        }
+      }
+    }
+
+    .answer div {
+      justify-content: flex-end;
+    }
+
+    .panels {
+      @include flex(row, space-between, flex-start);
+
+      .panel {
+        width: 50%;
+        @include flex(column, flex-start, center);
+        padding: 0 8px;
+
+        &:first-of-type {
+          padding-right: 4px;
+        }
+
+        &:last-of-type {
+          padding-left: 4px;
+        }
+
+        .club {
+          margin-bottom: 8px;
+        }
+
+        :global {
+          .ant-form-item-row {
+            justify-content: flex-start;
+
+            .ant-form-item-label {
+              max-width: calc(100% - 20px);
+              padding: 0;
+            }
+          }
+        }
+      }
+    }
+
+    .additional {
+      .title {
+        @include flex(row, space-between, center);
+        margin-bottom: 8px;
+      }
+    }
+  }
+
+  :global {
+    .ant-modal-content {
+      padding: 10px;
+    }
+
+    .ant-segmented-item {
+      max-width: 140px;
+    }
+  }
+}

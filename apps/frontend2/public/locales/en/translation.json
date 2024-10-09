@@ -5,6 +5,8 @@
     "remove": "Remove",
     "close": "Close",
     "add_more": "Add more",
+    "save": "Save",
+    "delete": "Delete",
     "placeholder": {
       "country": "Select country",
       "club": "Select club",
@@ -120,7 +122,22 @@
         "match": {
           "added": "Added match to {{season}} {{tournament}}",
           "remove_confirm": "Remove the match?",
-          "removed": "Removed match from {{season}} {{tournament}}"
+          "removed": "Removed match from {{season}} {{tournament}}",
+          "clear": "Clear results",
+          "updated": "Match is updated"
+        },
+        "form": {
+          "title": {
+            "create": "Enter match result",
+            "update": "Update match result"
+          },
+          "answer": "Match-answer",
+          "unplayed": "Was not played",
+          "tech": "Technical result",
+          "force_winner": "The winner is",
+          "date": "Date",
+          "penalty": "After-match penalties",
+          "replay": "Additional match"
         }
       }
     }

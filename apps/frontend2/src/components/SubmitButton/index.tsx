@@ -37,7 +37,9 @@ const SubmitButton: FC<Props> = ({ form, label, loading, size, className }) => {
         role="button"
         icon={<SaveOutlined />}
         title={label}
-      />
+      >
+        {label}
+      </Button>
     </Form.Item>
   );
 };

@@ -4,7 +4,7 @@
 
 .layout {
   @include flex(column, flex-start, center);
-  min-width: 400px;
+  min-width: $minimal;
 
   header,
   main,

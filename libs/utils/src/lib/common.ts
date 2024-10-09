@@ -22,12 +22,13 @@ import {
   Winner,
   Years,
   DEFAULT_SWISS_LENGTH,
+  DATE_FORMAT,
 } from "@fbs2.0/types";
 import { FormEvent } from "react";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 
-export const dateRenderer = (time: string | number | null, format?: string) => {
+export const dateRenderer = (time: string | number | null) => {
   if (!time) {
     return "";
   }
@@ -36,6 +37,16 @@ export const dateRenderer = (time: string | number | null, format?: string) => {
 
   return dayjs(time).format("ll");
 };
+
+export const formatDatePickerValue = (
+  value: string | number | undefined,
+  format = DATE_FORMAT
+) => (!!value && dayjs(value).isValid() ? dayjs(value, format) : null);
+
+export const normalizeDatePickerValue = (
+  value: dayjs.Dayjs | null,
+  format = DATE_FORMAT
+) => value && `${dayjs(value).format(format)}`;
 
 export const handleStringChange =
   (handler: (value: string) => void) => (event: FormEvent<HTMLElement>) =>

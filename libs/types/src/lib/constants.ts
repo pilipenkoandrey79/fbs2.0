@@ -1,5 +1,7 @@
 import { StageSchemeType, StageType, Tournament } from "./types";
 
+export const DATE_FORMAT = "YYYY-MM-DD";
+
 export const AUTH_REDIRECT_PATH = "auth-redirect";
 export const HIGHLIGHTED_CLUB_ID_SEARCH_PARAM = "highlight-club";
 

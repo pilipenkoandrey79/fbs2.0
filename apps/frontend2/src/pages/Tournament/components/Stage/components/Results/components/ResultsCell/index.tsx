@@ -16,6 +16,8 @@ interface Props {
   host: ClubWithWinner;
   guest: ClubWithWinner;
   adding: boolean;
+
+  onEdit: (date: string) => void;
 }
 
 const ResultsCell: FC<Props> = ({
@@ -24,6 +26,7 @@ const ResultsCell: FC<Props> = ({
   host,
   guest,
   adding,
+  onEdit,
 }) => {
   const { user } = useContext(UserContext);
   const { t } = useTranslation();
@@ -81,6 +84,7 @@ const ResultsCell: FC<Props> = ({
                   type="link"
                   icon={<EditFilled />}
                   className={styles["edit-button"]}
+                  onClick={() => onEdit(date)}
                 />
               )}
             </div>
@@ -91,6 +95,7 @@ const ResultsCell: FC<Props> = ({
                   type="link"
                   icon={<PlusOutlined />}
                   className={styles["edit-button"]}
+                  onClick={() => onEdit("")}
                 />
               )}
             </div>

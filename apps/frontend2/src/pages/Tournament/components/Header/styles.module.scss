@@ -56,7 +56,7 @@
     }
   }
 
-  @media (min-width: $screen-lg) {
+  @media (min-width: $screen-xl) {
     @include flex(row, flex-start, stretch);
 
     .panel {
@@ -69,6 +69,13 @@
 
     .highlight {
       align-self: unset;
+      width: 300px;
+    }
+  }
+
+  @media (min-width: $screen-xxl) {
+    .highlight {
+      width: 400px;
     }
   }
 }

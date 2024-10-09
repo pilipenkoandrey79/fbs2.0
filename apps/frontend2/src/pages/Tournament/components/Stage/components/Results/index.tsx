@@ -7,21 +7,22 @@ import {
   UKRAINE,
   USSR,
 } from "@fbs2.0/types";
-import { Button, Form, message, Popconfirm, Table, TableProps } from "antd";
+import { Button, Form, message, Table, TableProps } from "antd";
 import { FC, useContext, useEffect, useState } from "react";
 import classNames from "classnames";
 import { isNotEmpty } from "@fbs2.0/utils";
 import { useTranslation } from "react-i18next";
 import { useMediaQuery } from "react-responsive";
-import { CloseOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import { CloseOutlined, PlusOutlined } from "@ant-design/icons";
 import { useParams } from "react-router";
 
 import { UserContext } from "../../../../../../context/userContext";
 import { Club } from "../../../../../../components/Club";
 import { ResultsCell } from "./components/ResultsCell";
+import { Result, ResultForm } from "./components/ResultForm";
+import { DeleteCell } from "./components/DeleteCell";
 import { EditableCell, EditableCellProps } from "./components/EditableCell";
 import { useCreateMatch } from "../../../../../../react-query-hooks/match/useCreateMatch";
-import { useDeleteMatch } from "../../../../../../react-query-hooks/match/useDeleteMatch";
 
 import styles from "./styles.module.scss";
 import variables from "../../../../../../style/variables.module.scss";
@@ -51,11 +52,11 @@ const Results: FC<Props> = ({
   const [form] = Form.useForm<MatchDto>();
   const { season, tournament } = useParams();
   const createMatch = useCreateMatch();
-  const deleteMatch = useDeleteMatch();
   const [messageApi, contextHolder] = message.useMessage();
   const [adding, setAdding] = useState(false);
   const [addMore, setAddMore] = useState(true);
   const [dataSource, setDataSource] = useState<StageTableRow[]>([]);
+  const [resultEditing, setResultEditing] = useState<Result | null>(null);
 
   const isLgScreen = useMediaQuery({
     query: `(min-width: ${variables.screenLg})`,
@@ -106,16 +107,16 @@ const Results: FC<Props> = ({
       dataIndex: "results",
       width: 100,
       className: styles["results-cell"],
-      render: (
-        results: StageTableRow["results"],
-        { forceWinnerId, host, guest }
-      ) => (
+      render: (results: StageTableRow["results"], record: StageTableRow) => (
         <ResultsCell
           results={results}
-          forceWinnerId={forceWinnerId}
-          host={host}
-          guest={guest}
+          forceWinnerId={record.forceWinnerId}
+          host={record.host}
+          guest={record.guest}
           adding={adding}
+          onEdit={(date: string) => {
+            setResultEditing({ match: record, date });
+          }}
         />
       ),
       onCell: (record: StageTableRow) =>
@@ -133,25 +134,22 @@ const Results: FC<Props> = ({
         } as EditableCellProps),
     },
     getTeamColumn("guest"),
-    {
-      key: "delete",
-      width: 30,
-      className: styles.delete,
-      render: (record: StageTableRow) => (
-        <Popconfirm
-          title={t("common.remove")}
-          description={t("tournament.stages.results.match.remove_confirm")}
-          onConfirm={() => removeMatch(record)}
-        >
-          <Button
-            type="link"
-            size="small"
-            icon={<DeleteOutlined />}
-            disabled={adding}
-          />
-        </Popconfirm>
-      ),
-    },
+    ...(user?.isEditor
+      ? [
+          {
+            key: "delete",
+            width: isLgScreen ? 60 : 26,
+            className: styles.delete,
+            render: (record: StageTableRow) => (
+              <DeleteCell
+                record={record}
+                messageApi={messageApi}
+                adding={adding}
+              />
+            ),
+          },
+        ]
+      : []),
   ];
 
   const addMatch = async (values: MatchDto) => {
@@ -171,28 +169,6 @@ const Results: FC<Props> = ({
       messageApi.open({
         type: "success",
         content: t("tournament.stages.results.match.added", {
-          season,
-          tournament,
-        }),
-      });
-    } catch (error) {
-      messageApi.open({
-        type: "error",
-        content: typeof error === "string" ? error : (error as Error).message,
-      });
-    }
-  };
-
-  const removeMatch = async (match: StageTableRow) => {
-    try {
-      await deleteMatch.mutateAsync({
-        matchId: match.id,
-        answerMatchId: match.answerMatchId,
-      });
-
-      messageApi.open({
-        type: "success",
-        content: t("tournament.stages.results.match.removed", {
           season,
           tournament,
         }),
@@ -251,6 +227,14 @@ const Results: FC<Props> = ({
             setAdding(!adding);
           }}
           disabled={createMatch.isPending}
+        />
+      )}
+      {!!resultEditing && (
+        <ResultForm
+          result={resultEditing}
+          stageScheme={tournamentPart.stage.stageScheme}
+          onClose={() => setResultEditing(null)}
+          messageApi={messageApi}
         />
       )}
     </div>
