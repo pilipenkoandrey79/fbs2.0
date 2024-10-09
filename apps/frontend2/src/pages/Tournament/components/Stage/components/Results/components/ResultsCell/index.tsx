@@ -34,7 +34,15 @@ const ResultsCell: FC<Props> = ({
   return (
     <div className={styles.results}>
       {results.map(
-        ({ date, hostScore, guestScore, replayDate, hostPen, guestPen }) =>
+        ({
+          date,
+          hostScore,
+          guestScore,
+          replayDate,
+          hostPen,
+          guestPen,
+          tech,
+        }) =>
           date ? (
             <div
               key={date}
@@ -46,7 +54,9 @@ const ResultsCell: FC<Props> = ({
                 <Typography.Text className={styles.date} type="secondary">
                   {dateRenderer(date)}
                 </Typography.Text>
-                <span className={styles.score}>{`${hostScore}:${guestScore} ${
+                <span className={styles.score}>{`${hostScore}:${guestScore}${
+                  tech ? "*" : ""
+                } ${
                   !replayDate && isNotEmpty(hostPen) && isNotEmpty(guestPen)
                     ? t("tournament.stages.results.pen", {
                         h: hostPen,

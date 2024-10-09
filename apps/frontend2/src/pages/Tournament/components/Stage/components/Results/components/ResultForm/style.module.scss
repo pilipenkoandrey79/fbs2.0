@@ -37,6 +37,10 @@
           margin-bottom: 8px;
         }
 
+        .score {
+          font-size: 20px;
+        }
+
         :global {
           .ant-form-item-row {
             justify-content: flex-start;
@@ -55,6 +59,10 @@
         @include flex(row, space-between, center);
         margin-bottom: 8px;
       }
+    }
+
+    .force-winner > div {
+      @include flex(column, flex-start, center);
     }
   }
 

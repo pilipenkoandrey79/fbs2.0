@@ -5,7 +5,15 @@ import {
   StageScheme,
   StageTableRow,
 } from "@fbs2.0/types";
-import { Checkbox, Divider, Form, InputNumber, Modal, Typography } from "antd";
+import {
+  Checkbox,
+  Divider,
+  Form,
+  InputNumber,
+  Modal,
+  Segmented,
+  Typography,
+} from "antd";
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { isNotEmpty } from "@fbs2.0/utils";
@@ -13,7 +21,6 @@ import { MessageInstance } from "antd/es/message/interface";
 
 import { SubmitButton } from "../../../../../../../../components/SubmitButton";
 import { Club } from "../../../../../../../../components/Club";
-import { ForceWinnerInput } from "./components/ForceWinnerInput";
 import { DateInput } from "../../../../../../../../components/selectors/DateInput";
 import { useUpdateMatchResult } from "../../../../../../../../react-query-hooks/match/useUpdateMatchResult";
 
@@ -38,6 +45,7 @@ const ResultForm: FC<Props> = ({
   const [form] = Form.useForm<MatchResultDto>();
   const values = Form.useWatch([], form);
   const [showAdditionalSection, setShowAdditionalSection] = useState(false);
+  const [showFoceWinner, setShowFoceWinner] = useState(false);
 
   const initialValues = {
     ...(result.date
@@ -100,18 +108,38 @@ const ResultForm: FC<Props> = ({
   ]);
 
   useEffect(() => {
+    setShowFoceWinner(
+      !!values?.unplayed ||
+        (!stageScheme.pen &&
+          isNotEmpty(values?.hostPen) &&
+          isNotEmpty(values?.guestPen) &&
+          values?.hostPen === values?.guestPen)
+    );
+  }, [stageScheme.pen, values?.guestPen, values?.hostPen, values?.unplayed]);
+
+  useEffect(() => {
     form.setFieldsValue(
       values?.tech
-        ? { hostScore: 3, guestScore: 0, unplayed: false }
+        ? {
+            hostScore: 3,
+            guestScore: 0,
+            unplayed: false,
+            hostPen: undefined,
+            guestPen: undefined,
+          }
         : {
             hostScore: initialValues?.hostScore || 0,
             guestScore: initialValues?.guestScore || 0,
             unplayed: initialValues?.unplayed,
+            hostPen: initialValues?.hostPen ?? undefined,
+            guestPen: initialValues?.guestPen ?? undefined,
           }
     );
   }, [
     form,
+    initialValues?.guestPen,
     initialValues?.guestScore,
+    initialValues?.hostPen,
     initialValues?.hostScore,
     initialValues?.unplayed,
     values?.tech,
@@ -120,17 +148,27 @@ const ResultForm: FC<Props> = ({
   useEffect(() => {
     form.setFieldsValue(
       values?.unplayed
-        ? { hostScore: 0, guestScore: 0, tech: false }
+        ? {
+            hostScore: 0,
+            guestScore: 0,
+            tech: false,
+            hostPen: undefined,
+            guestPen: undefined,
+          }
         : {
             hostScore: initialValues?.hostScore || 0,
             guestScore: initialValues?.guestScore || 0,
             tech: initialValues?.tech,
             forceWinnerId: null,
+            hostPen: initialValues?.hostPen ?? undefined,
+            guestPen: initialValues?.guestPen ?? undefined,
           }
     );
   }, [
     form,
+    initialValues?.guestPen,
     initialValues?.guestScore,
+    initialValues?.hostPen,
     initialValues?.hostScore,
     initialValues?.tech,
     values?.unplayed,
@@ -159,6 +197,7 @@ const ResultForm: FC<Props> = ({
           initialValues={initialValues}
           disabled={updateMatch.isPending}
         >
+          {/** #1: date, answer */}
           <Form.Item
             name="answer"
             label={t("tournament.stages.results.form.answer")}
@@ -172,6 +211,8 @@ const ResultForm: FC<Props> = ({
             name="date"
             label={t("tournament.stages.results.form.date")}
           />
+
+          {/** #2: unplayed, tech */}
           <Divider type="horizontal" />
           <div className={styles.panels}>
             {["unplayed", "tech"].map((key) => (
@@ -199,86 +240,85 @@ const ResultForm: FC<Props> = ({
               </div>
             ))}
           </div>
-          <Divider type="horizontal" />
-          {values?.unplayed ? (
-            !values?.answer && (
-              <>
-                <ForceWinnerInput
-                  host={result.match.host}
-                  guest={result.match.guest}
-                />
-                <Divider type="horizontal" />
-              </>
-            )
-          ) : (
-            <>
-              <div className={styles.panels}>
-                {["host", "guest"].map((key) => (
-                  <div key={key} className={styles.panel}>
-                    <Club
-                      club={
-                        (
-                          result.match[
-                            key as keyof StageTableRow
-                          ] as ClubWithWinner
-                        ).club
-                      }
-                      className={styles.club}
-                    />
-                    <Form.Item name={`${key}Score`}>
-                      <InputNumber min={0} controls />
-                    </Form.Item>
-                  </div>
-                ))}
-              </div>
-              <Divider type="horizontal" />
-            </>
-          )}
 
-          {showAdditionalSection && (
-            <>
-              <div className={styles.additional}>
-                {values.unplayed ? (
-                  <ForceWinnerInput
-                    host={result.match.host}
-                    guest={result.match.guest}
-                  />
-                ) : (
-                  <>
-                    <div className={styles.title}>
-                      <span>
-                        {t(
-                          `tournament.stages.results.form.${
-                            stageScheme.pen ? "penalty" : "replay"
-                          }`
-                        )}
-                      </span>
-                      {!stageScheme.pen && <DateInput name="replayDate" />}
-                    </div>
-                    <div className={styles.panels}>
-                      {["hostPen", "guestPen"].map((key) => (
-                        <div key={key} className={styles.panel}>
-                          <Form.Item name={key}>
-                            <InputNumber min={0} controls />
-                          </Form.Item>
-                        </div>
-                      ))}
-                    </div>
-                    {!stageScheme.pen &&
-                      isNotEmpty(values.hostPen) &&
-                      isNotEmpty(values.guestPen) &&
-                      values.hostPen === values.guestPen && (
-                        <ForceWinnerInput
-                          host={result.match.host}
-                          guest={result.match.guest}
-                        />
-                      )}
-                  </>
-                )}
+          {/** #3: scores */}
+          <Divider type="horizontal" />
+          <div
+            className={styles.panels}
+            style={{ display: values?.unplayed ? "none" : "flex" }}
+          >
+            {["host", "guest"].map((key) => (
+              <div key={key} className={styles.panel}>
+                <Club
+                  club={
+                    (result.match[key as keyof StageTableRow] as ClubWithWinner)
+                      .club
+                  }
+                  className={styles.club}
+                />
+                <Form.Item name={`${key}Score`} className={styles.score}>
+                  <InputNumber min={0} controls />
+                </Form.Item>
               </div>
-              <Divider type="horizontal" />
-            </>
-          )}
+            ))}
+          </div>
+
+          {/** #4: penalties or replay */}
+          <div
+            className={styles.additional}
+            style={{
+              display:
+                showAdditionalSection && !values?.unplayed ? "block" : "none",
+            }}
+          >
+            <div className={styles.title}>
+              <span>
+                {t(
+                  `tournament.stages.results.form.${
+                    stageScheme.pen ? "penalty" : "replay"
+                  }`
+                )}
+              </span>
+              {!stageScheme.pen && <DateInput name="replayDate" />}
+            </div>
+            <div className={styles.panels}>
+              {["hostPen", "guestPen"].map((key) => (
+                <div key={key} className={styles.panel}>
+                  <Form.Item name={key}>
+                    <InputNumber min={0} controls />
+                  </Form.Item>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/** #5: forceWinner */}
+
+          <Form.Item
+            name="forceWinnerId"
+            label={t("tournament.stages.results.form.force_winner")}
+            className={styles["force-winner"]}
+            style={{ display: showFoceWinner ? "block" : "none" }}
+          >
+            <Segmented
+              options={[
+                {
+                  label: (
+                    <Club club={result.match.host.club} showCity={false} />
+                  ),
+                  value: result.match.host.id,
+                },
+                {
+                  label: (
+                    <Club club={result.match.guest.club} showCity={false} />
+                  ),
+                  value: result.match.guest.id,
+                },
+              ]}
+            />
+          </Form.Item>
+
+          <Divider type="horizontal" />
           <SubmitButton form={form} size="small" label={t("common.save")} />
         </Form>
       </div>
