@@ -1,10 +1,10 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
   Inject,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Post,
@@ -43,7 +43,7 @@ export class ParticipantController {
   @ApiBadRequestResponse()
   public getAllParticipants(@Param("season") season: string) {
     if (!isSeasonLabelValid(season, false)) {
-      throw new BadRequestException();
+      throw new NotFoundException();
     }
 
     return this.service.getAllSeasonParticipants(season);
@@ -59,7 +59,7 @@ export class ParticipantController {
     @Param("tournament") tournament: Tournament
   ) {
     if (!isSeasonLabelValid(season, false) || !isTournamentValid(tournament)) {
-      throw new BadRequestException();
+      throw new NotFoundException();
     }
 
     return this.service.getParticipants(season, tournament);
@@ -106,6 +106,10 @@ export class ParticipantController {
     @Param("season") season: string,
     @Param("tournament") tournament: Tournament
   ): Promise<number> {
+    if (!isSeasonLabelValid(season, false) || !isTournamentValid(tournament)) {
+      throw new NotFoundException();
+    }
+
     return this.service.addParticipantsFromAnotherTournament(
       season,
       tournament
@@ -122,6 +126,10 @@ export class ParticipantController {
     @Param("season") season: string,
     @Param("tournament") tournament: Tournament
   ) {
+    if (!isSeasonLabelValid(season, false) || !isTournamentValid(tournament)) {
+      throw new NotFoundException();
+    }
+
     return this.service.copyParticipantsFromPreviousSeason(season, tournament);
   }
 

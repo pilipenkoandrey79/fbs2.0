@@ -1,10 +1,10 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
   Inject,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Post,
@@ -53,7 +53,7 @@ export class MatchController {
   @ApiBadRequestResponse()
   public getAllSeasonMatches(@Param("season") season: string) {
     if (!isSeasonLabelValid(season, false)) {
-      throw new BadRequestException();
+      throw new NotFoundException();
     }
 
     return this.service.getAllSeasonMatches(season);
@@ -69,7 +69,7 @@ export class MatchController {
     @Param("tournament") tournament: Tournament
   ) {
     if (!isSeasonLabelValid(season, false) || !isTournamentValid(tournament)) {
-      throw new BadRequestException();
+      throw new NotFoundException();
     }
 
     return this.service.getMatches(season, tournament);

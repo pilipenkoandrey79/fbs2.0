@@ -3,6 +3,7 @@ import { RouteObject } from "react-router";
 
 import { AuthSuccessRedirect } from "./components/AuthSuccessRedirect";
 import { LanguagePath } from "./components/LanguagePath";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 
 export enum Paths {
   HOME = "/",
@@ -20,6 +21,7 @@ export const routes: RouteObject[] = [
   {
     path: "/",
     element: <LanguagePath />,
+    errorElement: <ErrorBoundary />,
     children: [
       {
         path: getLocalizedPath(Paths.HOME),

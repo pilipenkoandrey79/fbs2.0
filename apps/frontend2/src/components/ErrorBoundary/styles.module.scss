@@ -1,0 +1,6 @@
+@import "../../style/mixins.scss";
+
+.language-swaitcher {
+  @include flex(row, flex-end);
+  padding: 10px 40px;
+}

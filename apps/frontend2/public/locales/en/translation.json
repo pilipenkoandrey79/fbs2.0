@@ -16,6 +16,13 @@
       "enter_name": "Enter name"
     }
   },
+  "error_page": {
+    "title": "Something went wrong",
+    "title_404": "Not found",
+    "subtitle": "The problem occurs",
+    "subtitle_404": "Sorry, the page you visited does not exist.",
+    "button": "Back Home"
+  },
   "tournament": {
     "title": {
       "UCL": {

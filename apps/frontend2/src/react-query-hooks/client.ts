@@ -1,4 +1,5 @@
 import { QueryClient } from "@tanstack/react-query";
+import { AxiosError, HttpStatusCode } from "axios";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -6,7 +7,8 @@ export const queryClient = new QueryClient({
       retry: false,
       staleTime: Infinity,
       refetchOnWindowFocus: false,
-      throwOnError: false,
+      throwOnError: (error) =>
+        (error as AxiosError).response?.status === HttpStatusCode.NotFound,
     },
   },
 });
