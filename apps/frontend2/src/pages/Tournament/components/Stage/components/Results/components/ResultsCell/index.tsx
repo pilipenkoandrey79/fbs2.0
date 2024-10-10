@@ -1,4 +1,9 @@
-import { ClubWithWinner, StageTableRow } from "@fbs2.0/types";
+import {
+  ClubWithWinner,
+  ONE_MATCH_STAGES,
+  StageSchemeType,
+  StageTableRow,
+} from "@fbs2.0/types";
 import { FC, useContext } from "react";
 import classNames from "classnames";
 import { Button, Tooltip, Typography } from "antd";
@@ -16,6 +21,7 @@ interface Props {
   host: ClubWithWinner;
   guest: ClubWithWinner;
   adding: boolean;
+  stageSchemeType: StageSchemeType;
 
   onEdit: (date: string) => void;
 }
@@ -26,24 +32,32 @@ const ResultsCell: FC<Props> = ({
   host,
   guest,
   adding,
+  stageSchemeType,
   onEdit,
 }) => {
   const { user } = useContext(UserContext);
   const { t } = useTranslation();
 
+  const canAddResult =
+    !isNotEmpty(forceWinnerId) &&
+    results.length <
+      ([...ONE_MATCH_STAGES, StageSchemeType.LEAGUE].includes(stageSchemeType)
+        ? 1
+        : 2);
+
   return (
     <div className={styles.results}>
-      {results.map(
-        ({
-          date,
-          hostScore,
-          guestScore,
-          replayDate,
-          hostPen,
-          guestPen,
-          tech,
-        }) =>
-          date ? (
+      {results.length > 0 ? (
+        results.map(
+          ({
+            date,
+            hostScore,
+            guestScore,
+            replayDate,
+            hostPen,
+            guestPen,
+            tech,
+          }) => (
             <div
               key={date}
               className={classNames(styles.match, {
@@ -54,16 +68,20 @@ const ResultsCell: FC<Props> = ({
                 <Typography.Text className={styles.date} type="secondary">
                   {dateRenderer(date)}
                 </Typography.Text>
-                <span className={styles.score}>{`${hostScore}:${guestScore}${
-                  tech ? "*" : ""
-                } ${
-                  !replayDate && isNotEmpty(hostPen) && isNotEmpty(guestPen)
-                    ? t("tournament.stages.results.pen", {
-                        h: hostPen,
-                        g: guestPen,
-                      })
-                    : ""
-                }`}</span>
+                <span className={styles.score}>
+                  {forceWinnerId
+                    ? "-"
+                    : `${hostScore}:${guestScore}${tech ? "*" : ""} ${
+                        !replayDate &&
+                        isNotEmpty(hostPen) &&
+                        isNotEmpty(guestPen)
+                          ? t("tournament.stages.results.pen", {
+                              h: hostPen,
+                              g: guestPen,
+                            })
+                          : ""
+                      }`}
+                </span>
               </div>
               {replayDate && (
                 <div
@@ -90,26 +108,37 @@ const ResultsCell: FC<Props> = ({
                 </div>
               )}
               {!adding && user?.isEditor && (
-                <Button
-                  type="link"
-                  icon={<EditFilled />}
-                  className={styles["edit-button"]}
-                  onClick={() => onEdit(date)}
-                />
-              )}
-            </div>
-          ) : (
-            <div key={`empty-${host.id}-${guest.id}`}>
-              {!adding && user?.isEditor && (
-                <Button
-                  type="link"
-                  icon={<PlusOutlined />}
-                  className={styles["edit-button"]}
-                  onClick={() => onEdit("")}
-                />
+                <>
+                  <Button
+                    type="link"
+                    icon={<EditFilled />}
+                    className={styles["edit-button"]}
+                    onClick={() => onEdit(date)}
+                  />
+                  {canAddResult && (
+                    <Button
+                      type="link"
+                      icon={<PlusOutlined />}
+                      className={styles["add-button"]}
+                      onClick={() => onEdit("")}
+                    />
+                  )}
+                </>
               )}
             </div>
           )
+        )
+      ) : (
+        <div className={styles.match}>
+          {!adding && user?.isEditor && canAddResult && (
+            <Button
+              type="link"
+              icon={<PlusOutlined />}
+              className={styles["add-button"]}
+              onClick={() => onEdit("")}
+            />
+          )}
+        </div>
       )}
     </div>
   );

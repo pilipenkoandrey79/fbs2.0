@@ -65,27 +65,28 @@ export const getKnockoutStageMatchesData = (
 
           return acc;
         } else {
-          return [
-            ...acc,
-            {
-              id,
-              host: { ...host, club: prepareClub(host.club, year) },
-              guest: { ...guest, club: prepareClub(guest.club, year) },
-              forceWinnerId: forceWinner?.id ?? null,
-              results: [
-                {
-                  hostScore,
-                  guestScore,
-                  hostPen: hostPen,
-                  guestPen: guestPen,
-                  answer: false,
-                  unplayed: unplayed ?? false,
-                  tech: tech ?? false,
-                  date: date ?? "",
-                },
-              ],
-            },
-          ];
+          const row: StageTableRow = {
+            id,
+            host: { ...host, club: prepareClub(host.club, year) },
+            guest: { ...guest, club: prepareClub(guest.club, year) },
+            forceWinnerId: forceWinner?.id ?? null,
+            results: [],
+          };
+
+          if (date) {
+            row.results.push({
+              hostScore,
+              guestScore,
+              hostPen,
+              guestPen,
+              answer: false,
+              unplayed: unplayed ?? false,
+              tech: tech ?? false,
+              date,
+            });
+          }
+
+          return [...acc, row];
         }
       },
       []

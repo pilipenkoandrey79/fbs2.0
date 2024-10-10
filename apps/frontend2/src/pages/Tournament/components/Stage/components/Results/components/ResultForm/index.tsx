@@ -2,13 +2,14 @@ import {
   ClubWithWinner,
   MatchResultDto,
   ONE_MATCH_STAGES,
-  StageScheme,
+  Stage,
   StageTableRow,
 } from "@fbs2.0/types";
 import {
   Checkbox,
   Divider,
   Form,
+  Input,
   InputNumber,
   Modal,
   Segmented,
@@ -23,48 +24,69 @@ import { SubmitButton } from "../../../../../../../../components/SubmitButton";
 import { Club } from "../../../../../../../../components/Club";
 import { DateInput } from "../../../../../../../../components/selectors/DateInput";
 import { useUpdateMatchResult } from "../../../../../../../../react-query-hooks/match/useUpdateMatchResult";
+import { useCreateMatch } from "../../../../../../../../react-query-hooks/match/useCreateMatch";
 
 import styles from "./style.module.scss";
 
 export type Result = { match: StageTableRow; date: string };
 
 interface Props {
-  result: Result;
-  stageScheme: StageScheme;
+  row: Result;
+  stage: Stage;
   messageApi: MessageInstance;
+  availableDates: string[];
   onClose: () => void;
 }
 
 const ResultForm: FC<Props> = ({
   onClose,
-  result,
-  stageScheme,
+  row,
+  stage,
   messageApi,
+  availableDates,
 }) => {
   const { t } = useTranslation();
   const [form] = Form.useForm<MatchResultDto>();
   const values = Form.useWatch([], form);
   const [showAdditionalSection, setShowAdditionalSection] = useState(false);
   const [showFoceWinner, setShowFoceWinner] = useState(false);
+  const [pristine, setPristine] = useState(true);
 
-  const initialValues = {
-    ...(result.date
-      ? result.match.results.find(({ date }) => date === result.date)
-      : result.match.results[0]),
-    forceWinnerId: result.match.forceWinnerId,
-  };
+  const initialValues = row.date
+    ? {
+        ...row.match.results.find(({ date }) => date === row.date),
+        forceWinnerId: row.match.forceWinnerId,
+      }
+    : ({
+        answer: row.match.results.length > 0,
+        hostScore: 0,
+        guestScore: 0,
+      } as MatchResultDto);
 
   const updateMatch = useUpdateMatchResult();
+  const createMatch = useCreateMatch();
 
   const submit = async (values: MatchResultDto) => {
     try {
-      await updateMatch.mutateAsync({ id: result.match.id, payload: values });
+      if (row.date) {
+        await updateMatch.mutateAsync({ id: row.match.id, payload: values });
+      } else {
+        await createMatch.mutateAsync({
+          ...values,
+          date: values?.date || "",
+          hostId: row.match.host.id,
+          guestId: row.match.guest.id,
+          stageType: stage.stageType,
+        });
+      }
 
       onClose();
 
       messageApi.open({
         type: "success",
-        content: t("tournament.stages.results.match.updated"),
+        content: t(
+          `tournament.stages.results.match.${row.date ? "updated" : "entered"}`
+        ),
       });
     } catch (error) {
       messageApi.open({
@@ -75,13 +97,13 @@ const ResultForm: FC<Props> = ({
   };
 
   useEffect(() => {
-    if (!ONE_MATCH_STAGES.includes(stageScheme.type) && !values?.answer) {
+    if (!ONE_MATCH_STAGES.includes(stage.stageScheme.type) && !values?.answer) {
       setShowAdditionalSection(false);
 
       return;
     }
 
-    const previousResult = result.match.results.find(
+    const previousResult = row.match.results.find(
       ({ answer, date }) => !answer && !!date
     );
 
@@ -96,12 +118,12 @@ const ResultForm: FC<Props> = ({
 
     setShowAdditionalSection(
       totalHostScore === totalGuestScore &&
-        (stageScheme.awayGoal ? hostAwayScore === guestAwayScore : true)
+        (stage.stageScheme.awayGoal ? hostAwayScore === guestAwayScore : true)
     );
   }, [
-    result.match.results,
-    stageScheme.awayGoal,
-    stageScheme.type,
+    row.match.results,
+    stage.stageScheme.awayGoal,
+    stage.stageScheme.type,
     values?.answer,
     values?.guestScore,
     values?.hostScore,
@@ -110,77 +132,47 @@ const ResultForm: FC<Props> = ({
   useEffect(() => {
     setShowFoceWinner(
       !!values?.unplayed ||
-        (!stageScheme.pen &&
+        (!stage.stageScheme.pen &&
           isNotEmpty(values?.hostPen) &&
           isNotEmpty(values?.guestPen) &&
           values?.hostPen === values?.guestPen)
     );
-  }, [stageScheme.pen, values?.guestPen, values?.hostPen, values?.unplayed]);
-
-  useEffect(() => {
-    form.setFieldsValue(
-      values?.tech
-        ? {
-            hostScore: 3,
-            guestScore: 0,
-            unplayed: false,
-            hostPen: undefined,
-            guestPen: undefined,
-          }
-        : {
-            hostScore: initialValues?.hostScore || 0,
-            guestScore: initialValues?.guestScore || 0,
-            unplayed: initialValues?.unplayed,
-            hostPen: initialValues?.hostPen ?? undefined,
-            guestPen: initialValues?.guestPen ?? undefined,
-          }
-    );
   }, [
-    form,
-    initialValues?.guestPen,
-    initialValues?.guestScore,
-    initialValues?.hostPen,
-    initialValues?.hostScore,
-    initialValues?.unplayed,
-    values?.tech,
-  ]);
-
-  useEffect(() => {
-    form.setFieldsValue(
-      values?.unplayed
-        ? {
-            hostScore: 0,
-            guestScore: 0,
-            tech: false,
-            hostPen: undefined,
-            guestPen: undefined,
-          }
-        : {
-            hostScore: initialValues?.hostScore || 0,
-            guestScore: initialValues?.guestScore || 0,
-            tech: initialValues?.tech,
-            forceWinnerId: null,
-            hostPen: initialValues?.hostPen ?? undefined,
-            guestPen: initialValues?.guestPen ?? undefined,
-          }
-    );
-  }, [
-    form,
-    initialValues?.guestPen,
-    initialValues?.guestScore,
-    initialValues?.hostPen,
-    initialValues?.hostScore,
-    initialValues?.tech,
+    stage.stageScheme.pen,
+    values?.guestPen,
+    values?.hostPen,
     values?.unplayed,
   ]);
+
+  useEffect(() => {
+    if (values?.tech) {
+      form.setFieldsValue({
+        hostScore: 3,
+        guestScore: 0,
+        unplayed: false,
+        hostPen: undefined,
+        guestPen: undefined,
+      });
+    }
+  }, [form, values?.tech]);
+
+  useEffect(() => {
+    if (values?.unplayed) {
+      form.setFieldsValue({
+        hostScore: 0,
+        guestScore: 0,
+        tech: false,
+        hostPen: undefined,
+        guestPen: undefined,
+      });
+    }
+  }, [form, values?.unplayed]);
 
   return (
     <Modal
       className={styles.modal}
       title={t(
-        `tournament.stages.results.form.title.${
-          result.date ? "update" : "create"
-        }`
+        `tournament.stages.results.form.title.${row.date ? "update" : "create"}`
       )}
       onClose={onClose}
       onCancel={onClose}
@@ -193,6 +185,7 @@ const ResultForm: FC<Props> = ({
         <Form
           form={form}
           onFinish={submit}
+          onValuesChange={() => setPristine(false)}
           layout="horizontal"
           initialValues={initialValues}
           disabled={updateMatch.isPending}
@@ -200,16 +193,19 @@ const ResultForm: FC<Props> = ({
           {/** #1: date, answer */}
           <Form.Item
             name="answer"
-            label={t("tournament.stages.results.form.answer")}
-            valuePropName="checked"
-            rules={[{ required: true, message: "" }]}
+            label={t(
+              `tournament.stages.results.form.answer.${
+                values?.answer ? "true" : "false"
+              }`
+            )}
             className={styles.answer}
           >
-            <Checkbox disabled={!!result.date} />
+            <Input type="hidden" />
           </Form.Item>
           <DateInput
             name="date"
             label={t("tournament.stages.results.form.date")}
+            availableDates={availableDates}
           />
 
           {/** #2: unplayed, tech */}
@@ -232,7 +228,7 @@ const ResultForm: FC<Props> = ({
                 >
                   <Checkbox
                     disabled={
-                      !!result.date ||
+                      !!row.date ||
                       (key === "tech" ? values?.unplayed : values?.tech)
                     }
                   />
@@ -251,7 +247,7 @@ const ResultForm: FC<Props> = ({
               <div key={key} className={styles.panel}>
                 <Club
                   club={
-                    (result.match[key as keyof StageTableRow] as ClubWithWinner)
+                    (row.match[key as keyof StageTableRow] as ClubWithWinner)
                       .club
                   }
                   className={styles.club}
@@ -275,11 +271,11 @@ const ResultForm: FC<Props> = ({
               <span>
                 {t(
                   `tournament.stages.results.form.${
-                    stageScheme.pen ? "penalty" : "replay"
+                    stage.stageScheme.pen ? "penalty" : "replay"
                   }`
                 )}
               </span>
-              {!stageScheme.pen && <DateInput name="replayDate" />}
+              {!stage.stageScheme.pen && <DateInput name="replayDate" />}
             </div>
             <div className={styles.panels}>
               {["hostPen", "guestPen"].map((key) => (
@@ -303,23 +299,24 @@ const ResultForm: FC<Props> = ({
             <Segmented
               options={[
                 {
-                  label: (
-                    <Club club={result.match.host.club} showCity={false} />
-                  ),
-                  value: result.match.host.id,
+                  label: <Club club={row.match.host.club} showCity={false} />,
+                  value: row.match.host.id,
                 },
                 {
-                  label: (
-                    <Club club={result.match.guest.club} showCity={false} />
-                  ),
-                  value: result.match.guest.id,
+                  label: <Club club={row.match.guest.club} showCity={false} />,
+                  value: row.match.guest.id,
                 },
               ]}
             />
           </Form.Item>
 
           <Divider type="horizontal" />
-          <SubmitButton form={form} size="small" label={t("common.save")} />
+          <SubmitButton
+            form={form}
+            size="small"
+            label={t("common.save")}
+            forceDisabled={pristine}
+          />
         </Form>
       </div>
     </Modal>

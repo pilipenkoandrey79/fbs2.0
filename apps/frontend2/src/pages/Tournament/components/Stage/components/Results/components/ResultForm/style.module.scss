@@ -14,7 +14,7 @@
     }
 
     .answer div {
-      justify-content: flex-end;
+      justify-content: center;
     }
 
     .panels {
@@ -23,21 +23,13 @@
       .panel {
         width: 50%;
         @include flex(column, flex-start, center);
-        padding: 0 8px;
-
-        &:first-of-type {
-          padding-right: 4px;
-        }
-
-        &:last-of-type {
-          padding-left: 4px;
-        }
+        flex: 1;
 
         .club {
           margin-bottom: 8px;
         }
 
-        .score {
+        .score input {
           font-size: 20px;
         }
 

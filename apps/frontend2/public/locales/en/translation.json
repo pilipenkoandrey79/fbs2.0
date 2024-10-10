@@ -124,14 +124,19 @@
           "remove_confirm": "Remove the match?",
           "removed": "Removed match from {{season}} {{tournament}}",
           "clear": "Clear results",
-          "updated": "Match is updated"
+          "cleared": "Cleared results of match",
+          "updated": "Match is updated",
+          "entered": "Match result was added"
         },
         "form": {
           "title": {
             "create": "Enter match result",
             "update": "Update match result"
           },
-          "answer": "Match-answer",
+          "answer": {
+            "true": "Match-answer",
+            "false": "First match"
+          },
           "unplayed": "Was not played",
           "tech": "Technical result",
           "force_winner": "The winner is",

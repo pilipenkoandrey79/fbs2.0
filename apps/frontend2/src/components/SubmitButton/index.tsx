@@ -8,9 +8,17 @@ interface Props {
   loading?: boolean;
   size?: "large" | "middle" | "small";
   className?: string;
+  forceDisabled?: boolean;
 }
 
-const SubmitButton: FC<Props> = ({ form, label, loading, size, className }) => {
+const SubmitButton: FC<Props> = ({
+  form,
+  label,
+  loading,
+  size,
+  className,
+  forceDisabled,
+}) => {
   const [disabled, setDisabled] = useState(true);
 
   const values = Form.useWatch([], form);
@@ -32,7 +40,7 @@ const SubmitButton: FC<Props> = ({ form, label, loading, size, className }) => {
         type="primary"
         htmlType="submit"
         size={size || "large"}
-        disabled={disabled}
+        disabled={disabled || forceDisabled}
         loading={loading}
         role="button"
         icon={<SaveOutlined />}

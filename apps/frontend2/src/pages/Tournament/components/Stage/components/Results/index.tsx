@@ -62,6 +62,15 @@ const Results: FC<Props> = ({
     query: `(min-width: ${variables.screenLg})`,
   });
 
+  const availableDates = [
+    ...new Set(
+      dataSource
+        .map(({ results }) => results)
+        .flat()
+        .map(({ date }) => date)
+    ),
+  ];
+
   const getTeamColumn = (key: "host" | "guest") => ({
     key,
     dataIndex: key,
@@ -114,6 +123,7 @@ const Results: FC<Props> = ({
           host={record.host}
           guest={record.guest}
           adding={adding}
+          stageSchemeType={tournamentPart.stage.stageScheme.type}
           onEdit={(date: string) => {
             setResultEditing({ match: record, date });
           }}
@@ -231,10 +241,11 @@ const Results: FC<Props> = ({
       )}
       {!!resultEditing && (
         <ResultForm
-          result={resultEditing}
-          stageScheme={tournamentPart.stage.stageScheme}
+          row={resultEditing}
+          stage={tournamentPart.stage}
           onClose={() => setResultEditing(null)}
           messageApi={messageApi}
+          availableDates={availableDates}
         />
       )}
     </div>

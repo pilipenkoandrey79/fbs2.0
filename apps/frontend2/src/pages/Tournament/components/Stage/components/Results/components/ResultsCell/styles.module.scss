@@ -7,6 +7,7 @@
   .match {
     @include flex(row, space-between, stretch);
     position: relative;
+    min-height: 32px;
 
     &:not(:last-child) {
       border-bottom: 1px solid $border;
@@ -46,6 +47,12 @@
       position: absolute;
       top: 0;
       right: 0;
+    }
+
+    .add-button {
+      position: absolute;
+      bottom: 0;
+      left: 0;
     }
   }
 }

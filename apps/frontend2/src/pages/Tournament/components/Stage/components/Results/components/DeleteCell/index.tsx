@@ -39,10 +39,15 @@ const DeleteCell: FC<Props> = ({ record, messageApi }) => {
 
       messageApi.open({
         type: "success",
-        content: t("tournament.stages.results.match.removed", {
-          season,
-          tournament,
-        }),
+        content: t(
+          `tournament.stages.results.match.${
+            clearResults ? "cleared" : "removed"
+          }`,
+          {
+            season,
+            tournament,
+          }
+        ),
       });
     } catch (error) {
       messageApi.open({
