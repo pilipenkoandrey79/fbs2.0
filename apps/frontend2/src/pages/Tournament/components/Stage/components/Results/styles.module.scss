@@ -1,5 +1,4 @@
-@import "../../../../../../style/mixins.scss";
-@import "../../../../../../style/colors.module.scss";
+@import "../../../../../../style/variables.module.scss";
 
 .matches {
   :global {
@@ -11,62 +10,6 @@
   h3 {
     display: none;
   }
-
-  table tbody td.results-cell,
-  table tbody td.delete {
-    padding: 0 !important;
-
-    .results {
-      @include flex(column, flex-start, stretch);
-
-      .match {
-        @include flex(row, space-between, stretch);
-        position: relative;
-
-        &:not(:last-child) {
-          border-bottom: 1px solid $border;
-        }
-
-        .result {
-          @include flex(column, flex-start, stretch);
-          flex: 1;
-
-          &:not(:last-child) {
-            border-right: 1px solid $border;
-          }
-
-          .date {
-            font-size: 10px;
-            padding: 1px;
-          }
-
-          .score {
-            text-align: center;
-          }
-
-          &.coin {
-            .score {
-              font-weight: bold;
-            }
-          }
-        }
-
-        &.only-match {
-          .result {
-            border: none;
-          }
-        }
-
-        .edit-button {
-          position: absolute;
-          top: 0;
-          right: 0;
-        }
-      }
-    }
-  }
-
-  @include highlighted;
 
   @media (min-width: $screen-md) {
     h3 {

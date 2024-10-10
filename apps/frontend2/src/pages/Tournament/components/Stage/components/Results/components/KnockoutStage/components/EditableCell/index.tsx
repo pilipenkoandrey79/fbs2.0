@@ -3,8 +3,8 @@ import { Checkbox, Form, FormInstance, Select } from "antd";
 import { useTranslation } from "react-i18next";
 import { MatchDto, Participant } from "@fbs2.0/types";
 
-import { Club } from "../../../../../../../../components/Club";
-import { SubmitButton } from "../../../../../../../../components/SubmitButton";
+import { Club } from "../../../../../../../../../../components/Club";
+import { SubmitButton } from "../../../../../../../../../../components/SubmitButton";
 
 import styles from "./styles.module.scss";
 

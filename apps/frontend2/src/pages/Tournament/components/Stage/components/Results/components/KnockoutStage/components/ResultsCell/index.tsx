@@ -11,7 +11,7 @@ import { dateRenderer, isNotEmpty } from "@fbs2.0/utils";
 import { useTranslation } from "react-i18next";
 import { EditFilled, PlusOutlined } from "@ant-design/icons";
 
-import { UserContext } from "../../../../../../../../context/userContext";
+import { UserContext } from "../../../../../../../../../../context/userContext";
 
 import styles from "./styles.module.scss";
 

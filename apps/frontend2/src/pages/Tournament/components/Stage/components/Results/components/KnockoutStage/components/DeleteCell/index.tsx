@@ -11,8 +11,8 @@ import { useParams } from "react-router";
 import { MessageInstance } from "antd/es/message/interface";
 import { useMediaQuery } from "react-responsive";
 
-import { useDeleteMatch } from "../../../../../../../../react-query-hooks/match/useDeleteMatch";
-import variables from "../../../../../../../../style/variables.module.scss";
+import { useDeleteMatch } from "../../../../../../../../../../react-query-hooks/match/useDeleteMatch";
+import variables from "../../../../../../../../../../style/variables.module.scss";
 
 interface Props {
   record: StageTableRow;

@@ -20,11 +20,11 @@ import { useTranslation } from "react-i18next";
 import { isNotEmpty } from "@fbs2.0/utils";
 import { MessageInstance } from "antd/es/message/interface";
 
-import { SubmitButton } from "../../../../../../../../components/SubmitButton";
-import { Club } from "../../../../../../../../components/Club";
-import { DateInput } from "../../../../../../../../components/selectors/DateInput";
-import { useUpdateMatchResult } from "../../../../../../../../react-query-hooks/match/useUpdateMatchResult";
-import { useCreateMatch } from "../../../../../../../../react-query-hooks/match/useCreateMatch";
+import { SubmitButton } from "../../../../../../../../../../components/SubmitButton";
+import { Club } from "../../../../../../../../../../components/Club";
+import { DateInput } from "../../../../../../../../../../components/selectors/DateInput";
+import { useUpdateMatchResult } from "../../../../../../../../../../react-query-hooks/match/useUpdateMatchResult";
+import { useCreateMatch } from "../../../../../../../../../../react-query-hooks/match/useCreateMatch";
 
 import styles from "./style.module.scss";
 
