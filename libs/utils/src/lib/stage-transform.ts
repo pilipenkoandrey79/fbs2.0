@@ -20,6 +20,7 @@ import {
   getKnockoutStageMatchesData,
 } from "./knockout-stage-transform";
 import { prepareGroupTeamsStanding } from "./prepare-group-standing";
+import { addChessTable } from "./add-chess-table";
 
 export const getPointsToSubtract = (
   deductedPoints: DeductedPoints[],
@@ -86,17 +87,21 @@ export const transformTournamentPart_2 = (
     return acc;
   }, {} as MatchesByGroups);
 
-  return Object.keys(matchesByGroups).reduce<TournamentStage>(
-    (acc, group) => ({
+  return Object.keys(matchesByGroups).reduce<TournamentStage>((acc, group) => {
+    const groupMatches = matchesByGroups[group as Group];
+
+    return {
       ...acc,
       [group]: {
-        table: prepareGroupTeamsStanding(
-          matchesByGroups[group as Group],
-          stage
-        ),
+        table: GROUP_STAGES.includes(stage.stageScheme.type)
+          ? addChessTable(
+              prepareGroupTeamsStanding(groupMatches, stage),
+              groupMatches
+            )
+          : {},
         tours:
-          matches.length > 0
-            ? matches
+          groupMatches.length > 0
+            ? groupMatches
                 .reduce<{ tour: number; matches: BaseMatch[] }[]>(
                   (acc, match) => {
                     const tour = match.tour ?? 1;
@@ -121,9 +126,8 @@ export const transformTournamentPart_2 = (
                 )
             : getLeagueResultsTemplate(stage.stageScheme.type),
       },
-    }),
-    {} as TournamentStage
-  );
+    };
+  }, {} as TournamentStage);
 };
 
 export const _transformTournamentPart = (tournamentPart: TournamentPart) =>

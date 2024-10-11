@@ -5,7 +5,7 @@ import {
   BaseMatch,
   TournamentPart,
 } from "@fbs2.0/types";
-import { _getStageLabel, isNotEmpty, getResultLabel } from "@fbs2.0/utils";
+import { _getStageLabel, isNotEmpty, getResultLabel } from "./common";
 
 import { prepareGroupTeamsStanding } from "./prepare-group-standing";
 

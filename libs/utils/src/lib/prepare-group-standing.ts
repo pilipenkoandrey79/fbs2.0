@@ -6,14 +6,11 @@ import {
   Years,
   Tournament,
   BaseMatch,
-} from '@fbs2.0/types';
-import {
-  prepareClub,
-  getPointsToSubtract,
-  isGroupFinished,
-} from '@fbs2.0/utils';
+} from "@fbs2.0/types";
+import { prepareClub, isGroupFinished } from "./common";
+import { getPointsToSubtract } from "./stage-transform";
 
-import { groupSort } from './group-sort';
+import { groupSort } from "./group-sort";
 
 const getInitialGroupRowData = (
   team: Participant,
@@ -125,7 +122,7 @@ const prepareGroupRowData = (
 };
 
 const couldBeResorted = (groupRows: GroupRow[], stage: Stage) => {
-  const year = Number(stage.tournamentSeason.season.split('-')[0]);
+  const year = Number(stage.tournamentSeason.season.split("-")[0]);
 
   if (
     stage.tournamentSeason.tournament === Tournament.EUROPE_LEAGUE &&
@@ -154,7 +151,7 @@ export const prepareGroupTeamsStanding = (
   matches: BaseMatch[],
   stage: Stage
 ): GroupRow[] => {
-  const year = stage.tournamentSeason.season.split('-')[0];
+  const year = stage.tournamentSeason.season.split("-")[0];
 
   const matchesOfGroup = matches.sort((a, b) =>
     (a.tour || 0) < (b.tour || 0) ? -1 : (a.tour || 0) === (b.tour || 0) ? 0 : 1
