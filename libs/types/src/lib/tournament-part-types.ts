@@ -43,3 +43,11 @@ export interface TournamentDataRow {
   stage: Stage;
   matches: StageTableRow[] | LeagueStageData | Record<Group, GroupRow[]>;
 }
+
+// 2
+export interface TournamentStageGroup {
+  table: GroupRow[];
+  tours: Record<number, StageTableRow[]>;
+}
+
+export type TournamentStage = Record<Group, TournamentStageGroup>;

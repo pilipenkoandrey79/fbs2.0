@@ -5,6 +5,7 @@ import {
   getStageTransKey,
   getTournamentTitle,
   transformTournamentPart,
+  transformTournamentPart_2,
 } from "@fbs2.0/utils";
 import {
   HIGHLIGHTED_CLUB_ID_SEARCH_PARAM,
@@ -55,6 +56,17 @@ const Tournament: FC = () => {
       })),
     [rawMatches.data]
   );
+
+  const matches_2 = useMemo(
+    () =>
+      rawMatches.data?.map((tournamentPart) => ({
+        stage: tournamentPart.stage,
+        matches: transformTournamentPart_2(tournamentPart),
+      })),
+    [rawMatches.data]
+  );
+
+  console.log(matches_2);
 
   const title = `${t(
     getTournamentTitle({
