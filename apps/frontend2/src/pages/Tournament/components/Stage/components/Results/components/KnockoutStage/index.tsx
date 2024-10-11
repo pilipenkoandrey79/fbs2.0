@@ -75,7 +75,7 @@ const KnockoutStage: FC<Props> = ({
   const getTeamColumn = (key: "host" | "guest") => ({
     key,
     dataIndex: key,
-    width: 120,
+    width: 100,
     ellipsis: true,
     render: (team: StageTableRow["host"] | StageTableRow["guest"]) =>
       team.club ? (
@@ -111,6 +111,13 @@ const KnockoutStage: FC<Props> = ({
   });
 
   const columns: TableProps<StageTableRow>["columns"] = [
+    {
+      key: "no",
+      rowScope: "row",
+      width: 20,
+      className: styles.number,
+      render: (_, __, index) => index + 1,
+    },
     getTeamColumn("host"),
     {
       key: "results",

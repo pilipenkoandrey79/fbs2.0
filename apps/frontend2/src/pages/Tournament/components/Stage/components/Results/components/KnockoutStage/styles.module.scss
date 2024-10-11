@@ -55,4 +55,10 @@ table tbody td.delete {
   }
 }
 
+.number {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 1px !important;
+}
+
 @include highlighted;

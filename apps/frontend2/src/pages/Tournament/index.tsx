@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useState, useTransition } from "react";
 import { useParams } from "react-router";
 import { createSearchParams, useSearchParams } from "react-router-dom";
 import {
@@ -13,6 +13,7 @@ import {
 } from "@fbs2.0/types";
 import { useTranslation } from "react-i18next";
 import { Collapse } from "antd";
+import { CaretRightOutlined, LoadingOutlined } from "@ant-design/icons";
 
 import { Page } from "../../components/Page";
 import { Stage } from "./components/Stage";
@@ -26,12 +27,15 @@ const Tournament: FC = () => {
   const { t } = useTranslation();
   const { season, tournament } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isPending, startTransition] = useTransition();
 
   const rawMatches = useGetMatches(season, tournament);
   const participants = useGetParticipants(season, tournament);
 
   const [participantsDialogOpened, setParticipantsDialogOpened] =
     useState(false);
+
+  const [activeKey, setActiveKey] = useState<(number | string)[]>();
 
   const [highlightedClubId, setHighlightedClubId] = useState<number | null>(
     () => {
@@ -104,6 +108,7 @@ const Tournament: FC = () => {
       />
       <Collapse
         bordered={false}
+        activeKey={activeKey}
         items={matches?.map((tournamentPart) => {
           const previousTournamentPart =
             tournamentPart.stage.previousStage === null
@@ -127,6 +132,18 @@ const Tournament: FC = () => {
             label: t(getStageTransKey(tournamentPart.stage.stageType)),
           };
         })}
+        onChange={(key) => {
+          startTransition(() => {
+            setActiveKey(key);
+          });
+        }}
+        expandIcon={({ isActive }) =>
+          isPending ? (
+            <LoadingOutlined />
+          ) : (
+            <CaretRightOutlined rotate={isActive ? 90 : 0} />
+          )
+        }
       />
     </Page>
   );

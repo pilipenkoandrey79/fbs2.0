@@ -86,7 +86,7 @@ const getParticipantsSkippedPreviousStage = (
 
   const seeded =
     applyStageSubstitutions(
-      getSeededParticipants(participants, currentStage),
+      getSeededParticipants(participants, previousTournamentPart.stage),
       previousTournamentPart?.stage.stageSubstitutions
     ) || [];
 
