@@ -120,7 +120,12 @@ const Stage: FC<Props> = ({ tournamentParts, highlightedClubId }) => {
         <Divider type="vertical" className={styles.divider} />
         <div className={styles.results}>
           {hasTable && (
-            <Standings visible={isMdScreen || segment === Segments.tables} />
+            <Standings
+              visible={isMdScreen || segment === Segments.tables}
+              tournamentPart={tournamentParts.current}
+              highlightedClubId={highlightedClubId}
+              participants={filtered}
+            />
           )}
           {!isGroupStage && (
             <Matches
