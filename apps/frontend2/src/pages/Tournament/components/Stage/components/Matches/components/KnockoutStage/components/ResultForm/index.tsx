@@ -85,7 +85,7 @@ const ResultForm: FC<Props> = ({
       messageApi.open({
         type: "success",
         content: t(
-          `tournament.stages.results.match.${row.date ? "updated" : "entered"}`
+          `tournament.stages.matches.match.${row.date ? "updated" : "entered"}`
         ),
       });
     } catch (error) {
@@ -172,7 +172,7 @@ const ResultForm: FC<Props> = ({
     <Modal
       className={styles.modal}
       title={t(
-        `tournament.stages.results.form.title.${row.date ? "update" : "create"}`
+        `tournament.stages.matches.form.title.${row.date ? "update" : "create"}`
       )}
       onClose={onClose}
       onCancel={onClose}
@@ -194,7 +194,7 @@ const ResultForm: FC<Props> = ({
           <Form.Item
             name="answer"
             label={t(
-              `tournament.stages.results.form.answer.${
+              `tournament.stages.matches.form.answer.${
                 values?.answer ? "true" : "false"
               }`
             )}
@@ -204,7 +204,7 @@ const ResultForm: FC<Props> = ({
           </Form.Item>
           <DateInput
             name="date"
-            label={t("tournament.stages.results.form.date")}
+            label={t("tournament.stages.matches.form.date")}
             availableDates={availableDates}
           />
 
@@ -218,10 +218,10 @@ const ResultForm: FC<Props> = ({
                   label={
                     <Typography.Text
                       ellipsis={{
-                        tooltip: t(`tournament.stages.results.form.${key}`),
+                        tooltip: t(`tournament.stages.matches.form.${key}`),
                       }}
                     >
-                      {t(`tournament.stages.results.form.${key}`)}
+                      {t(`tournament.stages.matches.form.${key}`)}
                     </Typography.Text>
                   }
                   valuePropName="checked"
@@ -270,7 +270,7 @@ const ResultForm: FC<Props> = ({
             <div className={styles.title}>
               <span>
                 {t(
-                  `tournament.stages.results.form.${
+                  `tournament.stages.matches.form.${
                     stage.stageScheme.pen ? "penalty" : "replay"
                   }`
                 )}
@@ -292,7 +292,7 @@ const ResultForm: FC<Props> = ({
 
           <Form.Item
             name="forceWinnerId"
-            label={t("tournament.stages.results.form.force_winner")}
+            label={t("tournament.stages.matches.form.force_winner")}
             className={styles["force-winner"]}
             style={{ display: showFoceWinner ? "block" : "none" }}
           >

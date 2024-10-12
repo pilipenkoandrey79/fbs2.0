@@ -75,7 +75,7 @@ const ResultsCell: FC<Props> = ({
                         !replayDate &&
                         isNotEmpty(hostPen) &&
                         isNotEmpty(guestPen)
-                          ? t("tournament.stages.results.pen", {
+                          ? t("tournament.stages.matches.pen", {
                               h: hostPen,
                               g: guestPen,
                             })
@@ -95,7 +95,7 @@ const ResultsCell: FC<Props> = ({
                   <span className={styles.score}>
                     {forceWinnerId ? (
                       <Tooltip
-                        title={t("tournament.stages.results.coin", {
+                        title={t("tournament.stages.matches.coin", {
                           club: [host, guest].find(
                             ({ id }) => id === forceWinnerId
                           )?.club.name,

@@ -122,8 +122,9 @@
         "winners": "Winners of the previous stage",
         "skippers": "Skipped the previous stage"
       },
-      "results": {
-        "title": "Results",
+      "matches": {
+        "title": "Matches",
+        "subtitle": "{{tour}} tour",
         "pen": "pen. {{h}}:{{g}}",
         "coin": "{{club}} is winner by coin tossing",
         "match": {
@@ -151,6 +152,9 @@
           "penalty": "After-match penalties",
           "replay": "Additional match"
         }
+      },
+      "tables": {
+        "title": "Standigs"
       }
     }
   }

@@ -68,7 +68,7 @@ const KnockoutStage: FC<Props> = ({
   const availableDates = [
     ...new Set(
       dataSource
-        .map(({ results }) => results)
+        ?.map(({ results }) => results)
         .flat()
         .map(({ date }) => date)
     ),
@@ -186,7 +186,7 @@ const KnockoutStage: FC<Props> = ({
 
       messageApi.open({
         type: "success",
-        content: t("tournament.stages.results.match.added", {
+        content: t("tournament.stages.matches.match.added", {
           season,
           tournament,
         }),

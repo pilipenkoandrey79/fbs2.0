@@ -40,7 +40,7 @@ const DeleteCell: FC<Props> = ({ record, messageApi }) => {
       messageApi.open({
         type: "success",
         content: t(
-          `tournament.stages.results.match.${
+          `tournament.stages.matches.match.${
             clearResults ? "cleared" : "removed"
           }`,
           {
@@ -65,7 +65,7 @@ const DeleteCell: FC<Props> = ({ record, messageApi }) => {
       danger: true,
     },
     {
-      label: t("tournament.stages.results.match.clear"),
+      label: t("tournament.stages.matches.match.clear"),
       key: "clear",
       icon: <ClearOutlined />,
       disabled: record.results.every(({ date }) => !date),

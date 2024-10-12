@@ -2,8 +2,9 @@ import {
   AppstoreOutlined,
   BarsOutlined,
   LoadingOutlined,
+  TableOutlined,
 } from "@ant-design/icons";
-import { TournamentPart } from "@fbs2.0/types";
+import { GROUP_STAGES, StageSchemeType, TournamentPart } from "@fbs2.0/types";
 import { Divider, Segmented } from "antd";
 import { FC, useMemo, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
@@ -12,7 +13,8 @@ import classNames from "classnames";
 import { useParams } from "react-router";
 
 import { Participants } from "./components/Participants";
-import { Results } from "./components/Results";
+import { Matches } from "./components/Matches";
+import { Standings } from "./components/Standings";
 import { useGetParticipants } from "../../../../react-query-hooks/participant/useGetParticipants";
 import { prepareStageParticipants } from "./utils";
 
@@ -28,21 +30,30 @@ interface Props {
 }
 
 enum Segments {
-  results = "results",
+  matches = "matches",
   participants = "participants",
+  tables = "tables",
 }
 
 const Stage: FC<Props> = ({ tournamentParts, highlightedClubId }) => {
   const { t } = useTranslation();
   const { season, tournament } = useParams();
   const [isPending, startTransition] = useTransition();
-  const [segment, setSegment] = useState(Segments.results);
+  const [segment, setSegment] = useState(Segments.matches);
 
   const isMdScreen = useMediaQuery({
     query: `(min-width: ${variables.screenMd})`,
   });
 
   const participants = useGetParticipants(season, tournament);
+
+  const hasTable = [...GROUP_STAGES, StageSchemeType.LEAGUE].includes(
+    tournamentParts.current.stage.stageScheme.type
+  );
+
+  const isGroupStage = GROUP_STAGES.includes(
+    tournamentParts.current.stage.stageScheme.type
+  );
 
   const { seeded, previousStageWinners, skippers, filtered } = useMemo(
     () =>
@@ -64,11 +75,28 @@ const Stage: FC<Props> = ({ tournamentParts, highlightedClubId }) => {
               value: Segments.participants,
               icon: isPending ? <LoadingOutlined /> : <BarsOutlined />,
             },
-            {
-              label: t("tournament.stages.results.title"),
-              value: Segments.results,
-              icon: isPending ? <LoadingOutlined /> : <AppstoreOutlined />,
-            },
+            ...(isGroupStage
+              ? []
+              : [
+                  {
+                    label: t("tournament.stages.matches.title"),
+                    value: Segments.matches,
+                    icon: isPending ? (
+                      <LoadingOutlined />
+                    ) : (
+                      <AppstoreOutlined />
+                    ),
+                  },
+                ]),
+            ...(hasTable
+              ? [
+                  {
+                    label: t("tournament.stages.tables.title"),
+                    value: Segments.tables,
+                    icon: isPending ? <LoadingOutlined /> : <TableOutlined />,
+                  },
+                ]
+              : []),
           ]}
           onChange={(value: Segments) => {
             startTransition(() => {
@@ -78,7 +106,9 @@ const Stage: FC<Props> = ({ tournamentParts, highlightedClubId }) => {
           value={segment}
         />
       )}
-      <div className={classNames({ [styles.panels]: isMdScreen })}>
+      <div
+        className={classNames(styles.content, { [styles.panels]: isMdScreen })}
+      >
         <Participants
           currentStage={tournamentParts.current.stage}
           highlightedClubId={highlightedClubId}
@@ -88,12 +118,19 @@ const Stage: FC<Props> = ({ tournamentParts, highlightedClubId }) => {
           visible={isMdScreen || segment === Segments.participants}
         />
         <Divider type="vertical" className={styles.divider} />
-        <Results
-          visible={isMdScreen || segment === Segments.results}
-          tournamentPart={tournamentParts.current}
-          highlightedClubId={highlightedClubId}
-          participants={filtered}
-        />
+        <div className={styles.results}>
+          {hasTable && (
+            <Standings visible={isMdScreen || segment === Segments.tables} />
+          )}
+          {!isGroupStage && (
+            <Matches
+              visible={isMdScreen || segment === Segments.matches}
+              tournamentPart={tournamentParts.current}
+              highlightedClubId={highlightedClubId}
+              participants={filtered}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

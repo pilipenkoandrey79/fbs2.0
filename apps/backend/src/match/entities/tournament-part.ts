@@ -1,4 +1,4 @@
-import { TournamentPart as TournamentPartInterface } from "@fbs2.0/types";
+import { _TournamentPart as TournamentPartInterface } from "@fbs2.0/types";
 import { ApiProperty } from "@nestjs/swagger";
 
 import { Stage } from "./stage.entity";
