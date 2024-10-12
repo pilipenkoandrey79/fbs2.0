@@ -17,7 +17,7 @@ import {
   StageSchemeType,
   StageType,
   Tournament,
-  TournamentPart,
+  _TournamentPart,
   TournamentSeason,
   Winner,
   Years,
@@ -323,7 +323,7 @@ export const prepareClub = (club: Club, year: string) => {
 
 export const prepareMatchesList = (matches: Match[]) => {
   return matches
-    .reduce<TournamentPart[]>((acc, match) => {
+    .reduce<_TournamentPart[]>((acc, match) => {
       const { stage, ...restMatch } = match;
 
       const existentStageIdx = acc.findIndex(

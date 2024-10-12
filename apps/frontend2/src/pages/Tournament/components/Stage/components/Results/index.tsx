@@ -1,4 +1,9 @@
-import { GROUP_STAGES, Participant, TournamentDataRow } from "@fbs2.0/types";
+import {
+  Group,
+  GROUP_STAGES,
+  Participant,
+  TournamentPart,
+} from "@fbs2.0/types";
 import { message } from "antd";
 import { FC } from "react";
 import { isLeagueStage } from "@fbs2.0/utils";
@@ -13,7 +18,7 @@ import styles from "./styles.module.scss";
 interface Props {
   visible: boolean;
   participants: Participant[];
-  tournamentPart: TournamentDataRow;
+  tournamentPart: TournamentPart;
   highlightedClubId: number | null;
 }
 
@@ -40,7 +45,8 @@ const Results: FC<Props> = ({
       ) : (
         <KnockoutStage
           participants={participants}
-          tournamentPart={tournamentPart}
+          matches={tournamentPart.matches[Group.A].tours["1"]}
+          stage={tournamentPart.stage}
           highlightedClubId={highlightedClubId}
           messageApi={messageApi}
         />

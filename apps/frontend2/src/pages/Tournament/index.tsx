@@ -5,11 +5,10 @@ import {
   getStageTransKey,
   getTournamentTitle,
   transformTournamentPart,
-  transformTournamentPart_2,
 } from "@fbs2.0/utils";
 import {
   HIGHLIGHTED_CLUB_ID_SEARCH_PARAM,
-  TournamentDataRow,
+  TournamentPart,
   Tournament as TournamentType,
 } from "@fbs2.0/types";
 import { useTranslation } from "react-i18next";
@@ -48,7 +47,7 @@ const Tournament: FC = () => {
     }
   );
 
-  const matches = useMemo<TournamentDataRow[] | undefined>(
+  const matches = useMemo<TournamentPart[] | undefined>(
     () =>
       rawMatches.data?.map((tournamentPart) => ({
         stage: tournamentPart.stage,
@@ -56,17 +55,6 @@ const Tournament: FC = () => {
       })),
     [rawMatches.data]
   );
-
-  const matches_2 = useMemo(
-    () =>
-      rawMatches.data?.map((tournamentPart) => ({
-        stage: tournamentPart.stage,
-        matches: transformTournamentPart_2(tournamentPart),
-      })),
-    [rawMatches.data]
-  );
-
-  console.log(matches_2);
 
   const title = `${t(
     getTournamentTitle({

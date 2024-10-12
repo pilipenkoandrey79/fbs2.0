@@ -4,10 +4,8 @@ import {
   DEFAULT_SWISS_LENGTH,
   Group,
   GROUP_STAGES,
-  GroupRow,
-  LeagueStageData,
   StageSchemeType,
-  TournamentPart,
+  _TournamentPart,
   TournamentStage,
   TournamentStageGroup,
 } from "@fbs2.0/types";
@@ -34,25 +32,6 @@ export const getPointsToSubtract = (
     return acc;
   }, 0);
 
-export const transformTournamentPart = (
-  tournamentPart: TournamentPart | undefined
-) => {
-  switch (tournamentPart?.stage.stageScheme.type) {
-    case StageSchemeType.OLYMPIC_1_MATCH:
-    case StageSchemeType.OLYMPIC_2_MATCH:
-      return getKnockoutStageMatchesData(tournamentPart);
-    case StageSchemeType.GROUP_4_2_MATCH:
-    case StageSchemeType.GROUP_5_1_MATCH:
-    case StageSchemeType.GROUP_SEMI_FINAL:
-    case StageSchemeType.GROUP_ICFC:
-      return {} as Record<Group, GroupRow[]>;
-    case StageSchemeType.LEAGUE:
-      return {} as LeagueStageData;
-    default:
-      return [];
-  }
-};
-
 const getLeagueResultsTemplate = (stageSchemeType: StageSchemeType) =>
   new Array(
     GROUP_STAGES.includes(stageSchemeType)
@@ -70,8 +49,8 @@ const getLeagueResultsTemplate = (stageSchemeType: StageSchemeType) =>
       {}
     );
 
-export const transformTournamentPart_2 = (
-  { matches, stage }: TournamentPart = {} as TournamentPart
+export const transformTournamentPart = (
+  { matches, stage }: _TournamentPart = {} as _TournamentPart
 ): TournamentStage => {
   type MatchesByGroups = Record<Group, BaseMatch[]>;
 
@@ -93,12 +72,14 @@ export const transformTournamentPart_2 = (
     return {
       ...acc,
       [group]: {
-        table: GROUP_STAGES.includes(stage.stageScheme.type)
+        table: [...GROUP_STAGES, StageSchemeType.LEAGUE].includes(
+          stage.stageScheme.type
+        )
           ? addChessTable(
               prepareGroupTeamsStanding(groupMatches, stage),
               groupMatches
             )
-          : {},
+          : null,
         tours:
           groupMatches.length > 0
             ? groupMatches
@@ -130,7 +111,7 @@ export const transformTournamentPart_2 = (
   }, {} as TournamentStage);
 };
 
-export const _transformTournamentPart = (tournamentPart: TournamentPart) =>
+export const _transformTournamentPart = (tournamentPart: _TournamentPart) =>
   GROUP_STAGES.includes(tournamentPart.stage.stageScheme.type)
     ? transformGroupStage(tournamentPart)
     : isLeagueStage(tournamentPart.stage)

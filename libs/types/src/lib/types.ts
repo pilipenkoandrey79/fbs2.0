@@ -285,7 +285,7 @@ export interface User {
 
 export type UIUser = Omit<User, "id" | "refreshToken"> & { isEditor: boolean };
 
-export interface TournamentPart {
+export interface _TournamentPart {
   stage: Stage;
   matches: BaseMatch[];
 }

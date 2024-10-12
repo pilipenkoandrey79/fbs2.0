@@ -1,7 +1,7 @@
 import {
   _LeagueStageData,
   BaseMatch,
-  TournamentPart,
+  _TournamentPart,
   DEFAULT_SWISS_LENGTH,
   _StageTableData,
 } from "@fbs2.0/types";
@@ -19,7 +19,7 @@ const getLeagueResultsTemplate = () =>
     {}
   );
 
-const prepareMatchesData = ({ matches, stage }: TournamentPart) =>
+const prepareMatchesData = ({ matches, stage }: _TournamentPart) =>
   ({
     table: prepareGroupTeamsStanding(matches, stage),
     tours:
@@ -46,7 +46,7 @@ const prepareMatchesData = ({ matches, stage }: TournamentPart) =>
         : getLeagueResultsTemplate(),
   } as _LeagueStageData);
 
-export const transformLeagueStage = (tournamentPart: TournamentPart) => ({
+export const transformLeagueStage = (tournamentPart: _TournamentPart) => ({
   stage: {
     ...tournamentPart.stage,
     label: _getStageLabel(tournamentPart.stage.stageType),

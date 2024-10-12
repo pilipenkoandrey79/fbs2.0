@@ -2,8 +2,8 @@ import {
   ClubWithWinner,
   MatchDto,
   Participant,
+  Stage,
   StageTableRow,
-  TournamentDataRow,
   UKRAINE,
   USSR,
 } from "@fbs2.0/types";
@@ -37,13 +37,15 @@ const templateRow = {
 
 interface Props {
   participants: Participant[];
-  tournamentPart: TournamentDataRow;
+  matches: StageTableRow[];
+  stage: Stage;
   highlightedClubId: number | null;
   messageApi: MessageInstance;
 }
 
 const KnockoutStage: FC<Props> = ({
-  tournamentPart,
+  matches,
+  stage,
   highlightedClubId,
   participants,
   messageApi,
@@ -88,11 +90,9 @@ const KnockoutStage: FC<Props> = ({
               team.club.city.country.name
             ),
             [styles.relegated]:
-              isNotEmpty(tournamentPart.stage.linkedTournament) &&
-              !team?.isWinner,
-            [styles[
-              `highlighted-${tournamentPart.stage.tournamentSeason.tournament}`
-            ]]: team.club.id === highlightedClubId,
+              isNotEmpty(stage.linkedTournament) && !team?.isWinner,
+            [styles[`highlighted-${stage.tournamentSeason.tournament}`]]:
+              team.club.id === highlightedClubId,
           })}
         />
       ) : null,
@@ -131,7 +131,7 @@ const KnockoutStage: FC<Props> = ({
           host={record.host}
           guest={record.guest}
           adding={adding}
-          stageSchemeType={tournamentPart.stage.stageScheme.type}
+          stageSchemeType={stage.stageScheme.type}
           onEdit={(date: string) => {
             setResultEditing({ match: record, date });
           }}
@@ -174,7 +174,7 @@ const KnockoutStage: FC<Props> = ({
     try {
       await createMatch.mutateAsync({
         ...values,
-        stageType: tournamentPart.stage.stageType,
+        stageType: stage.stageType,
         answer: false,
       });
 
@@ -206,12 +206,8 @@ const KnockoutStage: FC<Props> = ({
   }, [adding, participants.length]);
 
   useEffect(() => {
-    setDataSource(
-      adding
-        ? [...(tournamentPart.matches as StageTableRow[]), templateRow]
-        : (tournamentPart.matches as StageTableRow[])
-    );
-  }, [adding, tournamentPart.matches]);
+    setDataSource(adding ? [...matches, templateRow] : matches);
+  }, [adding, matches]);
 
   return (
     <>
@@ -245,7 +241,7 @@ const KnockoutStage: FC<Props> = ({
       {!!resultEditing && (
         <ResultForm
           row={resultEditing}
-          stage={tournamentPart.stage}
+          stage={stage}
           onClose={() => setResultEditing(null)}
           messageApi={messageApi}
           availableDates={availableDates}

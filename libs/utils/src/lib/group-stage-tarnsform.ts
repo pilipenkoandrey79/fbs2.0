@@ -3,7 +3,7 @@ import {
   Group,
   GroupRow,
   BaseMatch,
-  TournamentPart,
+  _TournamentPart,
 } from "@fbs2.0/types";
 import { _getStageLabel, isNotEmpty, getResultLabel } from "./common";
 
@@ -40,7 +40,7 @@ const addChessTable = (rows: GroupRow[], matchesOfGroup: BaseMatch[]) =>
       }),
   }));
 
-const prepareMatches = (tournamentPart: TournamentPart) => {
+const prepareMatches = (tournamentPart: _TournamentPart) => {
   type MatchesByGroups = Record<Group, BaseMatch[]>;
 
   const matchesByGroups = tournamentPart.matches.reduce<MatchesByGroups>(
@@ -75,7 +75,7 @@ const prepareMatches = (tournamentPart: TournamentPart) => {
   return matches;
 };
 
-export const transformGroupStage = (tournamentPart: TournamentPart) => ({
+export const transformGroupStage = (tournamentPart: _TournamentPart) => ({
   stage: {
     ...tournamentPart.stage,
     label: _getStageLabel(tournamentPart.stage.stageType),

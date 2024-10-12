@@ -3,7 +3,7 @@ import {
   BarsOutlined,
   LoadingOutlined,
 } from "@ant-design/icons";
-import { TournamentDataRow } from "@fbs2.0/types";
+import { TournamentPart } from "@fbs2.0/types";
 import { Divider, Segmented } from "antd";
 import { FC, useMemo, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
@@ -21,8 +21,8 @@ import variables from "../../../../style/variables.module.scss";
 
 interface Props {
   tournamentParts: {
-    current: TournamentDataRow;
-    previous: TournamentDataRow | undefined;
+    current: TournamentPart;
+    previous: TournamentPart | undefined;
   };
   highlightedClubId: number | null;
 }
@@ -80,7 +80,7 @@ const Stage: FC<Props> = ({ tournamentParts, highlightedClubId }) => {
       )}
       <div className={classNames({ [styles.panels]: isMdScreen })}>
         <Participants
-          tournamentParts={tournamentParts}
+          currentStage={tournamentParts.current.stage}
           highlightedClubId={highlightedClubId}
           seeded={seeded}
           previousStageWinners={previousStageWinners}

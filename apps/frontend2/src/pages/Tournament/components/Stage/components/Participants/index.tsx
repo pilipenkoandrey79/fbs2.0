@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Participant, TournamentDataRow } from "@fbs2.0/types";
+import { Participant, Stage } from "@fbs2.0/types";
 import { useTranslation } from "react-i18next";
 import { Divider } from "antd";
 
@@ -12,15 +12,12 @@ interface Props {
   seeded: Participant[] | undefined;
   previousStageWinners: Participant[] | undefined;
   skippers: Participant[] | undefined;
-  tournamentParts: {
-    current: TournamentDataRow;
-    previous: TournamentDataRow | undefined;
-  };
+  currentStage: Stage;
   highlightedClubId: number | null;
 }
 
 const Participants: FC<Props> = ({
-  tournamentParts,
+  currentStage,
   seeded,
   previousStageWinners,
   skippers,
@@ -45,7 +42,7 @@ const Participants: FC<Props> = ({
             <ParticipantsList
               title={t("tournament.stages.participants.seeded")}
               participants={seeded}
-              stage={tournamentParts.current.stage}
+              stage={currentStage}
               highlightedClubId={highlightedClubId}
             />
           )}
@@ -56,7 +53,7 @@ const Participants: FC<Props> = ({
             <ParticipantsList
               title={t("tournament.stages.participants.winners")}
               participants={previousStageWinners}
-              stage={tournamentParts.current.stage}
+              stage={currentStage}
               highlightedClubId={highlightedClubId}
             />
           )}
@@ -64,7 +61,7 @@ const Participants: FC<Props> = ({
             <ParticipantsList
               title={t("tournament.stages.participants.skippers")}
               participants={skippers}
-              stage={tournamentParts.current.stage}
+              stage={currentStage}
               highlightedClubId={highlightedClubId}
             />
           )}

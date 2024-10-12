@@ -29,25 +29,10 @@ export interface StageTableRow {
   results: KnockoutStageTableRowResult[];
 }
 
-export interface LeagueStageData {
-  table: Omit<GroupRow, "chessCells">[];
-  tours: Record<number, StageTableRow[]>;
-}
-
-export type MatchesByStages = {
-  stage: Stage;
-  matches: StageTableRow[] | Record<Group, GroupRow[]>;
-};
-
-export interface TournamentDataRow {
-  stage: Stage;
-  matches: StageTableRow[] | LeagueStageData | Record<Group, GroupRow[]>;
-}
-
-// 2
 export interface TournamentStageGroup {
-  table: GroupRow[];
+  table: GroupRow[] | null;
   tours: Record<number, StageTableRow[]>;
 }
 
 export type TournamentStage = Record<Group, TournamentStageGroup>;
+export type TournamentPart = { stage: Stage; matches: TournamentStage };

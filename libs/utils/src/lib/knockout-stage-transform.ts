@@ -1,6 +1,6 @@
 import {
   Participant,
-  TournamentPart,
+  _TournamentPart,
   StageTableRow,
   _StageTableRow,
   _StageTableData,
@@ -15,7 +15,7 @@ import {
 } from "./common";
 
 export const getKnockoutStageMatchesData = (
-  tournamentPart: TournamentPart
+  tournamentPart: _TournamentPart
 ): StageTableRow[] => {
   const year = tournamentPart.stage.tournamentSeason.season.split("-")[0];
   const afterMatchPenalties = !!tournamentPart.stage.stageScheme.pen;
@@ -119,7 +119,7 @@ export const getKnockoutStageMatchesData = (
     .sort((a, b) => a.id - b.id);
 };
 
-export const _transformKnockoutStage = (tournamentPart: TournamentPart) => {
+export const _transformKnockoutStage = (tournamentPart: _TournamentPart) => {
   const resultHeaders: string[] = [];
 
   tournamentPart.matches.forEach(({ date }) => {
