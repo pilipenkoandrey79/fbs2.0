@@ -1,3 +1,7 @@
+@import "../../../../../../style/mixins.scss";
+
 .standings {
   display: block;
+
+  @include highlighted;
 }

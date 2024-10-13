@@ -125,6 +125,7 @@
       "matches": {
         "title": "Matches",
         "subtitle": "{{tour}} tour",
+        "group_subtitle": "Group {{group}}",
         "pen": "pen. {{h}}:{{g}}",
         "coin": "{{club}} is winner by coin tossing",
         "match": {

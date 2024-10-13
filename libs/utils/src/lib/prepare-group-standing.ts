@@ -46,15 +46,16 @@ const getInitialGroupRowData = (
         : score !== null && rivalScore !== null && score === rivalScore
         ? 1
         : 0) - pointsToSubtract,
+    id: team.id,
   };
 };
 
 const prepareGroupRowData = (
-  { games, win, draw, defeat, score, results, team, chessCells }: GroupRow,
+  { games, win, draw, defeat, score, results, team, chessCells, id }: GroupRow,
   { hostScore, guestScore, tech, deductedPointsList }: Partial<BaseMatch>,
   year: string
 ): GroupRow => {
-  const rowData = { team, chessCells } as GroupRow;
+  const rowData = { team, chessCells, id } as GroupRow;
   const scoreValue = hostScore ?? null;
   const rivalScoreValue = guestScore ?? null;
 

@@ -67,6 +67,7 @@ export type ChessCell = {
 };
 
 export interface GroupRow {
+  id: number;
   team: Participant;
   results: _GroupStageTableRowResult[];
   chessCells: ChessCell[];

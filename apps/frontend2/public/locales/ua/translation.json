@@ -125,7 +125,8 @@
       },
       "matches": {
         "title": "Матчі",
-        "subtitle": "{{tour}} тур",
+        "subtitle": "{{tour}} tour",
+        "group_subtitle": "Група {{group}}",
         "pen": "пен. {{h}}:{{g}}",
         "coin": "{{club}} - переможець за жеребом",
         "match": {

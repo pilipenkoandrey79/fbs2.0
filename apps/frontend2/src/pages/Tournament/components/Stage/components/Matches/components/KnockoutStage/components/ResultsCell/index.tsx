@@ -1,5 +1,6 @@
 import {
   ClubWithWinner,
+  GROUP_STAGES,
   ONE_MATCH_STAGES,
   StageSchemeType,
   StageTableRow,
@@ -41,7 +42,9 @@ const ResultsCell: FC<Props> = ({
   const canAddResult =
     !isNotEmpty(forceWinnerId) &&
     results.length <
-      ([...ONE_MATCH_STAGES, StageSchemeType.LEAGUE].includes(stageSchemeType)
+      ([...ONE_MATCH_STAGES, ...GROUP_STAGES, StageSchemeType.LEAGUE].includes(
+        stageSchemeType
+      )
         ? 1
         : 2);
 

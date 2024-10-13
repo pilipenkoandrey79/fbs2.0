@@ -23,6 +23,8 @@ const Matches: FC<Props> = ({
   const { t } = useTranslation();
   const [messageApi, contextHolder] = message.useMessage();
 
+  const groupIndexes = Object.keys(tournamentPart.matches).sort();
+
   return (
     <div
       style={{ display: visible ? "block" : "none" }}
@@ -30,25 +32,33 @@ const Matches: FC<Props> = ({
     >
       {contextHolder}
       <h3>{`${t("tournament.stages.matches.title")}`}</h3>
-
-      {Object.entries(tournamentPart.matches?.[Group.A]?.tours).map(
-        (tour, _, tours) => (
-          <Fragment key={tour[0]}>
-            {tours.length > 1 && (
-              <h4>{`${t("tournament.stages.matches.subtitle", {
-                tour: tour[0],
-              })}`}</h4>
-            )}
-            <KnockoutStage
-              participants={participants}
-              matches={tour[1]}
-              stage={tournamentPart.stage}
-              highlightedClubId={highlightedClubId}
-              messageApi={messageApi}
-            />
-          </Fragment>
-        )
-      )}
+      {groupIndexes.map((group, _, groups) => (
+        <Fragment key={group}>
+          {groups.length > 1 && (
+            <h4>{`${t("tournament.stages.matches.group_subtitle", {
+              group,
+            })}`}</h4>
+          )}
+          {Object.entries(tournamentPart.matches?.[group as Group]?.tours).map(
+            (tour, _, tours) => (
+              <Fragment key={tour[0]}>
+                {tours.length > 1 && (
+                  <h4>{`${t("tournament.stages.matches.subtitle", {
+                    tour: tour[0],
+                  })}`}</h4>
+                )}
+                <KnockoutStage
+                  participants={participants}
+                  matches={tour[1]}
+                  stage={tournamentPart.stage}
+                  highlightedClubId={highlightedClubId}
+                  messageApi={messageApi}
+                />
+              </Fragment>
+            )
+          )}
+        </Fragment>
+      ))}
     </div>
   );
 };

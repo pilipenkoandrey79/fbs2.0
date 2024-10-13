@@ -1,8 +1,10 @@
 import {
   ClubWithWinner,
+  GROUP_STAGES,
   MatchResultDto,
   ONE_MATCH_STAGES,
   Stage,
+  StageSchemeType,
   StageTableRow,
 } from "@fbs2.0/types";
 import {
@@ -193,11 +195,19 @@ const ResultForm: FC<Props> = ({
           {/** #1: date, answer */}
           <Form.Item
             name="answer"
-            label={t(
-              `tournament.stages.matches.form.answer.${
-                values?.answer ? "true" : "false"
-              }`
-            )}
+            label={
+              [
+                ...ONE_MATCH_STAGES,
+                ...GROUP_STAGES,
+                StageSchemeType.LEAGUE,
+              ].includes(stage.stageScheme.type)
+                ? undefined
+                : t(
+                    `tournament.stages.matches.form.answer.${
+                      values?.answer ? "true" : "false"
+                    }`
+                  )
+            }
             className={styles.answer}
           >
             <Input type="hidden" />
