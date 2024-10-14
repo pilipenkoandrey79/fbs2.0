@@ -9,6 +9,7 @@ const theme: ThemeConfig = {
     colorLinkActive: colors.linkActive,
     colorLinkHover: colors.linkHover,
     borderRadius: 3,
+    colorBorder: "#989898",
   },
   components: {
     Table: { borderColor: colors.border },

@@ -23,6 +23,8 @@ import { TournamentMenu } from "./components/TournamentMenu";
 import { useGetMatches } from "../../react-query-hooks/match/useGetMatches";
 import { useGetParticipants } from "../../react-query-hooks/participant/useGetParticipants";
 
+import styles from "./styles.module.scss";
+
 const Tournament: FC = () => {
   const { t } = useTranslation();
   const { season, tournament } = useParams();
@@ -92,6 +94,7 @@ const Tournament: FC = () => {
       ]}
       title={title}
       menu={<TournamentMenu />}
+      className={styles[`tournament-${tournament}`]}
     >
       <Header
         title={title}
@@ -127,6 +130,7 @@ const Tournament: FC = () => {
                   previous: previousTournamentPart,
                 }}
                 highlightedClubId={highlightedClubId}
+                loading={rawMatches.isPending}
               />
             ),
             label: t(getStageTransKey(tournamentPart.stage.stageType)),

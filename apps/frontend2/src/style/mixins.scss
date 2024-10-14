@@ -27,23 +27,26 @@
 
   .highlighted {
     &-UCL {
-      background-color: $ucl !important;
+      background-color: $ucl-primary !important;
+      color: #ffffff;
     }
 
     &-UEL {
-      background-color: $uel !important;
+      background-color: $uel-primary !important;
     }
 
     &-UECL {
-      background-color: $uecl !important;
+      background-color: $uecl-primary !important;
+      color: #ffffff;
     }
 
     &-CWC {
-      background-color: $cwc !important;
+      background-color: $cwc-primary !important;
     }
 
     &-ICFC {
-      background-color: $icfc !important;
+      background-color: $icfc-primary !important;
+      color: #ffffff;
     }
   }
 }

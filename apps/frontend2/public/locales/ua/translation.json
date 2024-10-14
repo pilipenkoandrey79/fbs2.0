@@ -125,7 +125,7 @@
       },
       "matches": {
         "title": "Матчі",
-        "subtitle": "{{tour}} tour",
+        "subtitle": "{{tour}} тур",
         "group_subtitle": "Група {{group}}",
         "pen": "пен. {{h}}:{{g}}",
         "coin": "{{club}} - переможець за жеребом",
@@ -156,7 +156,15 @@
         }
       },
       "tables": {
-        "title": "Таблиці"
+        "title": "Таблиці",
+        "columns": {
+          "games": "Г",
+          "win": "В",
+          "draw": "Н",
+          "defeat": "П",
+          "goals": "М'ячі",
+          "score": "О"
+        }
       }
     }
   }

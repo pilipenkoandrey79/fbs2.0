@@ -1,15 +1,19 @@
 import {
   ClubWithWinner,
+  Group,
+  GROUP_STAGES,
   MatchDto,
   Participant,
   Stage,
+  StageSchemeType,
   StageTableRow,
+  TournamentStage,
   UKRAINE,
   USSR,
 } from "@fbs2.0/types";
 import { Button, Form, Table, TableProps } from "antd";
 import { CloseOutlined, PlusOutlined } from "@ant-design/icons";
-import { FC, useContext, useEffect, useState } from "react";
+import { FC, useContext, useEffect, useMemo, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import classNames from "classnames";
 import { isNotEmpty } from "@fbs2.0/utils";
@@ -24,6 +28,7 @@ import { DeleteCell } from "./components/DeleteCell";
 import { UserContext } from "../../../../../../../../context/userContext";
 import { Club } from "../../../../../../../../components/Club";
 import { useCreateMatch } from "../../../../../../../../react-query-hooks/match/useCreateMatch";
+import { getFilteredParticipants } from "../../../../utils";
 
 import variables from "../../../../../../../../style/variables.module.scss";
 import styles from "./styles.module.scss";
@@ -36,11 +41,17 @@ const templateRow = {
 };
 
 interface Props {
-  participants: Participant[];
+  participants: {
+    seeded: Participant[] | undefined;
+    previousStageWinners: Participant[] | undefined;
+    skippers: Participant[] | undefined;
+  };
   matches: StageTableRow[];
   stage: Stage;
   highlightedClubId: number | null;
   messageApi: MessageInstance;
+  loading: boolean;
+  tour: number | undefined;
 }
 
 const KnockoutStage: FC<Props> = ({
@@ -49,6 +60,8 @@ const KnockoutStage: FC<Props> = ({
   highlightedClubId,
   participants,
   messageApi,
+  loading,
+  tour,
 }) => {
   const { t } = useTranslation();
   const { season, tournament } = useParams();
@@ -65,6 +78,28 @@ const KnockoutStage: FC<Props> = ({
     query: `(min-width: ${variables.screenLg})`,
   });
 
+  const availableParticipants = useMemo(
+    () =>
+      getFilteredParticipants(
+        participants.seeded,
+        participants.previousStageWinners,
+        participants.skippers,
+        {
+          stage,
+          matches: {
+            [Group.A]: { tours: { "1": matches }, table: null },
+          } as unknown as TournamentStage,
+        }
+      ),
+    [
+      matches,
+      participants.previousStageWinners,
+      participants.seeded,
+      participants.skippers,
+      stage,
+    ]
+  );
+
   const availableDates = [
     ...new Set(
       dataSource
@@ -77,7 +112,7 @@ const KnockoutStage: FC<Props> = ({
   const getTeamColumn = (key: "host" | "guest") => ({
     key,
     dataIndex: key,
-    width: 100,
+    width: isLgScreen ? 200 : 100,
     ellipsis: true,
     render: (team: StageTableRow["host"] | StageTableRow["guest"]) =>
       team.club ? (
@@ -102,7 +137,7 @@ const KnockoutStage: FC<Props> = ({
         ...(record.id === templateRow.id
           ? {
               editing: true,
-              participants,
+              participants: availableParticipants,
               form,
               loading: createMatch.isPending,
             }
@@ -111,13 +146,18 @@ const KnockoutStage: FC<Props> = ({
   });
 
   const columns: TableProps<StageTableRow>["columns"] = [
-    {
-      key: "no",
-      rowScope: "row",
-      width: 20,
-      className: styles.number,
-      render: (_, __, index) => index + 1,
-    },
+    ...(dataSource.length > 5
+      ? [
+          {
+            key: "no",
+            rowScope: "row",
+            width: 20,
+            className: styles.number,
+            render: (_: never, __: never, index: number) => index + 1,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } as any,
+        ]
+      : []),
     getTeamColumn("host"),
     {
       key: "results",
@@ -158,13 +198,19 @@ const KnockoutStage: FC<Props> = ({
             key: "delete",
             width: isLgScreen ? 60 : 26,
             className: styles.delete,
-            render: (record: StageTableRow) => (
-              <DeleteCell
-                record={record}
-                messageApi={messageApi}
-                adding={adding}
-              />
-            ),
+            render: (record: StageTableRow) =>
+              record.id === templateRow.id ? null : (
+                <DeleteCell
+                  record={record}
+                  messageApi={messageApi}
+                  adding={adding}
+                  isKnockoutStage={
+                    ![...GROUP_STAGES, StageSchemeType.LEAGUE].includes(
+                      stage.stageScheme.type
+                    )
+                  }
+                />
+              ),
           },
         ]
       : []),
@@ -176,6 +222,7 @@ const KnockoutStage: FC<Props> = ({
         ...values,
         stageType: stage.stageType,
         answer: false,
+        tour,
       });
 
       if (addMore) {
@@ -200,14 +247,14 @@ const KnockoutStage: FC<Props> = ({
   };
 
   useEffect(() => {
-    if (adding && participants.length < 1) {
+    if (adding && availableParticipants.length < 1) {
       setAdding(false);
     }
-  }, [adding, participants.length]);
+  }, [adding, availableParticipants.length]);
 
   useEffect(() => {
-    setDataSource(adding ? [...matches, templateRow] : matches);
-  }, [adding, matches]);
+    setDataSource(adding ? [...matches, { ...templateRow, tour }] : matches);
+  }, [adding, matches, tour]);
 
   return (
     <>
@@ -221,9 +268,10 @@ const KnockoutStage: FC<Props> = ({
           pagination={false}
           showHeader={false}
           bordered
+          loading={loading}
         />
       </Form>
-      {user?.isEditor && participants.length > 0 && (
+      {user?.isEditor && availableParticipants.length > 0 && (
         <Button
           icon={adding ? <CloseOutlined /> : <PlusOutlined />}
           type="primary"

@@ -1,0 +1,23 @@
+@import "../../style/colors.module.scss";
+
+.tournament {
+  &-UCL main {
+    background-color: $ucl-background;
+  }
+
+  &-UEL main {
+    background-color: $uel-background;
+  }
+
+  &-UECL main {
+    background-color: $uecl-background;
+  }
+
+  &-CWC main {
+    background-color: $cwc-background;
+  }
+
+  &-ICFC main {
+    background-color: $icfc-background;
+  }
+}

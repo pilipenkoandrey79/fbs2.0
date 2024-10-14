@@ -26,6 +26,7 @@ export interface StageTableRow {
   host: ClubWithWinner;
   guest: ClubWithWinner;
   forceWinnerId?: number | null;
+  tour: number | undefined;
   results: KnockoutStageTableRowResult[];
 }
 

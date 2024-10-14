@@ -155,7 +155,15 @@
         }
       },
       "tables": {
-        "title": "Standigs"
+        "title": "Standigs",
+        "columns": {
+          "games": "G",
+          "win": "W",
+          "draw": "D",
+          "defeat": "L",
+          "goals": "Goals",
+          "score": "S"
+        }
       }
     }
   }

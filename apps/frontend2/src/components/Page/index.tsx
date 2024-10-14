@@ -21,6 +21,7 @@ interface Props {
   menu?: ReactNode;
   isLoading?: boolean;
   errors?: (Error | AxiosError | null)[] | null;
+  className?: string;
 }
 
 const Page: FC<Props> = (props) => {
@@ -52,7 +53,7 @@ const Page: FC<Props> = (props) => {
   }, [errors, messageApi]);
 
   return (
-    <Layout className={styles.layout}>
+    <Layout className={classNames(styles.layout, props.className)}>
       <Helmet>
         <title>{props.title}</title>
       </Helmet>

@@ -9,20 +9,20 @@ import styles from "./styles.module.scss";
 
 interface Props {
   visible: boolean;
-  seeded: Participant[] | undefined;
-  previousStageWinners: Participant[] | undefined;
-  skippers: Participant[] | undefined;
+  participants: {
+    seeded: Participant[] | undefined;
+    previousStageWinners: Participant[] | undefined;
+    skippers: Participant[] | undefined;
+  };
   currentStage: Stage;
   highlightedClubId: number | null;
 }
 
 const Participants: FC<Props> = ({
   currentStage,
-  seeded,
-  previousStageWinners,
-  skippers,
   highlightedClubId,
   visible,
+  participants: { seeded, skippers, previousStageWinners },
 }) => {
   const { t } = useTranslation();
 

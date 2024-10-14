@@ -58,15 +58,23 @@ const ResultForm: FC<Props> = ({
     ? {
         ...row.match.results.find(({ date }) => date === row.date),
         forceWinnerId: row.match.forceWinnerId,
+        tour: row.match.tour,
       }
     : ({
         answer: row.match.results.length > 0,
         hostScore: 0,
         guestScore: 0,
+        tour: row.match.tour,
       } as MatchResultDto);
 
   const updateMatch = useUpdateMatchResult();
   const createMatch = useCreateMatch();
+
+  const isNotKnockoutStage = [...GROUP_STAGES, StageSchemeType.LEAGUE].includes(
+    stage.stageScheme.type
+  );
+
+  const isOneMatchStage = ONE_MATCH_STAGES.includes(stage.stageScheme.type);
 
   const submit = async (values: MatchResultDto) => {
     try {
@@ -192,23 +200,28 @@ const ResultForm: FC<Props> = ({
           initialValues={initialValues}
           disabled={updateMatch.isPending}
         >
-          {/** #1: date, answer */}
+          {/** #1: date, answer, tour */}
           <Form.Item
             name="answer"
-            label={
-              [
-                ...ONE_MATCH_STAGES,
-                ...GROUP_STAGES,
-                StageSchemeType.LEAGUE,
-              ].includes(stage.stageScheme.type)
-                ? undefined
-                : t(
-                    `tournament.stages.matches.form.answer.${
-                      values?.answer ? "true" : "false"
-                    }`
-                  )
-            }
+            label={t(
+              `tournament.stages.matches.form.answer.${
+                values?.answer ? "true" : "false"
+              }`
+            )}
             className={styles.answer}
+            style={{
+              display: isNotKnockoutStage || isOneMatchStage ? "none" : "block",
+            }}
+          >
+            <Input type="hidden" />
+          </Form.Item>
+          <Form.Item
+            name="tour"
+            label={t("tournament.stages.matches.subtitle", {
+              tour: values?.tour,
+            })}
+            className={styles.answer}
+            style={{ display: isNotKnockoutStage ? "block" : "none" }}
           >
             <Input type="hidden" />
           </Form.Item>

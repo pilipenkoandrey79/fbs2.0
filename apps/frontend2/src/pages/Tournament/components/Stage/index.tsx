@@ -27,6 +27,7 @@ interface Props {
     previous: TournamentPart | undefined;
   };
   highlightedClubId: number | null;
+  loading: boolean;
 }
 
 enum Segments {
@@ -40,7 +41,7 @@ enum SecondarySegments {
   matches = "matches",
 }
 
-const Stage: FC<Props> = ({ tournamentParts, highlightedClubId }) => {
+const Stage: FC<Props> = ({ tournamentParts, highlightedClubId, loading }) => {
   const { t } = useTranslation();
   const { season, tournament } = useParams();
   const [isPending, startTransition] = useTransition();
@@ -54,20 +55,20 @@ const Stage: FC<Props> = ({ tournamentParts, highlightedClubId }) => {
     query: `(min-width: ${variables.screenMd})`,
   });
 
-  const participants = useGetParticipants(season, tournament);
+  const rawParticipants = useGetParticipants(season, tournament);
 
   const hasTable = [...GROUP_STAGES, StageSchemeType.LEAGUE].includes(
     tournamentParts.current.stage.stageScheme.type
   );
 
-  const { seeded, previousStageWinners, skippers, filtered } = useMemo(
+  const participants = useMemo(
     () =>
       prepareStageParticipants(
-        participants.data,
+        rawParticipants.data,
         tournamentParts.current,
         tournamentParts.previous
       ),
-    [participants.data, tournamentParts]
+    [rawParticipants.data, tournamentParts]
   );
 
   return (
@@ -101,6 +102,7 @@ const Stage: FC<Props> = ({ tournamentParts, highlightedClubId }) => {
             });
           }}
           value={segment}
+          disabled={loading}
         />
       )}
       <div
@@ -109,9 +111,7 @@ const Stage: FC<Props> = ({ tournamentParts, highlightedClubId }) => {
         <Participants
           currentStage={tournamentParts.current.stage}
           highlightedClubId={highlightedClubId}
-          seeded={seeded}
-          previousStageWinners={previousStageWinners}
-          skippers={skippers}
+          participants={participants}
           visible={isMdScreen || segment === Segments.participants}
         />
         <Divider type="vertical" className={styles.divider} />
@@ -134,6 +134,7 @@ const Stage: FC<Props> = ({ tournamentParts, highlightedClubId }) => {
                 setSecondarySegment(value)
               }
               value={seconsarySegment}
+              disabled={loading}
             />
           )}
           <div className={styles.results}>
@@ -146,7 +147,7 @@ const Stage: FC<Props> = ({ tournamentParts, highlightedClubId }) => {
                 }
                 tournamentPart={tournamentParts.current}
                 highlightedClubId={highlightedClubId}
-                participants={filtered}
+                loading={loading}
               />
             )}
             <Matches
@@ -157,7 +158,8 @@ const Stage: FC<Props> = ({ tournamentParts, highlightedClubId }) => {
               }
               tournamentPart={tournamentParts.current}
               highlightedClubId={highlightedClubId}
-              participants={filtered}
+              participants={participants}
+              loading={loading}
             />
           </div>
         </div>

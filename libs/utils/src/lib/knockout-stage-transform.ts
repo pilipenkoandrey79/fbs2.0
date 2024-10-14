@@ -39,6 +39,7 @@ export const getKnockoutStageMatchesData = (
           forceWinner,
           unplayed,
           tech,
+          tour,
         }
       ) => {
         if (answer) {
@@ -71,6 +72,7 @@ export const getKnockoutStageMatchesData = (
             guest: { ...guest, club: prepareClub(guest.club, year) },
             forceWinnerId: forceWinner?.id ?? null,
             results: [],
+            tour,
           };
 
           if (date) {

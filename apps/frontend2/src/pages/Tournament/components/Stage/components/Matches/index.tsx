@@ -9,9 +9,14 @@ import styles from "./styles.module.scss";
 
 interface Props {
   visible: boolean;
-  participants: Participant[];
+  participants: {
+    seeded: Participant[] | undefined;
+    previousStageWinners: Participant[] | undefined;
+    skippers: Participant[] | undefined;
+  };
   tournamentPart: TournamentPart;
   highlightedClubId: number | null;
+  loading: boolean;
 }
 
 const Matches: FC<Props> = ({
@@ -19,6 +24,7 @@ const Matches: FC<Props> = ({
   tournamentPart,
   highlightedClubId,
   participants,
+  loading,
 }) => {
   const { t } = useTranslation();
   const [messageApi, contextHolder] = message.useMessage();
@@ -43,9 +49,12 @@ const Matches: FC<Props> = ({
             (tour, _, tours) => (
               <Fragment key={tour[0]}>
                 {tours.length > 1 && (
-                  <h4>{`${t("tournament.stages.matches.subtitle", {
-                    tour: tour[0],
-                  })}`}</h4>
+                  <h4 className={styles["tour-title"]}>{`${t(
+                    "tournament.stages.matches.subtitle",
+                    {
+                      tour: tour[0],
+                    }
+                  )}`}</h4>
                 )}
                 <KnockoutStage
                   participants={participants}
@@ -53,6 +62,8 @@ const Matches: FC<Props> = ({
                   stage={tournamentPart.stage}
                   highlightedClubId={highlightedClubId}
                   messageApi={messageApi}
+                  loading={loading}
+                  tour={tours.length > 1 ? Number(tour[0]) : undefined}
                 />
               </Fragment>
             )

@@ -18,9 +18,10 @@ interface Props {
   record: StageTableRow;
   messageApi: MessageInstance;
   adding: boolean;
+  isKnockoutStage: boolean;
 }
 
-const DeleteCell: FC<Props> = ({ record, messageApi }) => {
+const DeleteCell: FC<Props> = ({ record, messageApi, isKnockoutStage }) => {
   const { t } = useTranslation();
   const deleteMatch = useDeleteMatch();
   const { season, tournament } = useParams();
@@ -64,19 +65,23 @@ const DeleteCell: FC<Props> = ({ record, messageApi }) => {
       icon: <DeleteOutlined />,
       danger: true,
     },
-    {
-      label: t("tournament.stages.matches.match.clear"),
-      key: "clear",
-      icon: <ClearOutlined />,
-      disabled: record.results.every(({ date }) => !date),
-      danger: true,
-    },
+    ...(isKnockoutStage
+      ? [
+          {
+            label: t("tournament.stages.matches.match.clear"),
+            key: "clear",
+            icon: <ClearOutlined />,
+            disabled: record.results.every(({ date }) => !date),
+            danger: true,
+          },
+        ]
+      : []),
   ];
 
   const onClick = ({ key }: { key: string }) =>
     removeMatch(record, key === "clear");
 
-  return isLgScreen ? (
+  return isLgScreen || items.length === 1 ? (
     <>
       {items.map(({ key, icon, danger, disabled }) => (
         <Button

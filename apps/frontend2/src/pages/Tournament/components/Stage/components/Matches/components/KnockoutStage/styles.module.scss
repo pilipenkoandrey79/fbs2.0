@@ -1,6 +1,12 @@
 @import "../../../../../../../../style/mixins.scss";
 @import "../../../../../../../../style/colors.module.scss";
 
+:global {
+  .ant-table-tbody th.ant-table-cell {
+    white-space: nowrap;
+  }
+}
+
 table tbody td.results-cell,
 table tbody td.delete {
   padding: 0 !important;
