@@ -3,7 +3,7 @@ import { message } from "antd";
 import { FC, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 
-import { KnockoutStage } from "./components/KnockoutStage";
+import { KnockoutStageTable } from "./components/KnockoutStageTable";
 
 import styles from "./styles.module.scss";
 
@@ -29,7 +29,10 @@ const Matches: FC<Props> = ({
   const { t } = useTranslation();
   const [messageApi, contextHolder] = message.useMessage();
 
-  const groupIndexes = Object.keys(tournamentPart.matches).sort();
+  const groupIndexes = Object.values(Group).slice(
+    0,
+    tournamentPart.stage.stageScheme.groups || 1
+  );
 
   return (
     <div
@@ -45,29 +48,30 @@ const Matches: FC<Props> = ({
               group,
             })}`}</h4>
           )}
-          {Object.entries(tournamentPart.matches?.[group as Group]?.tours).map(
-            (tour, _, tours) => (
-              <Fragment key={tour[0]}>
-                {tours.length > 1 && (
-                  <h4 className={styles["tour-title"]}>{`${t(
-                    "tournament.stages.matches.subtitle",
-                    {
-                      tour: tour[0],
-                    }
-                  )}`}</h4>
-                )}
-                <KnockoutStage
-                  participants={participants}
-                  matches={tour[1]}
-                  stage={tournamentPart.stage}
-                  highlightedClubId={highlightedClubId}
-                  messageApi={messageApi}
-                  loading={loading}
-                  tour={tours.length > 1 ? Number(tour[0]) : undefined}
-                />
-              </Fragment>
-            )
-          )}
+          {Object.keys(
+            tournamentPart.matches?.[group as Group]?.tours ?? { "1": [] }
+          ).map((tour, _, tours) => (
+            <Fragment key={tour}>
+              {tours.length > 1 && (
+                <h4 className={styles["tour-title"]}>{`${t(
+                  "tournament.stages.matches.subtitle",
+                  {
+                    tour,
+                  }
+                )}`}</h4>
+              )}
+              <KnockoutStageTable
+                participants={participants}
+                matches={tournamentPart.matches}
+                stage={tournamentPart.stage}
+                highlightedClubId={highlightedClubId}
+                messageApi={messageApi}
+                loading={loading}
+                tour={tours.length > 1 ? Number(tour) : undefined}
+                group={group as Group}
+              />
+            </Fragment>
+          ))}
         </Fragment>
       ))}
     </div>

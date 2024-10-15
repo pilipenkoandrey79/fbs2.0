@@ -54,18 +54,20 @@ const ResultForm: FC<Props> = ({
   const [showFoceWinner, setShowFoceWinner] = useState(false);
   const [pristine, setPristine] = useState(true);
 
-  const initialValues = row.date
-    ? {
-        ...row.match.results.find(({ date }) => date === row.date),
-        forceWinnerId: row.match.forceWinnerId,
-        tour: row.match.tour,
-      }
-    : ({
-        answer: row.match.results.length > 0,
-        hostScore: 0,
-        guestScore: 0,
-        tour: row.match.tour,
-      } as MatchResultDto);
+  const initialValues = {
+    ...(row.date
+      ? {
+          ...row.match.results.find(({ date }) => date === row.date),
+          forceWinnerId: row.match.forceWinnerId,
+        }
+      : {
+          answer: row.match.results.length > 0,
+          hostScore: 0,
+          guestScore: 0,
+        }),
+    tour: row.match.tour,
+    group: row.match.group,
+  };
 
   const updateMatch = useUpdateMatchResult();
   const createMatch = useCreateMatch();
@@ -107,15 +109,17 @@ const ResultForm: FC<Props> = ({
   };
 
   useEffect(() => {
-    if (!ONE_MATCH_STAGES.includes(stage.stageScheme.type) && !values?.answer) {
+    const isOneMatch = ONE_MATCH_STAGES.includes(stage.stageScheme.type);
+
+    if (!isOneMatch && !values?.answer) {
       setShowAdditionalSection(false);
 
       return;
     }
 
-    const previousResult = row.match.results.find(
-      ({ answer, date }) => !answer && !!date
-    );
+    const previousResult = isOneMatch
+      ? undefined
+      : row.match.results.find(({ answer, date }) => !answer && !!date);
 
     const totalHostScore =
       (values?.hostScore || 0) + (previousResult?.hostScore || 0);
@@ -276,7 +280,7 @@ const ResultForm: FC<Props> = ({
                   className={styles.club}
                 />
                 <Form.Item name={`${key}Score`} className={styles.score}>
-                  <InputNumber min={0} controls />
+                  <InputNumber min={0} controls changeOnWheel />
                 </Form.Item>
               </div>
             ))}
@@ -304,7 +308,7 @@ const ResultForm: FC<Props> = ({
               {["hostPen", "guestPen"].map((key) => (
                 <div key={key} className={styles.panel}>
                   <Form.Item name={key}>
-                    <InputNumber min={0} controls />
+                    <InputNumber min={0} controls changeOnWheel />
                   </Form.Item>
                 </div>
               ))}

@@ -25,6 +25,7 @@ interface Props {
   tournamentParts: {
     current: TournamentPart;
     previous: TournamentPart | undefined;
+    prePrevious: TournamentPart | undefined;
   };
   highlightedClubId: number | null;
   loading: boolean;
@@ -66,7 +67,8 @@ const Stage: FC<Props> = ({ tournamentParts, highlightedClubId, loading }) => {
       prepareStageParticipants(
         rawParticipants.data,
         tournamentParts.current,
-        tournamentParts.previous
+        tournamentParts.previous,
+        tournamentParts.prePrevious
       ),
     [rawParticipants.data, tournamentParts]
   );

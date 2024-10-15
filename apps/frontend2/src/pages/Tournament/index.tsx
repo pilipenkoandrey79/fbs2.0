@@ -17,6 +17,7 @@ import { CaretRightOutlined, LoadingOutlined } from "@ant-design/icons";
 
 import { Page } from "../../components/Page";
 import { Stage } from "./components/Stage";
+import { getPreviousTournamentPart } from "./components/Stage/utils";
 import { Participants } from "./components/Participants";
 import { Header } from "./components/Header";
 import { TournamentMenu } from "./components/TournamentMenu";
@@ -113,13 +114,15 @@ const Tournament: FC = () => {
         bordered={false}
         activeKey={activeKey}
         items={matches?.map((tournamentPart) => {
-          const previousTournamentPart =
-            tournamentPart.stage.previousStage === null
-              ? undefined
-              : matches.find(
-                  ({ stage }) =>
-                    stage.id === tournamentPart.stage.previousStage?.id
-                );
+          const previousTournamentPart = getPreviousTournamentPart(
+            matches,
+            tournamentPart.stage
+          );
+
+          const prePreviousTournamentPart = getPreviousTournamentPart(
+            matches,
+            previousTournamentPart?.stage
+          );
 
           return {
             key: tournamentPart.stage.id,
@@ -128,6 +131,7 @@ const Tournament: FC = () => {
                 tournamentParts={{
                   current: tournamentPart,
                   previous: previousTournamentPart,
+                  prePrevious: prePreviousTournamentPart,
                 }}
                 highlightedClubId={highlightedClubId}
                 loading={rawMatches.isPending}

@@ -1,0 +1,147 @@
+@import "../../../../../../../../style/mixins.scss";
+@import "../../../../../../../../style/colors.module.scss";
+@import "../../../../../../../../style/variables.module.scss";
+
+:global {
+  .ant-table-tbody .ant-table-cell {
+    white-space: nowrap;
+  }
+}
+
+@include highlighted;
+
+.group-ucl-1 {
+  .team {
+    background-color: $ucl-primary-light;
+  }
+
+  .chess:has(.divider) {
+    background-color: $ucl-primary-dark;
+  }
+
+  .league {
+    &-winner {
+      .team {
+        font-weight: bold;
+      }
+    }
+
+    &-playoff-seeded {
+      .team {
+        background-color: $ucl-secondary-light;
+        font-weight: bold;
+      }
+    }
+
+    &-playoff-unseeded {
+      .team {
+        background-color: $ucl-secondary-light;
+        font-style: italic;
+      }
+    }
+
+    &-relegated {
+      .team {
+        background-color: unset;
+      }
+    }
+  }
+}
+
+.group-ucl-2 {
+  .team {
+    background-color: $ucl-secondary-light;
+  }
+
+  .chess:has(.divider) {
+    background-color: $ucl-secondary-dark;
+  }
+}
+
+.group-uel-1 {
+  .team {
+    background-color: $uel-primary-light;
+  }
+
+  .chess:has(.divider) {
+    background-color: $uel-primary-dark;
+  }
+
+  .league {
+    &-winner {
+      .team {
+        font-weight: bold;
+      }
+    }
+
+    &-playoff-seeded {
+      .team {
+        background-color: $uel-secondary-light;
+        font-weight: bold;
+      }
+    }
+
+    &-playoff-unseeded {
+      .team {
+        background-color: $uel-secondary-light;
+        font-style: italic;
+      }
+    }
+
+    &-relegated {
+      .team {
+        background-color: unset;
+      }
+    }
+  }
+}
+
+.group-uel-2 {
+  .team {
+    background-color: $uel-secondary-light;
+  }
+
+  .chess:has(.divider) {
+    background-color: $uel-secondary-dark;
+  }
+}
+
+.group-uecl-1 {
+  .team {
+    background-color: $uecl-primary-light;
+  }
+
+  .chess:has(.divider) {
+    background-color: $uecl-primary-dark;
+  }
+}
+
+.group-uecl-2 {
+  .team {
+    background-color: $uecl-secondary-light;
+  }
+
+  .chess:has(.divider) {
+    background-color: $uecl-secondary-dark;
+  }
+}
+
+.group-icfc-1 {
+  .team {
+    background-color: $icfc-primary-light;
+  }
+
+  .chess:has(.divider) {
+    background-color: $icfc-primary-dark;
+  }
+}
+
+.group-icfc-2 {
+  .team {
+    background-color: $icfc-secondary-light;
+  }
+
+  .chess:has(.divider) {
+    background-color: $icfc-secondary-dark;
+  }
+}

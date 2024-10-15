@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, Repository } from "typeorm";
-import { MatchResultDto, Tournament } from "@fbs2.0/types";
+import { DeductedPointsDto, MatchResultDto, Tournament } from "@fbs2.0/types";
 import { isNotEmpty, prepareMatchesList } from "@fbs2.0/utils";
 
 import { Match } from "./entities/match.entity";
@@ -253,6 +253,16 @@ export class MatchService {
         })
       : null;
 
+    const setDeductedPoints = (deductions: DeductedPointsDto[]) =>
+      deductions.map(({ participantId, points }) => {
+        const item = new DeductedPoints();
+
+        item.participant = { id: participantId } as Participant;
+        item.points = points;
+
+        return item;
+      });
+
     if (answer) {
       const answerMatch = await this.matchRepository.findOne({
         where: {
@@ -271,22 +281,14 @@ export class MatchService {
       answerMatch.forceWinner = forceWinner;
       answerMatch.unplayed = unplayed;
       answerMatch.tech = tech;
-
-      answerMatch.deductedPointsList = deductions.map(
-        ({ participantId, points }) => {
-          const item = new DeductedPoints();
-
-          item.participant = { id: participantId } as Participant;
-          item.points = points;
-
-          return item;
-        }
-      );
+      answerMatch.deductedPointsList = setDeductedPoints(deductions);
 
       return await this.matchRepository.save(answerMatch);
     } else {
       match.hostScore = hostScore;
       match.guestScore = guestScore;
+      match.hostPen = guestPen ?? null;
+      match.guestPen = hostPen ?? null;
       match.unplayed = unplayed;
       match.tech = tech;
       match.date = date;
@@ -295,14 +297,7 @@ export class MatchService {
         match.forceWinner = forceWinner;
       }
 
-      match.deductedPointsList = deductions.map(({ participantId, points }) => {
-        const item = new DeductedPoints();
-
-        item.participant = { id: participantId } as Participant;
-        item.points = points;
-
-        return item;
-      });
+      match.deductedPointsList = setDeductedPoints(deductions);
 
       return await this.matchRepository.save(match);
     }

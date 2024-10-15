@@ -46,15 +46,16 @@ interface Props {
     previousStageWinners: Participant[] | undefined;
     skippers: Participant[] | undefined;
   };
-  matches: StageTableRow[];
+  matches: TournamentStage;
   stage: Stage;
   highlightedClubId: number | null;
   messageApi: MessageInstance;
   loading: boolean;
   tour: number | undefined;
+  group: Group | undefined;
 }
 
-const KnockoutStage: FC<Props> = ({
+const KnockoutStageTable: FC<Props> = ({
   matches,
   stage,
   highlightedClubId,
@@ -62,6 +63,7 @@ const KnockoutStage: FC<Props> = ({
   messageApi,
   loading,
   tour,
+  group,
 }) => {
   const { t } = useTranslation();
   const { season, tournament } = useParams();
@@ -84,19 +86,18 @@ const KnockoutStage: FC<Props> = ({
         participants.seeded,
         participants.previousStageWinners,
         participants.skippers,
-        {
-          stage,
-          matches: {
-            [Group.A]: { tours: { "1": matches }, table: null },
-          } as unknown as TournamentStage,
-        }
+        { stage, matches },
+        group,
+        tour
       ),
     [
+      group,
       matches,
       participants.previousStageWinners,
       participants.seeded,
       participants.skippers,
       stage,
+      tour,
     ]
   );
 
@@ -146,7 +147,7 @@ const KnockoutStage: FC<Props> = ({
   });
 
   const columns: TableProps<StageTableRow>["columns"] = [
-    ...(dataSource.length > 5
+    ...(dataSource?.length > 5
       ? [
           {
             key: "no",
@@ -223,6 +224,7 @@ const KnockoutStage: FC<Props> = ({
         stageType: stage.stageType,
         answer: false,
         tour,
+        group,
       });
 
       if (addMore) {
@@ -253,8 +255,15 @@ const KnockoutStage: FC<Props> = ({
   }, [adding, availableParticipants.length]);
 
   useEffect(() => {
-    setDataSource(adding ? [...matches, { ...templateRow, tour }] : matches);
-  }, [adding, matches, tour]);
+    setDataSource(
+      adding
+        ? [
+            ...matches[group as Group].tours[tour || 1],
+            { ...templateRow, tour, group },
+          ]
+        : matches?.[group as Group]?.tours?.[tour || 1]
+    );
+  }, [adding, group, matches, tour]);
 
   return (
     <>
@@ -299,4 +308,4 @@ const KnockoutStage: FC<Props> = ({
   );
 };
 
-export { KnockoutStage };
+export { KnockoutStageTable };
