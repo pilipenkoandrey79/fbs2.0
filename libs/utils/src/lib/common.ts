@@ -404,8 +404,11 @@ export const getNumGroupRows = (stageSchemeType: StageSchemeType) => {
       return 3;
     case StageSchemeType.GROUP_5_1_MATCH:
       return 5;
-    default:
+    case StageSchemeType.GROUP_4_2_MATCH:
+    case StageSchemeType.GROUP_SEMI_FINAL:
       return 4;
+    default:
+      return Infinity;
   }
 };
 

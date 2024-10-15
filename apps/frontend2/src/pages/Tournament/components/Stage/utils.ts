@@ -8,7 +8,7 @@ import {
   StageType,
   TournamentPart,
 } from "@fbs2.0/types";
-import { isLeagueStage, isNotEmpty } from "@fbs2.0/utils";
+import { getNumGroupRows, isLeagueStage, isNotEmpty } from "@fbs2.0/utils";
 
 export const applyStageSubstitutions = (
   participants: Participant[] | undefined,
@@ -147,19 +147,33 @@ export const getFilteredParticipants = (
   group: Group | undefined,
   tour: number | undefined
 ) => {
-  const existedParticipantsIds =
-    currentTournamentPart.matches === undefined
-      ? []
-      : Object.values(currentTournamentPart.matches).reduce<number[]>(
-          (acc, { tours }) => {
-            Object.values(tours).forEach((matches) =>
-              matches.forEach(({ host, guest }) => [...acc, host.id, guest.id])
-            );
+  const usedParticipantsIds = currentTournamentPart.matches?.[
+    group as Group
+  ].tours?.[tour || 1].reduce<number[]>(
+    (acc, { host, guest }) => [...acc, host.id, guest.id],
+    []
+  );
 
-            return acc;
-          },
-          []
-        );
+  if (
+    usedParticipantsIds.length >=
+    getNumGroupRows(currentTournamentPart.stage.stageScheme.type)
+  ) {
+    return [];
+  }
+
+  const usedParticipantsIdsInOtherGroups = Object.keys(
+    currentTournamentPart.matches
+  )
+    .filter((key) => key.toString() !== group?.toString())
+    .reduce<number[]>((acc, group) => {
+      currentTournamentPart.matches[group as Group].table?.forEach(
+        ({ team }) => {
+          acc.push(team.id);
+        }
+      );
+
+      return acc;
+    }, []);
 
   return [
     ...(applyStageSubstitutions(
@@ -174,7 +188,12 @@ export const getFilteredParticipants = (
       skippers,
       currentTournamentPart.stage.stageSubstitutions
     ) || []),
-  ].filter(({ id }) => !existedParticipantsIds.includes(id));
+  ].filter(
+    ({ id }) =>
+      ![...usedParticipantsIds, ...usedParticipantsIdsInOtherGroups].includes(
+        id
+      )
+  );
 };
 
 export const prepareStageParticipants = (

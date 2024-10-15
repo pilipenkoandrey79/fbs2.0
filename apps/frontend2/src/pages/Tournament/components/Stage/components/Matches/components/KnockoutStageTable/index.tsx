@@ -258,7 +258,7 @@ const KnockoutStageTable: FC<Props> = ({
     setDataSource(
       adding
         ? [
-            ...matches[group as Group].tours[tour || 1],
+            ...(matches?.[group as Group]?.tours?.[tour || 1] || []),
             { ...templateRow, tour, group },
           ]
         : matches?.[group as Group]?.tours?.[tour || 1]
