@@ -3,7 +3,7 @@ import { Button, Checkbox, Intent, Switch } from "@blueprintjs/core";
 import { isNotEmpty } from "@fbs2.0/utils";
 import {
   ClubWithWinner,
-  _KnockoutStageTableRowResult,
+  KnockoutStageTableRowResult,
   MatchDto,
   MatchResultDto,
   Stage,
@@ -24,8 +24,8 @@ interface Props {
   stage: Stage;
   host: ClubWithWinner;
   guest: ClubWithWinner;
-  result?: _KnockoutStageTableRowResult;
-  previousResult?: _KnockoutStageTableRowResult;
+  result?: KnockoutStageTableRowResult;
+  previousResult?: KnockoutStageTableRowResult;
   date?: string;
   replayDate?: string;
   initialDate?: string;

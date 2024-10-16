@@ -21,6 +21,7 @@ import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { isNotEmpty } from "@fbs2.0/utils";
 import { MessageInstance } from "antd/es/message/interface";
+import classNames from "classnames";
 
 import { SubmitButton } from "../../../../../../../../../../components/SubmitButton";
 import { Club } from "../../../../../../../../../../components/Club";
@@ -31,6 +32,11 @@ import { useCreateMatch } from "../../../../../../../../../../react-query-hooks/
 import styles from "./style.module.scss";
 
 export type Result = { match: StageTableRow; date: string };
+
+interface ResultFormValues extends Omit<MatchResultDto, "deductions"> {
+  hostDeduction?: number;
+  guestDeduction?: number;
+}
 
 interface Props {
   row: Result;
@@ -48,11 +54,15 @@ const ResultForm: FC<Props> = ({
   availableDates,
 }) => {
   const { t } = useTranslation();
-  const [form] = Form.useForm<MatchResultDto>();
+  const [form] = Form.useForm<ResultFormValues>();
   const values = Form.useWatch([], form);
   const [showAdditionalSection, setShowAdditionalSection] = useState(false);
   const [showFoceWinner, setShowFoceWinner] = useState(false);
   const [pristine, setPristine] = useState(true);
+
+  const [showDeduction, setShowDeduction] = useState(
+    () => (row.match.deductedPointsList?.length || 0) > 0
+  );
 
   const initialValues = {
     ...(row.date
@@ -66,8 +76,13 @@ const ResultForm: FC<Props> = ({
           guestScore: 0,
         }),
     tour: row.match.tour,
-    group: row.match.group,
-  };
+    hostDeduction: row.match.deductedPointsList?.find(
+      ({ participant }) => participant.id === row.match.host.id
+    )?.points,
+    guestDeduction: row.match.deductedPointsList?.find(
+      ({ participant }) => participant.id === row.match.guest.id
+    )?.points,
+  } as ResultFormValues;
 
   const updateMatch = useUpdateMatchResult();
   const createMatch = useCreateMatch();
@@ -78,13 +93,26 @@ const ResultForm: FC<Props> = ({
 
   const isOneMatchStage = ONE_MATCH_STAGES.includes(stage.stageScheme.type);
 
-  const submit = async (values: MatchResultDto) => {
+  const submit = async (values: ResultFormValues) => {
     try {
+      const { hostDeduction, guestDeduction, ...payload } = values;
+
+      (payload as MatchResultDto).deductions =
+        hostDeduction || guestDeduction
+          ? [
+              { participantId: row.match.host.id, points: hostDeduction || 0 },
+              {
+                participantId: row.match.guest.id,
+                points: guestDeduction || 0,
+              },
+            ].filter(({ points }) => points > 0)
+          : undefined;
+
       if (row.date) {
-        await updateMatch.mutateAsync({ id: row.match.id, payload: values });
+        await updateMatch.mutateAsync({ id: row.match.id, payload });
       } else {
         await createMatch.mutateAsync({
-          ...values,
+          ...payload,
           date: values?.date || "",
           hostId: row.match.host.id,
           guestId: row.match.guest.id,
@@ -207,28 +235,39 @@ const ResultForm: FC<Props> = ({
           {/** #1: date, answer, tour */}
           <Form.Item
             name="answer"
+            layout="vertical"
             label={t(
               `tournament.stages.matches.form.answer.${
                 values?.answer ? "true" : "false"
               }`
             )}
-            className={styles.answer}
+            className={classNames(styles.answer, styles["hidden-input"])}
             style={{
               display: isNotKnockoutStage || isOneMatchStage ? "none" : "block",
             }}
           >
             <Input type="hidden" />
           </Form.Item>
-          <Form.Item
-            name="tour"
-            label={t("tournament.stages.matches.subtitle", {
-              tour: values?.tour,
-            })}
-            className={styles.answer}
-            style={{ display: isNotKnockoutStage ? "block" : "none" }}
+          <div
+            className={styles["group-tour"]}
+            style={{ display: isNotKnockoutStage ? "flex" : "none" }}
           >
-            <Input type="hidden" />
-          </Form.Item>
+            <span>
+              {t("tournament.stages.matches.group_subtitle", {
+                group: row.match.group,
+              })}
+            </span>
+            <Form.Item
+              name="tour"
+              layout="vertical"
+              label={t("tournament.stages.matches.subtitle", {
+                tour: values?.tour,
+              })}
+              className={styles["hidden-input"]}
+            >
+              <Input type="hidden" />
+            </Form.Item>
+          </div>
           <DateInput
             name="date"
             label={t("tournament.stages.matches.form.date")}
@@ -336,6 +375,31 @@ const ResultForm: FC<Props> = ({
               ]}
             />
           </Form.Item>
+
+          {/** #6: Deduction */}
+          {isNotKnockoutStage && (
+            <div className={styles.deduction}>
+              <label>
+                {t("tournament.stages.matches.form.deduction")}{" "}
+                <Checkbox
+                  checked={showDeduction}
+                  onChange={() => setShowDeduction(!showDeduction)}
+                />
+              </label>
+              <div
+                className={styles.panels}
+                style={{ display: showDeduction ? "flex" : "none" }}
+              >
+                {["hostDeduction", "guestDeduction"].map((key) => (
+                  <div key={key} className={styles.panel}>
+                    <Form.Item name={key}>
+                      <InputNumber min={0} controls changeOnWheel />
+                    </Form.Item>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           <Divider type="horizontal" />
           <SubmitButton

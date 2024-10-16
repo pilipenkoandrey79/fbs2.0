@@ -152,6 +152,7 @@ export interface MatchResultDto {
   tech?: boolean;
   deductions?: DeductedPointsDto[];
   tour?: number;
+  group?: Group;
 }
 
 export interface MatchDto extends Partial<MatchResultDto> {
@@ -159,7 +160,6 @@ export interface MatchDto extends Partial<MatchResultDto> {
   hostId: number;
   guestId: number;
   stageType: StageType;
-  group?: Group;
 }
 
 export interface ClubCoefficient {

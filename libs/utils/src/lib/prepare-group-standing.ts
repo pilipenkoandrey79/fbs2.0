@@ -29,7 +29,8 @@ const getInitialGroupRowData = (
         hostScore: score,
         guestScore: rivalScore,
         tech,
-        hasDeductedPoints: pointsToSubtract > 0,
+        hasDeductedPoints: pointsToSubtract,
+        date: "",
       },
     ],
     chessCells: [],
@@ -70,7 +71,8 @@ const prepareGroupRowData = (
       hostScore: scoreValue,
       guestScore: rivalScoreValue,
       tech: tech ?? false,
-      hasDeductedPoints: pointsToSubtract > 0,
+      hasDeductedPoints: pointsToSubtract,
+      date: "",
     },
   ];
 

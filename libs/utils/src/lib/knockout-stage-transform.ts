@@ -41,6 +41,7 @@ export const getKnockoutStageMatchesData = (
           tech,
           tour,
           group,
+          deductedPointsList,
         }
       ) => {
         if (answer) {
@@ -75,6 +76,7 @@ export const getKnockoutStageMatchesData = (
             results: [],
             tour,
             group,
+            deductedPointsList,
           };
 
           if (date) {
@@ -200,6 +202,7 @@ export const _transformKnockoutStage = (tournamentPart: _TournamentPart) => {
           answer: true,
           unplayed: unplayed ?? false,
           tech: tech ?? false,
+          date: date ?? "",
         };
       } else {
         const row: _StageTableRow = {
@@ -231,6 +234,7 @@ export const _transformKnockoutStage = (tournamentPart: _TournamentPart) => {
           answer: false,
           unplayed: unplayed ?? false,
           tech: tech ?? false,
+          date: date ?? "",
         };
 
         rows.push(row);

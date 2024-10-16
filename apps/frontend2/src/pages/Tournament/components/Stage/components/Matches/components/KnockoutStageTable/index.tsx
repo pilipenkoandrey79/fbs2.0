@@ -28,6 +28,7 @@ import { DeleteCell } from "./components/DeleteCell";
 import { UserContext } from "../../../../../../../../context/userContext";
 import { Club } from "../../../../../../../../components/Club";
 import { useCreateMatch } from "../../../../../../../../react-query-hooks/match/useCreateMatch";
+import { useDeleteMatch } from "../../../../../../../../react-query-hooks/match/useDeleteMatch";
 import { getFilteredParticipants } from "../../../../utils";
 
 import variables from "../../../../../../../../style/variables.module.scss";
@@ -70,6 +71,7 @@ const KnockoutStageTable: FC<Props> = ({
   const [form] = Form.useForm<MatchDto>();
   const { user } = useContext(UserContext);
   const createMatch = useCreateMatch();
+  const deleteMatch = useDeleteMatch();
 
   const [dataSource, setDataSource] = useState<StageTableRow[]>([]);
   const [adding, setAdding] = useState(false);
@@ -277,7 +279,7 @@ const KnockoutStageTable: FC<Props> = ({
           pagination={false}
           showHeader={false}
           bordered
-          loading={loading}
+          loading={loading || createMatch.isPending || deleteMatch.isPending}
         />
       </Form>
       {user?.isEditor && availableParticipants.length > 0 && (
@@ -292,7 +294,7 @@ const KnockoutStageTable: FC<Props> = ({
 
             setAdding(!adding);
           }}
-          disabled={createMatch.isPending}
+          disabled={createMatch.isPending || deleteMatch.isPending}
         />
       )}
       {!!resultEditing && (

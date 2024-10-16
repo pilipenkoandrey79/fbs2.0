@@ -147,12 +147,10 @@ export const getFilteredParticipants = (
   group: Group | undefined,
   tour: number | undefined
 ) => {
-  const usedParticipantsIds = currentTournamentPart.matches?.[
-    group as Group
-  ].tours?.[tour || 1].reduce<number[]>(
-    (acc, { host, guest }) => [...acc, host.id, guest.id],
-    []
-  );
+  const usedParticipantsIds =
+    currentTournamentPart.matches?.[group as Group]?.tours?.[tour || 1].reduce<
+      number[]
+    >((acc, { host, guest }) => [...acc, host.id, guest.id], []) || [];
 
   if (
     usedParticipantsIds.length >=
@@ -175,24 +173,34 @@ export const getFilteredParticipants = (
       return acc;
     }, []);
 
-  return [
-    ...(applyStageSubstitutions(
-      seededParticipants,
-      currentTournamentPart.stage.stageSubstitutions
-    ) || []),
-    ...(applyStageSubstitutions(
-      previousStageWinners,
-      currentTournamentPart.stage.stageSubstitutions
-    ) || []),
-    ...(applyStageSubstitutions(
-      skippers,
-      currentTournamentPart.stage.stageSubstitutions
-    ) || []),
-  ].filter(
-    ({ id }) =>
-      ![...usedParticipantsIds, ...usedParticipantsIdsInOtherGroups].includes(
-        id
-      )
+  const allParticipants =
+    (currentTournamentPart.matches?.[group as Group]?.table?.length || 0) >=
+    getNumGroupRows(currentTournamentPart.stage.stageScheme.type)
+      ? currentTournamentPart.matches?.[group as Group].table?.map(
+          ({ team }) => team
+        )
+      : [
+          ...(applyStageSubstitutions(
+            seededParticipants,
+            currentTournamentPart.stage.stageSubstitutions
+          ) || []),
+          ...(applyStageSubstitutions(
+            previousStageWinners,
+            currentTournamentPart.stage.stageSubstitutions
+          ) || []),
+          ...(applyStageSubstitutions(
+            skippers,
+            currentTournamentPart.stage.stageSubstitutions
+          ) || []),
+        ];
+
+  return (
+    allParticipants?.filter(
+      ({ id }) =>
+        ![...usedParticipantsIds, ...usedParticipantsIdsInOtherGroups].includes(
+          id
+        )
+    ) || []
   );
 };
 

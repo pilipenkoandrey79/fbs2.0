@@ -1,5 +1,11 @@
-import { Group, Participant, TournamentPart } from "@fbs2.0/types";
-import { message } from "antd";
+import {
+  Group,
+  GROUP_STAGES,
+  Participant,
+  StageSchemeType,
+  TournamentPart,
+} from "@fbs2.0/types";
+import { Divider, message } from "antd";
 import { FC, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -67,9 +73,16 @@ const Matches: FC<Props> = ({
                 highlightedClubId={highlightedClubId}
                 messageApi={messageApi}
                 loading={loading}
-                tour={tours.length > 1 ? Number(tour) : undefined}
+                tour={
+                  [...GROUP_STAGES, StageSchemeType.LEAGUE].includes(
+                    tournamentPart.stage.stageScheme.type
+                  )
+                    ? Number(tour)
+                    : undefined
+                }
                 group={group as Group}
               />
+              {tours.length > 1 && <Divider type="horizontal" />}
             </Fragment>
           ))}
         </Fragment>

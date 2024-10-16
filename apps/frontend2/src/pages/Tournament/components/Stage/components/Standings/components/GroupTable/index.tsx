@@ -90,14 +90,20 @@ const GroupTable: FC<Props> = ({
           dataIndex: "chessCells",
           width: 32,
           className: styles.chess,
-          render: (chessCells: GroupRow["chessCells"]) =>
-            chessCells[index]?.label ? (
-              <Tooltip title={dateRenderer(chessCells[index]?.date || null)}>
-                {chessCells[index].label}
+          render: (chessCells: GroupRow["chessCells"]) => {
+            const { label, match, date } = { ...chessCells[index] };
+
+            return label ? (
+              <Tooltip title={dateRenderer(date || null)}>
+                {label}
+                {((match?.deductedPointsList?.length || 0) > 0 ||
+                  !!match?.tech) &&
+                  "*"}
               </Tooltip>
             ) : (
               <span className={styles.divider} />
-            ),
+            );
+          },
         }))
       : []),
     {
@@ -136,6 +142,26 @@ const GroupTable: FC<Props> = ({
       dataIndex: "score",
       width: 32,
       title: t("tournament.stages.tables.columns.score"),
+      render: (score: number, record) => {
+        const deduction = record.results.reduce<number>(
+          (acc, { hasDeductedPoints }) => acc + (hasDeductedPoints || 0),
+          0
+        );
+
+        const value = `${score}${deduction ? "*" : ""}`;
+
+        return deduction ? (
+          <Tooltip
+            title={t("tournament.stages.matches.form.deducted", {
+              points: deduction,
+            })}
+          >
+            {value}
+          </Tooltip>
+        ) : (
+          value
+        );
+      },
     },
   ];
 

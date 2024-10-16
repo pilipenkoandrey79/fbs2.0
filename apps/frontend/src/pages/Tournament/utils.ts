@@ -3,7 +3,7 @@ import {
   GROUP_STAGES,
   Group,
   GroupRow,
-  _KnockoutStageTableRowResult,
+  KnockoutStageTableRowResult,
   _LeagueStageData,
   Participant,
   Stage,
@@ -32,8 +32,8 @@ export const getResultsInPair = (
   columnIndex: number
 ) => {
   type resultsType = {
-    result: _KnockoutStageTableRowResult | undefined;
-    anotherResult: _KnockoutStageTableRowResult | undefined;
+    result: KnockoutStageTableRowResult | undefined;
+    anotherResult: KnockoutStageTableRowResult | undefined;
   };
 
   return (

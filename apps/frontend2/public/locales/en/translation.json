@@ -151,7 +151,9 @@
           "force_winner": "The winner is",
           "date": "Date",
           "penalty": "After-match penalties",
-          "replay": "Additional match"
+          "replay": "Additional match",
+          "deduction": "Points deduction punishment",
+          "deducted": "{{points}} points deducted"
         }
       },
       "tables": {

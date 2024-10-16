@@ -8,6 +8,7 @@ import {
   Tournament,
   StageType,
   TournamentSeason,
+  DeductedPoints,
 } from "./types";
 
 export type JwtPayload = {
@@ -22,24 +23,27 @@ export interface JWTTokensPair {
 
 export type ClubWithWinner = Participant & { isWinner?: boolean };
 
-export interface _BaseMatchResult {
+export interface BaseMatchResult {
   hostScore: number | null;
   guestScore: number | null;
-  label?: string;
+  date: string;
+  label?: string; // @Deprected
   unplayed?: boolean;
   tech?: boolean;
 }
 
-export interface _KnockoutStageTableRowResult extends _BaseMatchResult {
+export interface KnockoutStageTableRowResult extends BaseMatchResult {
   hostPen?: number | null;
   guestPen?: number | null;
   answer: boolean;
+  replayDate?: string;
 }
 
-export interface _GroupStageTableRowResult extends _BaseMatchResult {
-  hasDeductedPoints?: boolean;
+export interface GroupStageTableRowResult extends BaseMatchResult {
+  hasDeductedPoints?: number;
 }
 
+// @Deprecated
 export interface _StageTableRow {
   id: number;
   answerMatchId?: number;
@@ -47,18 +51,40 @@ export interface _StageTableRow {
   host: ClubWithWinner;
   guest: ClubWithWinner;
   forceWinnerId?: number | null;
-  results: _KnockoutStageTableRowResult[];
+  results: KnockoutStageTableRowResult[];
 }
 
+// @Deprecated
 export interface _StageTableData {
   headers: string[];
   rows: _StageTableRow[];
 }
 
+// @Deprecated
 export interface _LeagueStageData {
   table: Omit<GroupRow, "chessCells">[];
   tours: Record<number, _StageTableData>;
 }
+
+export interface StageTableRow {
+  id: number;
+  answerMatchId?: number;
+  host: ClubWithWinner;
+  guest: ClubWithWinner;
+  forceWinnerId?: number | null;
+  tour: number | undefined;
+  group: Group | undefined;
+  results: KnockoutStageTableRowResult[];
+  deductedPointsList: DeductedPoints[] | undefined;
+}
+
+export interface TournamentStageGroup {
+  table: GroupRow[] | null;
+  tours: Record<number, StageTableRow[]>;
+}
+
+export type TournamentStage = Record<Group, TournamentStageGroup>;
+export type TournamentPart = { stage: Stage; matches: TournamentStage };
 
 export type ChessCell = {
   label: string;
@@ -69,7 +95,7 @@ export type ChessCell = {
 export interface GroupRow {
   id: number;
   team: Participant;
-  results: _GroupStageTableRowResult[];
+  results: GroupStageTableRowResult[];
   chessCells: ChessCell[];
   games: number;
   win: number;

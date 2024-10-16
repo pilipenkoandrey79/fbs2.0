@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import {
-  _KnockoutStageTableRowResult,
+  KnockoutStageTableRowResult,
   Balance,
   ClubCV,
   OldClubNameDto,
@@ -151,13 +151,14 @@ export class ClubService {
             ({ stage }) => stage.stageType === StageType.FINAL
           );
 
-          const finalResults = finalMatches.map<_KnockoutStageTableRowResult>(
-            ({ hostScore, guestScore, hostPen, guestPen, answer }) => ({
+          const finalResults = finalMatches.map<KnockoutStageTableRowResult>(
+            ({ hostScore, guestScore, hostPen, guestPen, answer, date }) => ({
               hostScore: answer ? guestScore : hostScore,
               guestScore: answer ? hostScore : guestScore,
               hostPen: answer ? guestPen : hostPen,
               guestPen: answer ? hostPen : guestPen,
               answer,
+              date,
             })
           );
 

@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, Repository } from "typeorm";
 import {
-  _KnockoutStageTableRowResult,
+  KnockoutStageTableRowResult,
   ClubWithWinner,
   CountryCV,
   CountryCVStatus,
@@ -142,13 +142,14 @@ export class CountryService {
         return acc;
       }, [])
       .map<CountryCV>((finalData) => {
-        const finalResults = finalData.m.map<_KnockoutStageTableRowResult>(
-          ({ hostScore, guestScore, hostPen, guestPen, answer }) => ({
+        const finalResults = finalData.m.map<KnockoutStageTableRowResult>(
+          ({ hostScore, guestScore, hostPen, guestPen, answer, date }) => ({
             hostScore: answer ? guestScore : hostScore,
             guestScore: answer ? hostScore : guestScore,
             hostPen: answer ? guestPen : hostPen,
             guestPen: answer ? hostPen : guestPen,
             answer,
+            date,
           })
         );
 

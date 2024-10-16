@@ -17,6 +17,29 @@
       justify-content: center;
     }
 
+    .group-tour {
+      @include flex(row, flex-start, center);
+      gap: 8px;
+      font-size: 20px;
+      padding-bottom: 8px;
+
+      div {
+        padding: 0;
+      }
+
+      label {
+        font-size: 20px !important;
+      }
+    }
+
+    .hidden-input {
+      :global {
+        .ant-form-item-control-input {
+          min-height: unset;
+        }
+      }
+    }
+
     .panels {
       @include flex(row, space-between, flex-start);
 
@@ -55,6 +78,10 @@
 
     .force-winner > div {
       @include flex(column, flex-start, center);
+    }
+
+    .deduction {
+      padding: 8px 0;
     }
   }
 

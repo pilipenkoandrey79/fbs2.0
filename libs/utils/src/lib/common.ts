@@ -7,7 +7,7 @@ import {
   FIRST_ICFC_SEASONS,
   Group,
   GroupRow,
-  _KnockoutStageTableRowResult,
+  KnockoutStageTableRowResult,
   Match,
   BaseMatch,
   ONE_MATCH_STAGES,
@@ -434,13 +434,14 @@ export const getWinners = (matches: Match[]) =>
       []
     )
     .map<Winner>(({ tournament, matches }) => {
-      const finalResults = matches.map<_KnockoutStageTableRowResult>(
-        ({ hostScore, guestScore, hostPen, guestPen, answer }) => ({
+      const finalResults = matches.map<KnockoutStageTableRowResult>(
+        ({ hostScore, guestScore, hostPen, guestPen, answer, date }) => ({
           hostScore: answer ? guestScore : hostScore,
           guestScore: answer ? hostScore : guestScore,
           hostPen: answer ? guestPen : hostPen,
           guestPen: answer ? hostPen : guestPen,
           answer,
+          date: date ?? "",
         })
       );
 
@@ -515,7 +516,7 @@ export const getCVBalance = (cv: ClubCV[] | undefined) => {
 };
 
 export const getWinner = (
-  results: _KnockoutStageTableRowResult[],
+  results: KnockoutStageTableRowResult[],
   awayGoalRule: boolean,
   forceWinner?: "host" | "guest"
 ): { host: boolean; guest: boolean } => {
