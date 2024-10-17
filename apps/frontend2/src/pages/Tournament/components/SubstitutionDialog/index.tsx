@@ -1,4 +1,4 @@
-import { Divider, Form, Input, message, Modal, Select } from "antd";
+import { Divider, Form, Input, message, Modal } from "antd";
 import { FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { StageSubstitution, StageSubstitutionDto } from "@fbs2.0/types";
@@ -6,10 +6,10 @@ import { useParams } from "react-router";
 
 import { StageProps } from "../Stage";
 import { SubmitButton } from "../../../../components/SubmitButton";
-import { Club } from "../../../../components/Club";
 import { useCreateSubstitution } from "../../../../react-query-hooks/tournament/useCreateSubstitution";
 import { useGetParticipants } from "../../../../react-query-hooks/participant/useGetParticipants";
 import { getStageParticipants } from "../Stage/utils";
+import { ParticipantSelector } from "./components/ParticipantSelector";
 
 interface Props {
   stageId: number;
@@ -97,61 +97,16 @@ const SubstitutionDialog: FC<Props> = ({
         <Form.Item name="stageId">
           <Input type="hidden" />
         </Form.Item>
-        <Form.Item
+        <ParticipantSelector
           name="expelledId"
           label={t("tournament.stages.substitutions.label1")}
-          rules={[{ required: true }]}
-        >
-          <Select
-            size="small"
-            showSearch
-            filterOption={(input, option) =>
-              (option?.["data-label"] ?? "")
-                .toLowerCase()
-                .includes(input.toLowerCase())
-            }
-            allowClear
-            placeholder={t("common.placeholder.club")}
-          >
-            {targets?.map((option) => (
-              <Select.Option
-                key={option.id}
-                value={option.id}
-                data-label={option.club.name}
-              >
-                <Club club={option.club} />
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
-        <Form.Item
+          options={targets}
+        />
+        <ParticipantSelector
           name="subId"
           label={t("tournament.stages.substitutions.label2")}
-          rules={[{ required: true }]}
-        >
-          <Select
-            size="small"
-            showSearch
-            filterOption={(input, option) =>
-              (option?.["data-label"] ?? "")
-                .toLowerCase()
-                .includes(input.toLowerCase())
-            }
-            allowClear
-            placeholder={t("common.placeholder.club")}
-            disabled={(subs?.length || 0) < 1}
-          >
-            {subs?.map((option) => (
-              <Select.Option
-                key={option.id}
-                value={option.id}
-                data-label={option.club.name}
-              >
-                <Club club={option.club} />
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
+          options={subs}
+        />
         <Divider type="horizontal" />
         <SubmitButton form={form} size="small" label={t("common.save")} />
       </Form>

@@ -16,10 +16,12 @@ export const useTransferParticipants = () => {
         `${ApiEntities.Participant}/${season}/${tournament}/add-from-other-tournament`
       ),
     onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: [QUERY_KEY.participants, season, tournament],
-        refetchType: "all",
-      });
+      [QUERY_KEY.participants, QUERY_KEY.matches].forEach((key) =>
+        queryClient.invalidateQueries({
+          queryKey: [key, season, tournament],
+          refetchType: "all",
+        })
+      );
     },
   });
 };

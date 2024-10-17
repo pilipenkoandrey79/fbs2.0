@@ -16,10 +16,12 @@ export const useDeleteParticipant = () => {
         `${ApiEntities.Participant}/${participantId}`
       ),
     onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: [QUERY_KEY.participants, season, tournament],
-        refetchType: "all",
-      });
+      [QUERY_KEY.participants, QUERY_KEY.matches].forEach((key) =>
+        queryClient.invalidateQueries({
+          queryKey: [key, season, tournament],
+          refetchType: "all",
+        })
+      );
     },
   });
 };

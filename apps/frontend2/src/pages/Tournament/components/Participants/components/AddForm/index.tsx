@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { AddClubForm } from "./components/AddClubForm";
 import { SubmitButton } from "../../../../../../components/SubmitButton";
-import { ParticipantSelector } from "../../../../../../components/selectors/ParticipantSelector";
+import { ParticipantSelector } from "../../../ParticipantSelector";
 import { StageTypeSelector } from "../../../../../../components/selectors/StageTypeSelector";
 import { CountrySelector } from "../../../../../../components/selectors/CountrySelector";
 import { useCreateParticipant } from "../../../../../../react-query-hooks/participant/useCreateParticipant";

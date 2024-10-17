@@ -12,7 +12,7 @@ import { Button, Typography } from "antd";
 
 import { useGetTournamentSeasons } from "../../../../react-query-hooks/tournament/useGetTournamentSeasons";
 import { TournamentLogo } from "../../../../components/TournamentLogo";
-import { ParticipantSelector } from "../../../../components/selectors/ParticipantSelector";
+import { ParticipantSelector } from "../ParticipantSelector";
 import { Paths } from "../../../../routes";
 
 import styles from "./styles.module.scss";

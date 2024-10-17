@@ -1,11 +1,12 @@
 import { FC } from "react";
-import { Form, Select, SelectProps } from "antd";
+import { Form, SelectProps } from "antd";
 import { Country } from "@fbs2.0/types";
 import { isNotEmpty } from "@fbs2.0/utils";
 import { useTranslation } from "react-i18next";
 
 import { useGetCountries } from "../../../react-query-hooks/country/useGetCountries";
 import { Flag } from "../../Flag";
+import { Selector } from "../Selector";
 
 interface OldCountriesConfigProp {
   disable?: boolean;
@@ -64,38 +65,17 @@ const CountrySelector: FC<Props> = ({
   const { data } = useGetCountries();
 
   const node = (
-    <Select
-      size="small"
-      showSearch
-      filterOption={(input, option) =>
-        (option?.["data-label"] ?? "")
-          .toLowerCase()
-          .includes(input.toLowerCase())
-      }
+    <Selector<Country>
+      options={getOptions(data, oldCountriesConfig, i18n.resolvedLanguage)}
+      renderOption={(option) => (
+        <span>
+          <Flag country={option} /> {option.name}
+        </span>
+      )}
       className={className}
       placeholder={t("common.placeholder.country")}
-      {...(formItem
-        ? {}
-        : {
-            value,
-            onChange,
-          })}
-    >
-      {getOptions(data, oldCountriesConfig, i18n.resolvedLanguage)?.map(
-        (option) => (
-          <Select.Option
-            key={option.id}
-            value={option.id}
-            data-label={option.name}
-            disabled={oldCountriesConfig?.disable && option.till}
-          >
-            <span>
-              <Flag country={option} /> {option.name}
-            </span>
-          </Select.Option>
-        )
-      )}
-    </Select>
+      {...(formItem ? {} : { value, onChange })}
+    />
   );
 
   return formItem ? (

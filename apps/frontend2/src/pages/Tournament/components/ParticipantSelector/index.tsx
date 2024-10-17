@@ -1,4 +1,4 @@
-import { Form, Select, SelectProps } from "antd";
+import { Form, SelectProps } from "antd";
 import { FC } from "react";
 import { useParams } from "react-router";
 import { Participant, Club as ClubInterface } from "@fbs2.0/types";
@@ -7,9 +7,10 @@ import { useTranslation } from "react-i18next";
 import {
   getYearSelector,
   useGetClubs,
-} from "../../../react-query-hooks/club/useGetClubs";
-import { useGetParticipants } from "../../../react-query-hooks/participant/useGetParticipants";
-import { Club } from "../../Club";
+} from "../../../../react-query-hooks/club/useGetClubs";
+import { useGetParticipants } from "../../../../react-query-hooks/participant/useGetParticipants";
+import { Club } from "../../../../components/Club";
+import { Selector } from "../../../../components/selectors/Selector";
 
 interface Props extends SelectProps {
   formItem?: boolean;
@@ -56,35 +57,14 @@ const ParticipantSelector: FC<Props> = ({
     .sort((a, b) => collator.compare(a.name, b.name));
 
   const node = (
-    <Select
-      size="small"
-      showSearch
-      filterOption={(input, option) =>
-        (option?.["data-label"] ?? "")
-          .toLowerCase()
-          .includes(input.toLowerCase())
-      }
+    <Selector<ClubInterface>
+      options={options}
+      renderOption={(option) => <Club club={option} />}
       className={className}
       allowClear={allowClear}
       placeholder={t("common.placeholder.club")}
-      {...(formItem
-        ? {}
-        : {
-            value,
-            onChange,
-            onClear,
-          })}
-    >
-      {options?.map((option) => (
-        <Select.Option
-          key={option.id}
-          value={option.id}
-          data-label={option.name}
-        >
-          <Club club={option} />
-        </Select.Option>
-      ))}
-    </Select>
+      {...(formItem ? {} : { value, onChange, onClear })}
+    />
   );
 
   return formItem ? (

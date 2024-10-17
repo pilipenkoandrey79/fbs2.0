@@ -1,7 +1,7 @@
 import { Participant } from "@fbs2.0/types";
 import { FC, HTMLAttributes, PropsWithChildren } from "react";
 
-import { ParticipantSelector } from "../../../../../../../../components/selectors/ParticipantSelector";
+import { ParticipantSelector } from "../../../../../ParticipantSelector";
 import { StageTypeSelector } from "../../../../../../../../components/selectors/StageTypeSelector";
 
 export interface EditableCellProps extends HTMLAttributes<HTMLElement> {
