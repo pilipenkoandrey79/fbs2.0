@@ -2,7 +2,7 @@ import { ThemeConfig } from "antd";
 
 import colors from "./colors.module.scss";
 
-const theme: ThemeConfig = {
+const myTheme: ThemeConfig = {
   token: {
     colorPrimary: colors.primaryBase,
     colorLink: colors.link,
@@ -29,4 +29,4 @@ const theme: ThemeConfig = {
   },
 };
 
-export { theme };
+export { myTheme };

@@ -1,6 +1,6 @@
 import { Participant } from "@fbs2.0/types";
 import { FC } from "react";
-import { Button, FormInstance, message, Popconfirm } from "antd";
+import { Button, FormInstance, Popconfirm } from "antd";
 import {
   CloseOutlined,
   DeleteOutlined,
@@ -32,34 +32,21 @@ const ActionsCell: FC<Props> = ({
   setPristine,
 }) => {
   const { t } = useTranslation();
-  const [messageApi, contextHolder] = message.useMessage();
   const updateParticipant = useUpdateParticipant();
   const deleteParticipant = useDeleteParticipant();
 
   const save = async (id: number) => {
-    try {
-      const values = await form.validateFields();
+    const values = await form.validateFields();
 
-      await updateParticipant.mutateAsync({
-        id,
-        participantDto: {
-          clubId: values.club,
-          startingStage: values.startingStage,
-        },
-      });
+    await updateParticipant.mutateAsync({
+      id,
+      participantDto: {
+        clubId: values.club,
+        startingStage: values.startingStage,
+      },
+    });
 
-      cancel();
-
-      messageApi.open({
-        type: "success",
-        content: t("tournament.participants.list.replaced"),
-      });
-    } catch (error) {
-      messageApi.open({
-        type: "error",
-        content: typeof error === "string" ? error : (error as Error).message,
-      });
-    }
+    cancel();
   };
 
   const edit = (record: Partial<Participant>) => {
@@ -77,21 +64,9 @@ const ActionsCell: FC<Props> = ({
   };
 
   const remove = async (id: number) => {
-    try {
-      await deleteParticipant.mutateAsync(id);
+    await deleteParticipant.mutateAsync(id);
 
-      cancel();
-
-      messageApi.open({
-        type: "success",
-        content: t("tournament.participants.list.removed"),
-      });
-    } catch (error) {
-      messageApi.open({
-        type: "error",
-        content: typeof error === "string" ? error : (error as Error).message,
-      });
-    }
+    cancel();
   };
 
   if (record?.fromStage) {
@@ -100,7 +75,6 @@ const ActionsCell: FC<Props> = ({
 
   return (
     <span className={styles.buttons}>
-      {contextHolder}
       {record.id === editingId ? (
         <>
           <Button

@@ -1,4 +1,4 @@
-import { Button, message, Modal } from "antd";
+import { Button, Modal } from "antd";
 import { FC, useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
@@ -8,6 +8,7 @@ import {
   FileAddOutlined,
   ImportOutlined,
 } from "@ant-design/icons";
+import toast from "react-hot-toast";
 
 import { AddForm } from "./components/AddForm";
 import { Fallback } from "../../../../components/Fallback";
@@ -29,7 +30,6 @@ const Participants: FC<Props> = ({ open, onClose }) => {
   const { season, tournament } = useParams();
   const { t } = useTranslation();
   const { user } = useContext(UserContext);
-  const [messageApi, contextHolder] = message.useMessage();
 
   const participants = useGetParticipants(season, tournament);
   const { data: availableTournaments } = useGetTournamentSeasons(true);
@@ -46,40 +46,19 @@ const Participants: FC<Props> = ({ open, onClose }) => {
   const loadParticipants = useLoadParticipants();
 
   const transfer = async () => {
-    try {
-      const count = await transferParticipants.mutateAsync();
+    const count = await transferParticipants.mutateAsync();
 
-      messageApi.open({
-        type: "success",
-        content: t(
-          `tournament.participants.list.${
-            count === 0 ? "zero_" : ""
-          }transfered`,
-          { count, season, tournament }
-        ),
-      });
-    } catch (error) {
-      messageApi.open({
-        type: "error",
-        content: typeof error === "string" ? error : (error as Error).message,
-      });
-    }
+    toast.success(
+      t(
+        `tournament.participants.list.${count === 0 ? "zero_" : ""}transfered`,
+        { count, season, tournament }
+      )
+    );
   };
 
   const load = async () => {
-    try {
-      const count = await loadParticipants.mutateAsync();
-
-      messageApi.open({
-        type: "success",
-        content: t("tournament.participants.list.loaded", { count }),
-      });
-    } catch (error) {
-      messageApi.open({
-        type: "error",
-        content: typeof error === "string" ? error : (error as Error).message,
-      });
-    }
+    const count = await loadParticipants.mutateAsync();
+    toast.success(t("tournament.participants.list.loaded", { count }));
   };
 
   return (
@@ -94,7 +73,6 @@ const Participants: FC<Props> = ({ open, onClose }) => {
       footer={[]}
     >
       <div className={styles.content}>
-        {contextHolder}
         {participants.isLoading ? (
           <Fallback />
         ) : (

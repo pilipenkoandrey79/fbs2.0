@@ -5,7 +5,7 @@ import {
   StageSchemeType,
   TournamentPart,
 } from "@fbs2.0/types";
-import { Divider, message } from "antd";
+import { Divider } from "antd";
 import { FC, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -33,7 +33,6 @@ const Matches: FC<Props> = ({
   loading,
 }) => {
   const { t } = useTranslation();
-  const [messageApi, contextHolder] = message.useMessage();
 
   const groupIndexes = Object.values(Group).slice(
     0,
@@ -45,7 +44,6 @@ const Matches: FC<Props> = ({
       style={{ display: visible ? "block" : "none" }}
       className={styles.matches}
     >
-      {contextHolder}
       <h3>{`${t("tournament.stages.matches.title")}`}</h3>
       {groupIndexes.map((group, _, groups) => (
         <Fragment key={group}>
@@ -71,7 +69,6 @@ const Matches: FC<Props> = ({
                 matches={tournamentPart.matches}
                 stage={tournamentPart.stage}
                 highlightedClubId={highlightedClubId}
-                messageApi={messageApi}
                 loading={loading}
                 tour={
                   [...GROUP_STAGES, StageSchemeType.LEAGUE].includes(

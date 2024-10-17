@@ -17,9 +17,6 @@ import { FC, useContext, useEffect, useMemo, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import classNames from "classnames";
 import { isNotEmpty } from "@fbs2.0/utils";
-import { MessageInstance } from "antd/es/message/interface";
-import { useTranslation } from "react-i18next";
-import { useParams } from "react-router";
 
 import { EditableCell, EditableCellProps } from "./components/EditableCell";
 import { ResultsCell } from "./components/ResultsCell";
@@ -50,7 +47,6 @@ interface Props {
   matches: TournamentStage;
   stage: Stage;
   highlightedClubId: number | null;
-  messageApi: MessageInstance;
   loading: boolean;
   tour: number | undefined;
   group: Group | undefined;
@@ -61,13 +57,10 @@ const KnockoutStageTable: FC<Props> = ({
   stage,
   highlightedClubId,
   participants,
-  messageApi,
   loading,
   tour,
   group,
 }) => {
-  const { t } = useTranslation();
-  const { season, tournament } = useParams();
   const [form] = Form.useForm<MatchDto>();
   const { user } = useContext(UserContext);
   const createMatch = useCreateMatch();
@@ -205,7 +198,6 @@ const KnockoutStageTable: FC<Props> = ({
               record.id === templateRow.id ? null : (
                 <DeleteCell
                   record={record}
-                  messageApi={messageApi}
                   adding={adding}
                   isKnockoutStage={
                     ![...GROUP_STAGES, StageSchemeType.LEAGUE].includes(
@@ -220,33 +212,18 @@ const KnockoutStageTable: FC<Props> = ({
   ];
 
   const addMatch = async (values: MatchDto) => {
-    try {
-      await createMatch.mutateAsync({
-        ...values,
-        stageType: stage.stageType,
-        answer: false,
-        tour,
-        group,
-      });
+    await createMatch.mutateAsync({
+      ...values,
+      stageType: stage.stageType,
+      answer: false,
+      tour,
+      group,
+    });
 
-      if (addMore) {
-        form.resetFields();
-      } else {
-        setAdding(false);
-      }
-
-      messageApi.open({
-        type: "success",
-        content: t("tournament.stages.matches.match.added", {
-          season,
-          tournament,
-        }),
-      });
-    } catch (error) {
-      messageApi.open({
-        type: "error",
-        content: typeof error === "string" ? error : (error as Error).message,
-      });
+    if (addMore) {
+      form.resetFields();
+    } else {
+      setAdding(false);
     }
   };
 
@@ -302,7 +279,6 @@ const KnockoutStageTable: FC<Props> = ({
           row={resultEditing}
           stage={stage}
           onClose={() => setResultEditing(null)}
-          messageApi={messageApi}
           availableDates={availableDates}
         />
       )}

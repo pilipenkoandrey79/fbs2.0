@@ -1,5 +1,5 @@
-import { Layout, message } from "antd";
-import { FC, ReactNode, useEffect, useState } from "react";
+import { Layout } from "antd";
+import { FC, ReactNode } from "react";
 import { DatabaseOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -26,31 +26,9 @@ interface Props {
 
 const Page: FC<Props> = (props) => {
   const { t } = useTranslation();
-  const [messageApi, contextHolder] = message.useMessage();
-
-  const [errors, setErrors] = useState<(Error | AxiosError | null)[] | null>(
-    null
-  );
-
   const currentPath = useCurrentPath();
   const isHome = currentPath === Paths.HOME;
   const isClubsPage = currentPath === Paths.CLUBS;
-
-  useEffect(() => {
-    setErrors(
-      props.errors && props.errors.length > 0
-        ? props.errors?.filter((error) => !!error)
-        : null
-    );
-  }, [props.errors]);
-
-  useEffect(() => {
-    if (errors && errors.length > 0) {
-      errors
-        .filter((error) => !!error)
-        .forEach((error) => messageApi.error(error.message));
-    }
-  }, [errors, messageApi]);
 
   return (
     <Layout className={classNames(styles.layout, props.className)}>
@@ -72,13 +50,12 @@ const Page: FC<Props> = (props) => {
             </Link>
           )}
           <LanguageSwitcher className={styles["language-swaitcher"]} />
-          <LoginButton setErrors={setErrors} />
+          <LoginButton />
         </div>
       </Layout.Header>
       <Layout.Content
         className={classNames({ [styles.fallback]: props.isLoading })}
       >
-        {contextHolder}
         {props.isLoading ? <Fallback /> : props.children}
       </Layout.Content>
       <Layout.Footer>FBS ©{new Date().getFullYear()}</Layout.Footer>

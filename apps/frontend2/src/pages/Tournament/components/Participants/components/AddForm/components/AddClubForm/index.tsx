@@ -1,4 +1,4 @@
-import { Form, Input, message } from "antd";
+import { Form, Input } from "antd";
 import { FC } from "react";
 import { ClubDto } from "@fbs2.0/types";
 import { useTranslation } from "react-i18next";
@@ -19,56 +19,28 @@ interface CustomizedClubDto extends Omit<ClubDto, "cityId"> {
 
 const AddClubForm: FC<Props> = ({ countryId, className }) => {
   const { t } = useTranslation();
-  const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm<CustomizedClubDto>();
   const createCity = useCreateCity();
   const createClub = useCreateClub();
 
   const addCity = async (name: string) => {
-    try {
-      const city = await createCity.mutateAsync({
-        countryId,
-        name,
-      });
+    const city = await createCity.mutateAsync({ countryId, name });
 
-      messageApi.open({
-        type: "success",
-        content: t("tournament.participants.list.city_added"),
-      });
-
-      return city.id;
-    } catch (error) {
-      messageApi.open({
-        type: "error",
-        content: typeof error === "string" ? error : (error as Error).message,
-      });
-    }
+    return city.id;
   };
 
   const submit = async (values: CustomizedClubDto) => {
-    try {
-      const cityId = Number(
-        typeof values.cityId[0] === "string"
-          ? await addCity(values.cityId[0])
-          : values.cityId[0]
-      );
+    const cityId = Number(
+      typeof values.cityId[0] === "string"
+        ? await addCity(values.cityId[0])
+        : values.cityId[0]
+    );
 
-      const clubDto: ClubDto = { name: values.name, cityId };
+    const clubDto: ClubDto = { name: values.name, cityId };
 
-      await createClub.mutateAsync(clubDto);
+    await createClub.mutateAsync(clubDto);
 
-      form.resetFields();
-
-      messageApi.open({
-        type: "success",
-        content: t("tournament.participants.list.club_added"),
-      });
-    } catch (error) {
-      messageApi.open({
-        type: "error",
-        content: typeof error === "string" ? error : (error as Error).message,
-      });
-    }
+    form.resetFields();
   };
 
   return (
@@ -78,7 +50,6 @@ const AddClubForm: FC<Props> = ({ countryId, className }) => {
       onFinish={submit}
       className={className}
     >
-      {contextHolder}
       <CitySelector countryId={countryId} />
       <Form.Item
         name="name"

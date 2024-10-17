@@ -1,16 +1,17 @@
 import { FC, Suspense, useEffect, useState } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { ConfigProvider } from "antd";
+import { ConfigProvider, theme } from "antd";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { HelmetProvider } from "react-helmet-async";
+import { Toaster } from "react-hot-toast";
 
 import { Fallback } from "../Fallback";
 import { routes } from "../../routes";
 import { queryClient } from "../../react-query-hooks/client";
-import { theme } from "../../style/theme";
+import { myTheme } from "../../style/theme";
 import { Language, antLocales, dayJsLocales } from "../../i18n/locales";
 import { UserContext } from "../../context/userContext";
 import { useUserContext } from "../../context/useUserContext";
@@ -18,6 +19,7 @@ import { useUserContext } from "../../context/useUserContext";
 const router = createBrowserRouter(routes);
 
 const App: FC = () => {
+  const { token } = theme.useToken();
   const [lang, setLang] = useState(Language.en);
   const { i18n } = useTranslation();
   const currentUser = useUserContext();
@@ -31,13 +33,14 @@ const App: FC = () => {
     <Suspense fallback={<Fallback page />}>
       <QueryClientProvider client={queryClient}>
         <HelmetProvider>
-          <ConfigProvider theme={theme} locale={antLocales[lang]}>
+          <ConfigProvider theme={myTheme} locale={antLocales[lang]}>
             <UserContext.Provider value={currentUser}>
               <RouterProvider router={router} fallbackElement={<Fallback />} />
             </UserContext.Provider>
           </ConfigProvider>
           <ReactQueryDevtools initialIsOpen={false} />
         </HelmetProvider>
+        <Toaster toastOptions={{ style: { fontFamily: token.fontFamily } }} />
       </QueryClientProvider>
     </Suspense>
   );

@@ -1,4 +1,4 @@
-import { Divider, Form, Input, message, Modal } from "antd";
+import { Divider, Form, Input, Modal } from "antd";
 import { FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { StageSubstitution, StageSubstitutionDto } from "@fbs2.0/types";
@@ -26,7 +26,6 @@ const SubstitutionDialog: FC<Props> = ({
 }) => {
   const { season, tournament } = useParams();
   const [form] = Form.useForm<StageSubstitutionDto>();
-  const [messageApi, contextHolder] = message.useMessage();
   const { t } = useTranslation();
   const createSubstitution = useCreateSubstitution();
   const participants = useGetParticipants(season, tournament);
@@ -56,24 +55,9 @@ const SubstitutionDialog: FC<Props> = ({
   );
 
   const submit = async (values: StageSubstitutionDto) => {
-    try {
-      await createSubstitution.mutateAsync(values);
+    await createSubstitution.mutateAsync(values);
 
-      close();
-
-      messageApi.open({
-        type: "success",
-        content: t("tournament.stages.substitutions.created", {
-          season,
-          tournament,
-        }),
-      });
-    } catch (error) {
-      messageApi.open({
-        type: "error",
-        content: typeof error === "string" ? error : (error as Error).message,
-      });
-    }
+    close();
   };
 
   return (
@@ -93,7 +77,6 @@ const SubstitutionDialog: FC<Props> = ({
         disabled={createSubstitution.isPending}
         initialValues={{ stageId }}
       >
-        {contextHolder}
         <Form.Item name="stageId">
           <Input type="hidden" />
         </Form.Item>

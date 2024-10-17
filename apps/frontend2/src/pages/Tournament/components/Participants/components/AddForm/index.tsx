@@ -1,5 +1,5 @@
 import { ParticipantDto } from "@fbs2.0/types";
-import { Button, Checkbox, Form, message } from "antd";
+import { Button, Checkbox, Form } from "antd";
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -19,7 +19,6 @@ interface Props {
 
 const AddForm: FC<Props> = ({ close, selectedCountryId }) => {
   const { t } = useTranslation();
-  const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm<ParticipantDto>();
   const createParticipant = useCreateParticipant();
 
@@ -28,24 +27,12 @@ const AddForm: FC<Props> = ({ close, selectedCountryId }) => {
   const [addMore, setAddMore] = useState(true);
 
   const submit = async (values: ParticipantDto) => {
-    try {
-      await createParticipant.mutateAsync(values);
+    await createParticipant.mutateAsync(values);
 
-      if (addMore) {
-        form.resetFields();
-      } else {
-        close();
-      }
-
-      messageApi.open({
-        type: "success",
-        content: t("tournament.participants.list.added"),
-      });
-    } catch (error) {
-      messageApi.open({
-        type: "error",
-        content: typeof error === "string" ? error : (error as Error).message,
-      });
+    if (addMore) {
+      form.resetFields();
+    } else {
+      close();
     }
   };
 
@@ -62,7 +49,6 @@ const AddForm: FC<Props> = ({ close, selectedCountryId }) => {
   return (
     <>
       <Form form={form} layout="horizontal" onFinish={submit}>
-        {contextHolder}
         <div className={styles.selectors}>
           <div className={styles.participant}>
             <CountrySelector

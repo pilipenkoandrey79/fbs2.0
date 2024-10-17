@@ -20,7 +20,6 @@ import {
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { isNotEmpty } from "@fbs2.0/utils";
-import { MessageInstance } from "antd/es/message/interface";
 import classNames from "classnames";
 
 import { SubmitButton } from "../../../../../../../../../../components/SubmitButton";
@@ -41,18 +40,11 @@ interface ResultFormValues extends Omit<MatchResultDto, "deductions"> {
 interface Props {
   row: Result;
   stage: Stage;
-  messageApi: MessageInstance;
   availableDates: string[];
   onClose: () => void;
 }
 
-const ResultForm: FC<Props> = ({
-  onClose,
-  row,
-  stage,
-  messageApi,
-  availableDates,
-}) => {
+const ResultForm: FC<Props> = ({ onClose, row, stage, availableDates }) => {
   const { t } = useTranslation();
   const [form] = Form.useForm<ResultFormValues>();
   const values = Form.useWatch([], form);
@@ -94,46 +86,32 @@ const ResultForm: FC<Props> = ({
   const isOneMatchStage = ONE_MATCH_STAGES.includes(stage.stageScheme.type);
 
   const submit = async (values: ResultFormValues) => {
-    try {
-      const { hostDeduction, guestDeduction, ...payload } = values;
+    const { hostDeduction, guestDeduction, ...payload } = values;
 
-      (payload as MatchResultDto).deductions =
-        hostDeduction || guestDeduction
-          ? [
-              { participantId: row.match.host.id, points: hostDeduction || 0 },
-              {
-                participantId: row.match.guest.id,
-                points: guestDeduction || 0,
-              },
-            ].filter(({ points }) => points > 0)
-          : undefined;
+    (payload as MatchResultDto).deductions =
+      hostDeduction || guestDeduction
+        ? [
+            { participantId: row.match.host.id, points: hostDeduction || 0 },
+            {
+              participantId: row.match.guest.id,
+              points: guestDeduction || 0,
+            },
+          ].filter(({ points }) => points > 0)
+        : undefined;
 
-      if (row.date) {
-        await updateMatch.mutateAsync({ id: row.match.id, payload });
-      } else {
-        await createMatch.mutateAsync({
-          ...payload,
-          date: values?.date || "",
-          hostId: row.match.host.id,
-          guestId: row.match.guest.id,
-          stageType: stage.stageType,
-        });
-      }
-
-      onClose();
-
-      messageApi.open({
-        type: "success",
-        content: t(
-          `tournament.stages.matches.match.${row.date ? "updated" : "entered"}`
-        ),
-      });
-    } catch (error) {
-      messageApi.open({
-        type: "error",
-        content: typeof error === "string" ? error : (error as Error).message,
+    if (row.date) {
+      await updateMatch.mutateAsync({ id: row.match.id, payload });
+    } else {
+      await createMatch.mutateAsync({
+        ...payload,
+        date: values?.date || "",
+        hostId: row.match.host.id,
+        guestId: row.match.guest.id,
+        stageType: stage.stageType,
       });
     }
+
+    onClose();
   };
 
   useEffect(() => {
