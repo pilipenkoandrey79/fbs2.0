@@ -261,7 +261,7 @@ const KnockoutStageTable: FC<Props> = ({
       adding
         ? [
             ...(matches?.[group as Group]?.tours?.[tour || 1] || []),
-            { ...templateRow, tour, group },
+            { ...templateRow, tour, group, deductedPointsList: undefined },
           ]
         : matches?.[group as Group]?.tours?.[tour || 1]
     );

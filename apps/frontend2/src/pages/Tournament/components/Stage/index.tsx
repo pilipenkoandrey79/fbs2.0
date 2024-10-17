@@ -4,28 +4,31 @@ import {
   LoadingOutlined,
   TableOutlined,
 } from "@ant-design/icons";
-import { GROUP_STAGES, StageSchemeType, TournamentPart } from "@fbs2.0/types";
+import {
+  GROUP_STAGES,
+  Participant,
+  StageSchemeType,
+  TournamentPart,
+} from "@fbs2.0/types";
 import { Divider, Segmented } from "antd";
-import { FC, useMemo, useState, useTransition } from "react";
+import { FC, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
 import { useMediaQuery } from "react-responsive";
 import classNames from "classnames";
-import { useParams } from "react-router";
 
 import { Participants } from "./components/Participants";
 import { Matches } from "./components/Matches";
 import { Standings } from "./components/Standings";
-import { useGetParticipants } from "../../../../react-query-hooks/participant/useGetParticipants";
-import { prepareStageParticipants } from "./utils";
 
 import styles from "./styles.module.scss";
 import variables from "../../../../style/variables.module.scss";
 
-interface Props {
-  tournamentParts: {
-    current: TournamentPart;
-    previous: TournamentPart | undefined;
-    prePrevious: TournamentPart | undefined;
+export interface StageProps {
+  tournamentPart: TournamentPart;
+  participants: {
+    seeded: Participant[] | undefined;
+    previousStageWinners: Participant[] | undefined;
+    skippers: Participant[];
   };
   highlightedClubId: number | null;
   loading: boolean;
@@ -42,9 +45,13 @@ enum SecondarySegments {
   matches = "matches",
 }
 
-const Stage: FC<Props> = ({ tournamentParts, highlightedClubId, loading }) => {
+const Stage: FC<StageProps> = ({
+  tournamentPart,
+  participants,
+  highlightedClubId,
+  loading,
+}) => {
   const { t } = useTranslation();
-  const { season, tournament } = useParams();
   const [isPending, startTransition] = useTransition();
   const [segment, setSegment] = useState(Segments.matches);
 
@@ -56,21 +63,8 @@ const Stage: FC<Props> = ({ tournamentParts, highlightedClubId, loading }) => {
     query: `(min-width: ${variables.screenMd})`,
   });
 
-  const rawParticipants = useGetParticipants(season, tournament);
-
   const hasTable = [...GROUP_STAGES, StageSchemeType.LEAGUE].includes(
-    tournamentParts.current.stage.stageScheme.type
-  );
-
-  const participants = useMemo(
-    () =>
-      prepareStageParticipants(
-        rawParticipants.data,
-        tournamentParts.current,
-        tournamentParts.previous,
-        tournamentParts.prePrevious
-      ),
-    [rawParticipants.data, tournamentParts]
+    tournamentPart.stage.stageScheme.type
   );
 
   return (
@@ -111,7 +105,7 @@ const Stage: FC<Props> = ({ tournamentParts, highlightedClubId, loading }) => {
         className={classNames(styles.content, { [styles.panels]: isMdScreen })}
       >
         <Participants
-          currentStage={tournamentParts.current.stage}
+          currentStage={tournamentPart.stage}
           highlightedClubId={highlightedClubId}
           participants={participants}
           visible={isMdScreen || segment === Segments.participants}
@@ -147,7 +141,7 @@ const Stage: FC<Props> = ({ tournamentParts, highlightedClubId, loading }) => {
                     ? seconsarySegment === SecondarySegments.standings
                     : segment === Segments.tables
                 }
-                tournamentPart={tournamentParts.current}
+                tournamentPart={tournamentPart}
                 highlightedClubId={highlightedClubId}
                 loading={loading}
               />
@@ -158,7 +152,7 @@ const Stage: FC<Props> = ({ tournamentParts, highlightedClubId, loading }) => {
                   ? seconsarySegment === SecondarySegments.matches
                   : segment === Segments.matches
               }
-              tournamentPart={tournamentParts.current}
+              tournamentPart={tournamentPart}
               highlightedClubId={highlightedClubId}
               participants={participants}
               loading={loading}

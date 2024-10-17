@@ -8,16 +8,24 @@ import {
 } from "@fbs2.0/utils";
 import {
   HIGHLIGHTED_CLUB_ID_SEARCH_PARAM,
-  TournamentPart,
+  StageSubstitution,
   Tournament as TournamentType,
 } from "@fbs2.0/types";
 import { useTranslation } from "react-i18next";
 import { Collapse } from "antd";
-import { CaretRightOutlined, LoadingOutlined } from "@ant-design/icons";
+import {
+  CaretRightOutlined,
+  LoadingOutlined,
+  SwapOutlined,
+} from "@ant-design/icons";
 
 import { Page } from "../../components/Page";
-import { Stage } from "./components/Stage";
-import { getPreviousTournamentPart } from "./components/Stage/utils";
+import { Stage, StageProps } from "./components/Stage";
+import { SubstitutionDialog } from "./components/SubstitutionDialog";
+import {
+  getPreviousTournamentPart,
+  prepareStageParticipants,
+} from "./components/Stage/utils";
 import { Participants } from "./components/Participants";
 import { Header } from "./components/Header";
 import { TournamentMenu } from "./components/TournamentMenu";
@@ -40,6 +48,12 @@ const Tournament: FC = () => {
 
   const [activeKey, setActiveKey] = useState<(number | string)[]>();
 
+  const [substitutionDialogData, setSubstitutionDialogData] = useState<{
+    stageId: number;
+    stageParticipants: StageProps["participants"];
+    currentSubstitutions: StageSubstitution[] | undefined;
+  } | null>(null);
+
   const [highlightedClubId, setHighlightedClubId] = useState<number | null>(
     () => {
       const initValue = Number(
@@ -50,13 +64,70 @@ const Tournament: FC = () => {
     }
   );
 
-  const matches = useMemo<TournamentPart[] | undefined>(
+  const items = useMemo(
     () =>
-      rawMatches.data?.map((tournamentPart) => ({
-        stage: tournamentPart.stage,
-        matches: transformTournamentPart(tournamentPart),
-      })),
-    [rawMatches.data]
+      rawMatches.data
+        ?.map((tournamentPart) => ({
+          stage: tournamentPart.stage,
+          matches: transformTournamentPart(tournamentPart),
+        }))
+        .map((tournamentPart, _, tournamentParts) => {
+          const previousTournamentPart = getPreviousTournamentPart(
+            tournamentParts,
+            tournamentPart.stage
+          );
+
+          const stageParticipants = prepareStageParticipants(
+            participants.data,
+            tournamentPart,
+            previousTournamentPart,
+            getPreviousTournamentPart(
+              tournamentParts,
+              previousTournamentPart?.stage
+            )
+          );
+
+          const stageHasParticipants = Object.values(stageParticipants).some(
+            (list) => (list?.length || 0) > 0
+          );
+
+          return {
+            key: tournamentPart.stage.id,
+            children: (
+              <Stage
+                tournamentPart={tournamentPart}
+                participants={stageParticipants}
+                highlightedClubId={highlightedClubId}
+                loading={rawMatches.isPending}
+              />
+            ),
+            label: t(getStageTransKey(tournamentPart.stage.stageType)),
+            extra: stageHasParticipants && (
+              <SwapOutlined
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setSubstitutionDialogData({
+                    stageId: tournamentPart.stage.id,
+                    stageParticipants,
+                    currentSubstitutions:
+                      tournamentPart.stage.stageSubstitutions,
+                  });
+                }}
+                disabled={
+                  substitutionDialogData?.stageId !== tournamentPart.stage.id
+                }
+              />
+            ),
+          };
+        }),
+    [
+      highlightedClubId,
+      participants.data,
+      rawMatches.data,
+      rawMatches.isPending,
+      substitutionDialogData?.stageId,
+      t,
+    ]
   );
 
   const title = `${t(
@@ -113,33 +184,7 @@ const Tournament: FC = () => {
       <Collapse
         bordered={false}
         activeKey={activeKey}
-        items={matches?.map((tournamentPart) => {
-          const previousTournamentPart = getPreviousTournamentPart(
-            matches,
-            tournamentPart.stage
-          );
-
-          const prePreviousTournamentPart = getPreviousTournamentPart(
-            matches,
-            previousTournamentPart?.stage
-          );
-
-          return {
-            key: tournamentPart.stage.id,
-            children: (
-              <Stage
-                tournamentParts={{
-                  current: tournamentPart,
-                  previous: previousTournamentPart,
-                  prePrevious: prePreviousTournamentPart,
-                }}
-                highlightedClubId={highlightedClubId}
-                loading={rawMatches.isPending}
-              />
-            ),
-            label: t(getStageTransKey(tournamentPart.stage.stageType)),
-          };
-        })}
+        items={items}
         onChange={(key) => {
           startTransition(() => {
             setActiveKey(key);
@@ -153,6 +198,14 @@ const Tournament: FC = () => {
           )
         }
       />
+      {substitutionDialogData !== null && (
+        <SubstitutionDialog
+          stageId={substitutionDialogData?.stageId}
+          stageParticipants={substitutionDialogData.stageParticipants}
+          currentSubstitutions={substitutionDialogData.currentSubstitutions}
+          close={() => setSubstitutionDialogData(null)}
+        />
+      )}
     </Page>
   );
 };

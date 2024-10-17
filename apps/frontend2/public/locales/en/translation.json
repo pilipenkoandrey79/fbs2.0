@@ -166,6 +166,12 @@
           "goals": "Goals",
           "score": "S"
         }
+      },
+      "substitutions": {
+        "title": "Participant substitution",
+        "label1": "Change",
+        "label2": "on",
+        "created": "Participant is substituted with another one"
       }
     }
   }

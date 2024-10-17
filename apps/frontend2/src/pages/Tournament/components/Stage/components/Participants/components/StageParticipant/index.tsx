@@ -1,8 +1,11 @@
 import { Participant, Stage } from "@fbs2.0/types";
 import { FC } from "react";
+import classNames from "classnames";
 
 import { applyStageSubstitutions } from "../../../../utils";
 import { Club } from "../../../../../../../../components/Club";
+
+import styles from "./styles.module.scss";
 
 interface Props {
   stage: Stage;
@@ -21,14 +24,14 @@ const StageParticipant: FC<Props> = ({ stage, participant, className }) => {
   const substitution = getSubstitution(participant, stage);
 
   return (
-    <>
+    <span className={classNames({ [styles.substituted]: !!substitution })}>
       <Club
         club={participant.club}
         expelled={!!substitution}
         className={className}
       />
       {substitution && <Club club={substitution.club} />}
-    </>
+    </span>
   );
 };
 

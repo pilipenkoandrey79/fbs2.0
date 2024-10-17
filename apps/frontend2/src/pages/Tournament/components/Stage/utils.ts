@@ -139,6 +139,17 @@ const getPreviousStageWinners = (
   );
 };
 
+export const getStageParticipants = (
+  seededParticipants: Participant[] | undefined,
+  previousStageWinners: Participant[] | undefined,
+  skippers: Participant[] | undefined,
+  substitutions: StageSubstitution[] | undefined
+) => [
+  ...(applyStageSubstitutions(seededParticipants, substitutions) || []),
+  ...(applyStageSubstitutions(previousStageWinners, substitutions) || []),
+  ...(applyStageSubstitutions(skippers, substitutions) || []),
+];
+
 export const getFilteredParticipants = (
   seededParticipants: Participant[] | undefined,
   previousStageWinners: Participant[] | undefined,
@@ -179,20 +190,12 @@ export const getFilteredParticipants = (
       ? currentTournamentPart.matches?.[group as Group].table?.map(
           ({ team }) => team
         )
-      : [
-          ...(applyStageSubstitutions(
-            seededParticipants,
-            currentTournamentPart.stage.stageSubstitutions
-          ) || []),
-          ...(applyStageSubstitutions(
-            previousStageWinners,
-            currentTournamentPart.stage.stageSubstitutions
-          ) || []),
-          ...(applyStageSubstitutions(
-            skippers,
-            currentTournamentPart.stage.stageSubstitutions
-          ) || []),
-        ];
+      : getStageParticipants(
+          seededParticipants,
+          previousStageWinners,
+          skippers,
+          currentTournamentPart.stage.stageSubstitutions
+        );
 
   return (
     allParticipants?.filter(
