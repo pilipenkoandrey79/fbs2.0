@@ -7,7 +7,7 @@ import {
   USSR,
 } from "@fbs2.0/types";
 import { Table, TableProps, Tooltip } from "antd";
-import { FC } from "react";
+import { FC, useContext } from "react";
 import { useMediaQuery } from "react-responsive";
 import classNames from "classnames";
 import { dateRenderer, isNotEmpty } from "@fbs2.0/utils";
@@ -15,13 +15,13 @@ import { useTranslation } from "react-i18next";
 
 import { Club } from "../../../../../../../../components/Club";
 import { getGroupWinnersQuantity } from "../../../../utils";
+import { HighlightContext } from "../../../../../../../../context/highlightContext";
 
 import styles from "./styles.module.scss";
 import variables from "../../../../../../../../style/variables.module.scss";
 
 interface Props {
   tournamentPart: TournamentPart;
-  highlightedClubId: number | null;
   group: Group | undefined;
   groupKey: string;
   loading?: boolean;
@@ -29,12 +29,12 @@ interface Props {
 
 const GroupTable: FC<Props> = ({
   tournamentPart,
-  highlightedClubId,
   group,
   loading,
   groupKey,
 }) => {
   const { t } = useTranslation();
+  const { highlightId } = useContext(HighlightContext);
 
   const isMdScreen = useMediaQuery({
     query: `(min-width: ${variables.screenMd})`,
@@ -82,7 +82,7 @@ const GroupTable: FC<Props> = ({
               ),
               [styles[
                 `highlighted-${tournamentPart.stage.tournamentSeason.tournament}`
-              ]]: team.club.id === highlightedClubId,
+              ]]: team.club.id === highlightId,
             })}
           />
         ) : null,

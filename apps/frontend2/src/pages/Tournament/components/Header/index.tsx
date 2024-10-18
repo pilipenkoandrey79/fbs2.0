@@ -1,4 +1,4 @@
-import { FC, useMemo, useTransition } from "react";
+import { FC, useContext, useMemo, useTransition } from "react";
 import { useTranslation } from "react-i18next";
 import { generatePath, Link } from "react-router-dom";
 import {
@@ -14,6 +14,7 @@ import { useGetTournamentSeasons } from "../../../../react-query-hooks/tournamen
 import { TournamentLogo } from "../../../../components/TournamentLogo";
 import { ParticipantSelector } from "../ParticipantSelector";
 import { Paths } from "../../../../routes";
+import { HighlightContext } from "../../../../context/highlightContext";
 
 import styles from "./styles.module.scss";
 
@@ -21,20 +22,12 @@ interface Props {
   title: string;
   season: string | undefined;
   tournament: string | undefined;
-  highlightedClubId: number | null;
   onParticipants: () => void;
-  setHighlightedClubId: (id: number | null) => void;
 }
 
-const Header: FC<Props> = ({
-  title,
-  season,
-  tournament,
-  highlightedClubId,
-  onParticipants,
-  setHighlightedClubId,
-}) => {
+const Header: FC<Props> = ({ title, season, tournament, onParticipants }) => {
   const { t } = useTranslation();
+  const { highlightId, setHighlightId } = useContext(HighlightContext);
   const [isPending, startTransition] = useTransition();
   const { data: availableTournaments } = useGetTournamentSeasons(true);
 
@@ -109,9 +102,9 @@ const Header: FC<Props> = ({
         <ParticipantSelector
           formItem={false}
           allowClear
-          value={highlightedClubId}
-          onChange={(value) => setHighlightedClubId(value ?? null)}
-          onClear={() => setHighlightedClubId(null)}
+          value={highlightId}
+          onChange={(value) => setHighlightId(value ?? null)}
+          onClear={() => setHighlightId(null)}
         />
       </div>
     </div>

@@ -16,12 +16,10 @@ interface Props {
     skippers: Participant[] | undefined;
   };
   currentStage: Stage;
-  highlightedClubId: number | null;
 }
 
 const Participants: FC<Props> = ({
   currentStage,
-  highlightedClubId,
   visible,
   participants: { seeded, skippers, previousStageWinners },
 }) => {
@@ -51,7 +49,6 @@ const Participants: FC<Props> = ({
               title={t("tournament.stages.participants.seeded")}
               participants={seeded}
               stage={currentStage}
-              highlightedClubId={highlightedClubId}
             />
           )}
         </div>
@@ -62,7 +59,6 @@ const Participants: FC<Props> = ({
               title={t("tournament.stages.participants.winners")}
               participants={previousStageWinners}
               stage={currentStage}
-              highlightedClubId={highlightedClubId}
             />
           )}
           {(skippers?.length || 0) > 0 && (
@@ -70,7 +66,6 @@ const Participants: FC<Props> = ({
               title={t("tournament.stages.participants.skippers")}
               participants={skippers}
               stage={currentStage}
-              highlightedClubId={highlightedClubId}
             />
           )}
         </div>

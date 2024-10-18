@@ -4,7 +4,7 @@
 
 .matches {
   .groups {
-    @include flex(row);
+    @include flex(row, flex-start, flex-start);
     flex-wrap: wrap;
     gap: 12px;
 

@@ -30,7 +30,6 @@ export interface StageProps {
     previousStageWinners: Participant[] | undefined;
     skippers: Participant[];
   };
-  highlightedClubId: number | null;
   loading: boolean;
 }
 
@@ -45,12 +44,7 @@ enum SecondarySegments {
   matches = "matches",
 }
 
-const Stage: FC<StageProps> = ({
-  tournamentPart,
-  participants,
-  highlightedClubId,
-  loading,
-}) => {
+const Stage: FC<StageProps> = ({ tournamentPart, participants, loading }) => {
   const { t } = useTranslation();
   const [isPending, startTransition] = useTransition();
   const [segment, setSegment] = useState(Segments.matches);
@@ -106,7 +100,6 @@ const Stage: FC<StageProps> = ({
       >
         <Participants
           currentStage={tournamentPart.stage}
-          highlightedClubId={highlightedClubId}
           participants={participants}
           visible={isMdScreen || segment === Segments.participants}
         />
@@ -142,7 +135,6 @@ const Stage: FC<StageProps> = ({
                     : segment === Segments.tables
                 }
                 tournamentPart={tournamentPart}
-                highlightedClubId={highlightedClubId}
                 loading={loading}
               />
             )}
@@ -153,7 +145,6 @@ const Stage: FC<StageProps> = ({
                   : segment === Segments.matches
               }
               tournamentPart={tournamentPart}
-              highlightedClubId={highlightedClubId}
               participants={participants}
               loading={loading}
             />

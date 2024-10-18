@@ -23,6 +23,7 @@ import { ResultsCell } from "./components/ResultsCell";
 import { Result, ResultForm } from "./components/ResultForm";
 import { DeleteCell } from "./components/DeleteCell";
 import { UserContext } from "../../../../../../../../context/userContext";
+import { HighlightContext } from "../../../../../../../../context/highlightContext";
 import { Club } from "../../../../../../../../components/Club";
 import { useCreateMatch } from "../../../../../../../../react-query-hooks/match/useCreateMatch";
 import { useDeleteMatch } from "../../../../../../../../react-query-hooks/match/useDeleteMatch";
@@ -46,7 +47,6 @@ interface Props {
   };
   matches: TournamentStage;
   stage: Stage;
-  highlightedClubId: number | null;
   loading: boolean;
   tour: number | undefined;
   group: Group | undefined;
@@ -55,7 +55,6 @@ interface Props {
 const KnockoutStageTable: FC<Props> = ({
   matches,
   stage,
-  highlightedClubId,
   participants,
   loading,
   tour,
@@ -63,6 +62,7 @@ const KnockoutStageTable: FC<Props> = ({
 }) => {
   const [form] = Form.useForm<MatchDto>();
   const { user } = useContext(UserContext);
+  const { highlightId } = useContext(HighlightContext);
   const createMatch = useCreateMatch();
   const deleteMatch = useDeleteMatch();
 
@@ -123,7 +123,7 @@ const KnockoutStageTable: FC<Props> = ({
             [styles.relegated]:
               isNotEmpty(stage.linkedTournament) && !team?.isWinner,
             [styles[`highlighted-${stage.tournamentSeason.tournament}`]]:
-              team.club.id === highlightedClubId,
+              team.club.id === highlightId,
           })}
         />
       ) : null,

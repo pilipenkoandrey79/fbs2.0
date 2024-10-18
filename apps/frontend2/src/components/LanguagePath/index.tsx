@@ -1,11 +1,14 @@
 import { FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router";
+import { useHighlightContext } from "../../context/useHighlightContext";
+import { HighlightContext } from "../../context/highlightContext";
 
 const LanguagePath: FC = () => {
   const { i18n } = useTranslation();
   const { lang } = useParams();
   const { pathname } = useLocation();
+  const highlightedState = useHighlightContext();
 
   const navigate = useNavigate();
 
@@ -29,7 +32,11 @@ const LanguagePath: FC = () => {
     });
   }, [i18n, lang, navigate, pathname]);
 
-  return <Outlet />;
+  return (
+    <HighlightContext.Provider value={highlightedState}>
+      <Outlet />
+    </HighlightContext.Provider>
+  );
 };
 
 export { LanguagePath };

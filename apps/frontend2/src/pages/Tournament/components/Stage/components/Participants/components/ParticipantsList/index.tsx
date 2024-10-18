@@ -1,11 +1,12 @@
 import { Participant, Stage, Tournament, UKRAINE, USSR } from "@fbs2.0/types";
 import { Table, TableProps } from "antd";
-import { FC } from "react";
+import { FC, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { isNotEmpty } from "@fbs2.0/utils";
 import classNames from "classnames";
 
 import { StageParticipant } from "../StageParticipant";
+import { HighlightContext } from "../../../../../../../../context/highlightContext";
 
 import styles from "./styles.module.scss";
 
@@ -13,7 +14,6 @@ interface Props {
   title: string;
   participants: Participant[] | undefined;
   stage: Stage;
-  highlightedClubId: number | null;
 }
 
 const getParticipantClasses = (
@@ -28,14 +28,11 @@ const getParticipantClasses = (
       participant.club.id === highlightedClubId,
   });
 
-const ParticipantsList: FC<Props> = ({
-  title,
-  participants,
-  stage,
-  highlightedClubId,
-}) => {
+const ParticipantsList: FC<Props> = ({ title, participants, stage }) => {
   const { t, i18n } = useTranslation();
   const collator = new Intl.Collator(i18n.resolvedLanguage);
+  const { highlightId } = useContext(HighlightContext);
+  console.log(highlightId);
 
   const columns: TableProps<Participant>["columns"] = [
     {
@@ -59,7 +56,7 @@ const ParticipantsList: FC<Props> = ({
           className={getParticipantClasses(
             participant,
             stage.tournamentSeason.tournament,
-            highlightedClubId
+            highlightId
           )}
         />
       ),

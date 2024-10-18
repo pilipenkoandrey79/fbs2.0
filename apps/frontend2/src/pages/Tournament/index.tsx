@@ -1,16 +1,11 @@
-import { FC, useEffect, useMemo, useState, useTransition } from "react";
+import { FC, useMemo, useState, useTransition } from "react";
 import { useParams } from "react-router";
-import { createSearchParams, useSearchParams } from "react-router-dom";
 import {
   getStageTransKey,
   getTournamentTitle,
   transformTournamentPart,
 } from "@fbs2.0/utils";
-import {
-  HIGHLIGHTED_CLUB_ID_SEARCH_PARAM,
-  StageSubstitution,
-  Tournament as TournamentType,
-} from "@fbs2.0/types";
+import { StageSubstitution, Tournament as TournamentType } from "@fbs2.0/types";
 import { useTranslation } from "react-i18next";
 import { Collapse, CollapseProps } from "antd";
 import {
@@ -37,7 +32,6 @@ import styles from "./styles.module.scss";
 const Tournament: FC = () => {
   const { t } = useTranslation();
   const { season, tournament } = useParams();
-  const [searchParams, setSearchParams] = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
   const rawMatches = useGetMatches(season, tournament);
@@ -53,16 +47,6 @@ const Tournament: FC = () => {
     stageParticipants: StageProps["participants"];
     currentSubstitutions: StageSubstitution[] | undefined;
   } | null>(null);
-
-  const [highlightedClubId, setHighlightedClubId] = useState<number | null>(
-    () => {
-      const initValue = Number(
-        searchParams.get(HIGHLIGHTED_CLUB_ID_SEARCH_PARAM)
-      );
-
-      return Number.isNaN(initValue) || initValue === 0 ? null : initValue;
-    }
-  );
 
   const items = useMemo<CollapseProps["items"]>(
     () =>
@@ -98,7 +82,6 @@ const Tournament: FC = () => {
               <Stage
                 tournamentPart={tournamentPart}
                 participants={stageParticipants}
-                highlightedClubId={highlightedClubId}
                 loading={rawMatches.isPending}
               />
             ),
@@ -122,7 +105,6 @@ const Tournament: FC = () => {
           };
         }),
     [
-      highlightedClubId,
       participants.data,
       rawMatches.data,
       rawMatches.isPending,
@@ -137,26 +119,6 @@ const Tournament: FC = () => {
       tournament: tournament as TournamentType,
     })
   )} ${season}`;
-
-  useEffect(() => {
-    const currentSearchParam = searchParams.get(
-      HIGHLIGHTED_CLUB_ID_SEARCH_PARAM
-    );
-
-    if (highlightedClubId === null && currentSearchParam === null) {
-      return;
-    }
-
-    if (`${highlightedClubId}` !== currentSearchParam) {
-      setSearchParams(
-        highlightedClubId
-          ? createSearchParams([
-              [HIGHLIGHTED_CLUB_ID_SEARCH_PARAM, `${highlightedClubId}`],
-            ])
-          : {}
-      );
-    }
-  }, [highlightedClubId, participants, searchParams, setSearchParams]);
 
   return (
     <Page
@@ -174,8 +136,6 @@ const Tournament: FC = () => {
         season={season}
         tournament={tournament}
         onParticipants={() => setParticipantsDialogOpened(true)}
-        highlightedClubId={highlightedClubId}
-        setHighlightedClubId={setHighlightedClubId}
       />
 
       <Participants

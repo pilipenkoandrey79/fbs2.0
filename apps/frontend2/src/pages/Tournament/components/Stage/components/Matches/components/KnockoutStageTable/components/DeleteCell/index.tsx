@@ -69,10 +69,10 @@ const DeleteCell: FC<Props> = ({ record, isKnockoutStage }) => {
       {buttons.map(({ key, icon, disabled, title }) => (
         <Popconfirm
           title={`${title}?`}
+          key={key}
           onConfirm={() => removeMatch(record, key === "clear")}
         >
           <Button
-            key={key}
             icon={icon}
             size="small"
             type="link"

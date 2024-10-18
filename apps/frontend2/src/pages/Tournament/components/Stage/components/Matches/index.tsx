@@ -22,14 +22,12 @@ interface Props {
     skippers: Participant[] | undefined;
   };
   tournamentPart: TournamentPart;
-  highlightedClubId: number | null;
   loading: boolean;
 }
 
 const Matches: FC<Props> = ({
   visible,
   tournamentPart,
-  highlightedClubId,
   participants,
   loading,
 }) => {
@@ -73,7 +71,6 @@ const Matches: FC<Props> = ({
                   participants={participants}
                   matches={tournamentPart.matches}
                   stage={tournamentPart.stage}
-                  highlightedClubId={highlightedClubId}
                   loading={loading}
                   tour={
                     [...GROUP_STAGES, StageSchemeType.LEAGUE].includes(
