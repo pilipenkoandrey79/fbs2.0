@@ -1,4 +1,5 @@
 @import "../../../../../../style/mixins.scss";
+@import "../../../../../../style/colors.module.scss";
 
 .participants {
   .panels {
@@ -11,6 +12,38 @@
     .divider {
       align-self: stretch;
       height: unset;
+    }
+  }
+
+  &.UCL {
+    h3 {
+      .num {
+        background-color: $ucl-secondary-light;
+      }
+    }
+  }
+
+  &.UEL {
+    h3 {
+      .num {
+        background-color: $uel-secondary-light;
+      }
+    }
+  }
+
+  &.UECL {
+    h3 {
+      .num {
+        background-color: $uecl-secondary-light;
+      }
+    }
+  }
+
+  &.ICFC {
+    h3 {
+      .num {
+        background-color: $icfc-secondary-light;
+      }
     }
   }
 }

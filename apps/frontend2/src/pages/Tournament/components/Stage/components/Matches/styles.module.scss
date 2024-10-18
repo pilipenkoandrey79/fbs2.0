@@ -3,21 +3,81 @@
 @import "../../../../../../style/colors.module.scss";
 
 .matches {
-  h3 {
-    display: none;
-  }
+  .groups {
+    @include flex(row);
+    flex-wrap: wrap;
+    gap: 12px;
 
-  .tour-title {
-    margin: 0;
-  }
+    .group {
+      flex: 0;
+      border: 1px solid $border;
+      padding: 0 4px 4px;
 
-  @media (min-width: $screen-md) {
+      h4 {
+        margin-top: 0;
+      }
+
+      .divider {
+        margin-top: 2px;
+      }
+    }
+
     h3 {
-      display: block;
+      display: none;
+    }
+
+    .tour-title {
+      margin: 0;
+    }
+
+    @media (min-width: $screen-md) {
+      h3 {
+        display: block;
+      }
+    }
+
+    @media (min-width: $screen-lg) {
+      flex: 0;
     }
   }
 
-  @media (min-width: $screen-lg) {
-    flex: 0;
+  &.UCL {
+    .groups .group {
+      border-color: $ucl-primary-light;
+
+      h4:not(.tour-title) {
+        background-color: $ucl-secondary-light;
+      }
+    }
+  }
+
+  &.UEL {
+    .groups .group {
+      border-color: $uel-primary-light;
+
+      h4:not(.tour-title) {
+        background-color: $uel-secondary-light;
+      }
+    }
+  }
+
+  &.UECL {
+    .groups .group {
+      border-color: $uecl-primary-light;
+
+      h4:not(.tour-title) {
+        background-color: $uecl-secondary-light;
+      }
+    }
+  }
+
+  &.ICFC {
+    .groups .group {
+      border-color: $icfc-primary-light;
+
+      h4:not(.tour-title) {
+        background-color: $icfc-secondary-light;
+      }
+    }
   }
 }

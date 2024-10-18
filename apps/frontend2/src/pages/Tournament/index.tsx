@@ -12,7 +12,7 @@ import {
   Tournament as TournamentType,
 } from "@fbs2.0/types";
 import { useTranslation } from "react-i18next";
-import { Collapse } from "antd";
+import { Collapse, CollapseProps } from "antd";
 import {
   CaretRightOutlined,
   LoadingOutlined,
@@ -64,7 +64,7 @@ const Tournament: FC = () => {
     }
   );
 
-  const items = useMemo(
+  const items = useMemo<CollapseProps["items"]>(
     () =>
       rawMatches.data
         ?.map((tournamentPart) => ({
@@ -93,6 +93,7 @@ const Tournament: FC = () => {
 
           return {
             key: tournamentPart.stage.id,
+            classNames: { header: styles["collapse-header"] },
             children: (
               <Stage
                 tournamentPart={tournamentPart}

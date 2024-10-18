@@ -8,6 +8,7 @@ import {
 import { Divider } from "antd";
 import { FC, Fragment } from "react";
 import { useTranslation } from "react-i18next";
+import classNames from "classnames";
 
 import { KnockoutStageTable } from "./components/KnockoutStageTable";
 
@@ -42,48 +43,55 @@ const Matches: FC<Props> = ({
   return (
     <div
       style={{ display: visible ? "block" : "none" }}
-      className={styles.matches}
+      className={classNames(
+        styles.matches,
+        styles[tournamentPart.stage.tournamentSeason.tournament]
+      )}
     >
       <h3>{`${t("tournament.stages.matches.title")}`}</h3>
-      {groupIndexes.map((group, _, groups) => (
-        <Fragment key={group}>
-          {groups.length > 1 && (
-            <h4>{`${t("tournament.stages.matches.group_subtitle", {
-              group,
-            })}`}</h4>
-          )}
-          {Object.keys(
-            tournamentPart.matches?.[group as Group]?.tours ?? { "1": [] }
-          ).map((tour, _, tours) => (
-            <Fragment key={tour}>
-              {tours.length > 1 && (
-                <h4 className={styles["tour-title"]}>{`${t(
-                  "tournament.stages.matches.subtitle",
-                  {
-                    tour,
+      <div className={styles.groups}>
+        {groupIndexes.map((group, _, groups) => (
+          <div key={group} className={styles.group}>
+            {groups.length > 1 && (
+              <h4>{`${t("tournament.stages.matches.group_subtitle", {
+                group,
+              })}`}</h4>
+            )}
+            {Object.keys(
+              tournamentPart.matches?.[group as Group]?.tours ?? { "1": [] }
+            ).map((tour, index, tours) => (
+              <Fragment key={tour}>
+                {tours.length > 1 && (
+                  <h4 className={styles["tour-title"]}>{`${t(
+                    "tournament.stages.matches.subtitle",
+                    {
+                      tour,
+                    }
+                  )}`}</h4>
+                )}
+                <KnockoutStageTable
+                  participants={participants}
+                  matches={tournamentPart.matches}
+                  stage={tournamentPart.stage}
+                  highlightedClubId={highlightedClubId}
+                  loading={loading}
+                  tour={
+                    [...GROUP_STAGES, StageSchemeType.LEAGUE].includes(
+                      tournamentPart.stage.stageScheme.type
+                    )
+                      ? Number(tour)
+                      : undefined
                   }
-                )}`}</h4>
-              )}
-              <KnockoutStageTable
-                participants={participants}
-                matches={tournamentPart.matches}
-                stage={tournamentPart.stage}
-                highlightedClubId={highlightedClubId}
-                loading={loading}
-                tour={
-                  [...GROUP_STAGES, StageSchemeType.LEAGUE].includes(
-                    tournamentPart.stage.stageScheme.type
-                  )
-                    ? Number(tour)
-                    : undefined
-                }
-                group={group as Group}
-              />
-              {tours.length > 1 && <Divider type="horizontal" />}
-            </Fragment>
-          ))}
-        </Fragment>
-      ))}
+                  group={group as Group}
+                />
+                {tours.length > 1 && index < tours.length - 1 && (
+                  <Divider type="horizontal" className={styles.divider} />
+                )}
+              </Fragment>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

@@ -40,18 +40,22 @@ const GroupTable: FC<Props> = ({
     query: `(min-width: ${variables.screenMd})`,
   });
 
+  const isXlScreen = useMediaQuery({
+    query: `(min-width: ${variables.screenXl})`,
+  });
+
   const columns: TableProps<GroupRow>["columns"] = [
     {
       key: "no",
       rowScope: "row",
-      width: 32,
+      width: isXlScreen ? 24 : 32,
       className: styles.number,
       render: (_, __, index) => index + 1,
     },
     {
       key: "team",
       dataIndex: "team",
-      width: isMdScreen ? 150 : 100,
+      width: isMdScreen && !isXlScreen ? 150 : 100,
       ellipsis: true,
       className: styles.team,
       render: (team: GroupRow["team"], _, index) =>
@@ -133,7 +137,7 @@ const GroupTable: FC<Props> = ({
     {
       key: "goals",
       dataIndex: "goals",
-      width: 60,
+      width: isXlScreen ? 48 : 60,
       render: (goals) => `${goals[0]}-${goals[1]}`,
       title: t("tournament.stages.tables.columns.goals"),
     },

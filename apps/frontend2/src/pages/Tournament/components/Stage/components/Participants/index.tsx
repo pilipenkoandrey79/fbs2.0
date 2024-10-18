@@ -2,6 +2,7 @@ import { FC } from "react";
 import { Participant, Stage } from "@fbs2.0/types";
 import { useTranslation } from "react-i18next";
 import { Divider } from "antd";
+import classNames from "classnames";
 
 import { ParticipantsList } from "./components/ParticipantsList";
 
@@ -28,14 +29,21 @@ const Participants: FC<Props> = ({
 
   return (
     <div
-      className={styles.participants}
+      className={classNames(
+        styles.participants,
+        styles[currentStage.tournamentSeason.tournament]
+      )}
       style={{ display: visible ? "block" : "none" }}
     >
-      <h3>{`${t("tournament.stages.participants.teams")}: ${
-        (seeded || []).length +
-        (previousStageWinners || []).length +
-        (skippers || []).length
-      }`}</h3>
+      <h3>
+        {t("tournament.stages.participants.teams")}
+        {": "}
+        <span className={styles.num}>
+          {(seeded || []).length +
+            (previousStageWinners || []).length +
+            (skippers || []).length}
+        </span>
+      </h3>
       <div className={styles.panels}>
         <div className={styles.panel}>
           {(seeded?.length || 0) > 0 && (

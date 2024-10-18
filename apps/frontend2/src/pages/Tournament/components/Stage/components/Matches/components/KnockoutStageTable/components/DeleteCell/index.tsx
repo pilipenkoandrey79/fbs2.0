@@ -4,7 +4,7 @@ import {
   EllipsisOutlined,
 } from "@ant-design/icons";
 import { StageTableRow } from "@fbs2.0/types";
-import { Button, Dropdown } from "antd";
+import { Button, Dropdown, Popconfirm } from "antd";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useMediaQuery } from "react-responsive";
@@ -34,45 +34,56 @@ const DeleteCell: FC<Props> = ({ record, isKnockoutStage }) => {
     });
   };
 
-  const items = [
+  const buttons = [
     {
-      label: t("common.delete"),
-      key: "delete",
+      title: t("common.delete"),
       icon: <DeleteOutlined />,
-      danger: true,
+      key: "delete",
+      disabled: false,
     },
-    ...(isKnockoutStage
-      ? [
-          {
-            label: t("tournament.stages.matches.match.clear"),
-            key: "clear",
-            icon: <ClearOutlined />,
-            disabled: record.results.every(({ date }) => !date),
-            danger: true,
-          },
-        ]
-      : []),
+    {
+      title: t("tournament.stages.matches.match.clear"),
+      icon: <ClearOutlined />,
+      key: "clear",
+      disabled: record.results.every(({ date }) => !date),
+    },
   ];
 
-  const onClick = ({ key }: { key: string }) =>
-    removeMatch(record, key === "clear");
+  const items = buttons.map(({ key, title, icon, disabled }) => ({
+    label: (
+      <Popconfirm
+        title={`${title}?`}
+        onConfirm={() => removeMatch(record, key === "clear")}
+      >
+        {icon}
+        <span style={{ marginInlineStart: 8 }}>{title}</span>
+      </Popconfirm>
+    ),
+    key,
+    danger: true,
+    disabled,
+  }));
 
   return isLgScreen || items.length === 1 ? (
     <>
-      {items.map(({ key, icon, danger, disabled }) => (
-        <Button
-          key={key}
-          icon={icon}
-          size="small"
-          type="link"
-          danger={danger}
-          disabled={disabled}
-          onClick={() => onClick({ key })}
-        />
+      {buttons.map(({ key, icon, disabled, title }) => (
+        <Popconfirm
+          title={`${title}?`}
+          onConfirm={() => removeMatch(record, key === "clear")}
+        >
+          <Button
+            key={key}
+            icon={icon}
+            size="small"
+            type="link"
+            danger
+            disabled={disabled}
+          />
+        </Popconfirm>
       ))}
     </>
   ) : (
-    <Dropdown menu={{ items, onClick }}>
+    <Dropdown menu={{ items }}>
       <Button type="link" size="small" icon={<EllipsisOutlined />} />
     </Dropdown>
   );
