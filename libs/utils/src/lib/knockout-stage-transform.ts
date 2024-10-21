@@ -89,6 +89,8 @@ export const getKnockoutStageMatchesData = (
               unplayed: unplayed ?? false,
               tech: tech ?? false,
               date,
+              replayDate:
+                !afterMatchPenalties && replayDate ? replayDate : undefined,
             });
           }
 

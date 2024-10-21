@@ -158,7 +158,7 @@ const KnockoutStageTable: FC<Props> = ({
     {
       key: "results",
       dataIndex: "results",
-      width: 100,
+      width: 126,
       className: styles["results-cell"],
       render: (results: StageTableRow["results"], record: StageTableRow) => (
         <ResultsCell

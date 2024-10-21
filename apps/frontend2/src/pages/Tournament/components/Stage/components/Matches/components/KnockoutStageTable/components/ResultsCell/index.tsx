@@ -60,6 +60,7 @@ const ResultsCell: FC<Props> = ({
             hostPen,
             guestPen,
             tech,
+            unplayed,
           }) => (
             <div
               key={date}
@@ -72,7 +73,7 @@ const ResultsCell: FC<Props> = ({
                   {dateRenderer(date)}
                 </Typography.Text>
                 <span className={styles.score}>
-                  {forceWinnerId
+                  {unplayed
                     ? "-"
                     : `${hostScore}:${guestScore}${tech ? "*" : ""} ${
                         !replayDate &&

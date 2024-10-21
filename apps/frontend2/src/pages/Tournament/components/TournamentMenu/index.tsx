@@ -1,5 +1,5 @@
 import { Menu } from "antd";
-import { FC } from "react";
+import { FC, useContext } from "react";
 import { AvailableTournaments } from "@fbs2.0/types";
 import { generatePath, useParams } from "react-router";
 import { Link } from "react-router-dom";
@@ -9,9 +9,11 @@ import { useTranslation } from "react-i18next";
 
 import { useGetTournamentSeasons } from "../../../../react-query-hooks/tournament/useGetTournamentSeasons";
 import { Paths } from "../../../../routes";
+import { HighlightContext } from "../../../../context/highlightContext";
 
 const TournamentMenu: FC = () => {
   const { t } = useTranslation();
+  const { setHighlightId } = useContext(HighlightContext);
   const { season, tournament } = useParams();
   const { data: availableTournaments } = useGetTournamentSeasons(true);
 
@@ -49,7 +51,14 @@ const TournamentMenu: FC = () => {
     ];
   };
 
-  return <Menu items={getNavLinks()} mode="horizontal" theme="dark" />;
+  return (
+    <Menu
+      items={getNavLinks()}
+      onClick={() => setHighlightId(null)}
+      mode="horizontal"
+      theme="dark"
+    />
+  );
 };
 
 export { TournamentMenu };

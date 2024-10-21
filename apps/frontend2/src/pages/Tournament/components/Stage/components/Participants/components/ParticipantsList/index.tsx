@@ -32,7 +32,6 @@ const ParticipantsList: FC<Props> = ({ title, participants, stage }) => {
   const { t, i18n } = useTranslation();
   const collator = new Intl.Collator(i18n.resolvedLanguage);
   const { highlightId } = useContext(HighlightContext);
-  console.log(highlightId);
 
   const columns: TableProps<Participant>["columns"] = [
     {

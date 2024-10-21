@@ -5,13 +5,15 @@ import toast from "react-hot-toast";
 export type MutationContext = { success?: string };
 
 export const onError = (error: Error | AxiosError) =>
-  toast.error(
-    typeof error === "string"
-      ? error
-      : error instanceof AxiosError
-      ? error.response?.data?.message
-      : (error as Error).message || "unknown error"
-  );
+  (error as AxiosError).response?.status !== HttpStatusCode.NotFound
+    ? toast.error(
+        typeof error === "string"
+          ? error
+          : error instanceof AxiosError
+          ? error.response?.data?.message
+          : (error as Error).message || "unknown error"
+      )
+    : undefined;
 
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({ onError }),

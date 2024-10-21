@@ -155,9 +155,13 @@ const ResultForm: FC<Props> = ({ onClose, row, stage, availableDates }) => {
         (!stage.stageScheme.pen &&
           isNotEmpty(values?.hostPen) &&
           isNotEmpty(values?.guestPen) &&
-          values?.hostPen === values?.guestPen)
+          values?.hostPen === values?.guestPen) ||
+        (!!initialValues.answer && !!initialValues.forceWinnerId)
     );
   }, [
+    initialValues.answer,
+    initialValues.forceWinnerId,
+    row.match.forceWinnerId,
     stage.stageScheme.pen,
     values?.guestPen,
     values?.hostPen,
@@ -333,7 +337,6 @@ const ResultForm: FC<Props> = ({ onClose, row, stage, availableDates }) => {
           </div>
 
           {/** #5: forceWinner */}
-
           <Form.Item
             name="forceWinnerId"
             label={t("tournament.stages.matches.form.force_winner")}

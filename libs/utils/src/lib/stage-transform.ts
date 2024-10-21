@@ -9,7 +9,7 @@ import {
   TournamentStage,
   TournamentStageGroup,
 } from "@fbs2.0/types";
-import { isLeagueStage } from "./common";
+import { getTeamsQuantityInGroup, isLeagueStage } from "./common";
 
 import { transformGroupStage } from "./group-stage-tarnsform";
 import { transformLeagueStage } from "./league-stage-tarnsform";
@@ -35,7 +35,7 @@ export const getPointsToSubtract = (
 const getLeagueResultsTemplate = (stageSchemeType: StageSchemeType) =>
   new Array(
     GROUP_STAGES.includes(stageSchemeType)
-      ? 6
+      ? (getTeamsQuantityInGroup(stageSchemeType) - 1) * 2
       : stageSchemeType === StageSchemeType.LEAGUE
       ? DEFAULT_SWISS_LENGTH / 4 - 1
       : 1
