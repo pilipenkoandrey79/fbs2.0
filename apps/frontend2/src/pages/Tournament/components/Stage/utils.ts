@@ -90,7 +90,9 @@ const getSeededParticipants = (
   currentStage: Stage
 ) =>
   participants?.filter(
-    ({ startingStage }) => startingStage === currentStage.stageType
+    ({ startingStage, fromStage }) =>
+      startingStage === currentStage.stageType ||
+      fromStage?.linkedTournamentStage === currentStage.stageType
   );
 
 const getPreviousStageWinners = (

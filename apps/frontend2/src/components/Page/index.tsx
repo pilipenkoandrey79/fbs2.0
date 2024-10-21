@@ -4,7 +4,6 @@ import { DatabaseOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import { AxiosError } from "axios";
 import { Helmet } from "react-helmet-async";
 
 import { Fallback } from "../Fallback";
@@ -20,7 +19,6 @@ interface Props {
   title: string;
   menu?: ReactNode;
   isLoading?: boolean;
-  errors?: (Error | AxiosError | null)[] | null;
   className?: string;
 }
 

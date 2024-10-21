@@ -82,7 +82,7 @@ const Tournament: FC = () => {
               <Stage
                 tournamentPart={tournamentPart}
                 participants={stageParticipants}
-                loading={rawMatches.isPending}
+                loading={rawMatches.isLoading}
               />
             ),
             label: t(getStageTransKey(tournamentPart.stage.stageType)),
@@ -107,7 +107,7 @@ const Tournament: FC = () => {
     [
       participants.data,
       rawMatches.data,
-      rawMatches.isPending,
+      rawMatches.isLoading,
       substitutionDialogData?.stageId,
       t,
     ]
@@ -123,10 +123,6 @@ const Tournament: FC = () => {
   return (
     <Page
       isLoading={rawMatches.isLoading}
-      errors={[
-        rawMatches.isError ? rawMatches.error : null,
-        participants.isError ? participants.error : null,
-      ]}
       title={title}
       menu={<TournamentMenu />}
       className={styles[`tournament-${tournament}`]}

@@ -32,10 +32,13 @@ export const getPointsToSubtract = (
     return acc;
   }, 0);
 
-const getLeagueResultsTemplate = (stageSchemeType: StageSchemeType) =>
+const getKnockoutResultsTemplate = (stageSchemeType: StageSchemeType) =>
   new Array(
     GROUP_STAGES.includes(stageSchemeType)
-      ? (getTeamsQuantityInGroup(stageSchemeType) - 1) * 2
+      ? ((getTeamsQuantityInGroup(stageSchemeType) - 1) *
+          getTeamsQuantityInGroup(stageSchemeType)) /
+        Math.floor(getTeamsQuantityInGroup(stageSchemeType) / 2) /
+        (stageSchemeType === StageSchemeType.GROUP_5_1_MATCH ? 2 : 1)
       : stageSchemeType === StageSchemeType.LEAGUE
       ? DEFAULT_SWISS_LENGTH / 4 - 1
       : 1
@@ -103,9 +106,9 @@ export const transformTournamentPart = (
                     ...acc,
                     [tour]: getKnockoutStageMatchesData({ matches, stage }),
                   }),
-                  getLeagueResultsTemplate(stage.stageScheme.type)
+                  getKnockoutResultsTemplate(stage.stageScheme.type)
                 )
-            : getLeagueResultsTemplate(stage.stageScheme.type),
+            : getKnockoutResultsTemplate(stage.stageScheme.type),
       },
     };
   }, {} as TournamentStage);

@@ -259,7 +259,7 @@ const KnockoutStageTable: FC<Props> = ({
           loading={loading || createMatch.isPending || deleteMatch.isPending}
         />
       </Form>
-      {user?.isEditor && availableParticipants.length > 0 && (
+      {user?.isEditor && availableParticipants.length > 1 && (
         <Button
           icon={adding ? <CloseOutlined /> : <PlusOutlined />}
           type="primary"

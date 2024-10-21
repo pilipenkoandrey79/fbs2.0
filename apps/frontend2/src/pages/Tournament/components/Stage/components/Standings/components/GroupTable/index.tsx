@@ -10,7 +10,11 @@ import { Table, TableProps, Tooltip } from "antd";
 import { FC, useContext } from "react";
 import { useMediaQuery } from "react-responsive";
 import classNames from "classnames";
-import { dateRenderer, isNotEmpty } from "@fbs2.0/utils";
+import {
+  dateRenderer,
+  getTeamsQuantityInGroup,
+  isNotEmpty,
+} from "@fbs2.0/utils";
 import { useTranslation } from "react-i18next";
 
 import { Club } from "../../../../../../../../components/Club";
@@ -89,26 +93,30 @@ const GroupTable: FC<Props> = ({
     },
     ...(isMdScreen &&
     tournamentPart.stage.stageScheme.type !== StageSchemeType.LEAGUE
-      ? new Array(4).fill(1).map((_, index) => ({
-          key: `chess-${index}`,
-          dataIndex: "chessCells",
-          width: 32,
-          className: styles.chess,
-          render: (chessCells: GroupRow["chessCells"]) => {
-            const { label, match, date } = { ...chessCells[index] };
+      ? new Array(
+          getTeamsQuantityInGroup(tournamentPart.stage.stageScheme.type)
+        )
+          .fill(1)
+          .map((_, index) => ({
+            key: `chess-${index}`,
+            dataIndex: "chessCells",
+            width: 32,
+            className: styles.chess,
+            render: (chessCells: GroupRow["chessCells"]) => {
+              const { label, match, date } = { ...chessCells[index] };
 
-            return label ? (
-              <Tooltip title={dateRenderer(date || null)}>
-                {label}
-                {((match?.deductedPointsList?.length || 0) > 0 ||
-                  !!match?.tech) &&
-                  "*"}
-              </Tooltip>
-            ) : (
-              <span className={styles.divider} />
-            );
-          },
-        }))
+              return match === null ? (
+                <span className={styles.divider} />
+              ) : (
+                <Tooltip title={dateRenderer(date || null)}>
+                  {label}
+                  {((match?.deductedPointsList?.length || 0) > 0 ||
+                    !!match?.tech) &&
+                    "*"}
+                </Tooltip>
+              );
+            },
+          }))
       : []),
     {
       key: "games",

@@ -66,6 +66,7 @@ const ResultForm: FC<Props> = ({ onClose, row, stage, availableDates }) => {
           answer: row.match.results.length > 0,
           hostScore: 0,
           guestScore: 0,
+          date: availableDates?.[(availableDates.length || 0) - 1] || undefined,
         }),
     tour: row.match.tour,
     hostDeduction: row.match.deductedPointsList?.find(

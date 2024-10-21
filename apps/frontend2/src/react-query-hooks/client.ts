@@ -20,7 +20,7 @@ export const queryClient = new QueryClient({
   mutationCache: new MutationCache({
     onError,
     onSuccess: (_, __, context) => {
-      const { success } = context as MutationContext;
+      const { success } = { ...(context as MutationContext) };
       success && toast.success(success);
     },
   }),

@@ -114,6 +114,34 @@
   .chess:has(.divider) {
     background-color: $uecl-primary-dark;
   }
+
+  .league {
+    &-winner {
+      .team {
+        font-weight: bold;
+      }
+    }
+
+    &-playoff-seeded {
+      .team {
+        background-color: $uecl-secondary-light;
+        font-weight: bold;
+      }
+    }
+
+    &-playoff-unseeded {
+      .team {
+        background-color: $uecl-secondary-light;
+        font-style: italic;
+      }
+    }
+
+    &-relegated {
+      .team {
+        background-color: unset;
+      }
+    }
+  }
 }
 
 .group-uecl-2 {

@@ -10,11 +10,12 @@ import {
 import classNames from "classnames";
 import { Button, Typography } from "antd";
 
-import { useGetTournamentSeasons } from "../../../../react-query-hooks/tournament/useGetTournamentSeasons";
 import { TournamentLogo } from "../../../../components/TournamentLogo";
 import { ParticipantSelector } from "../ParticipantSelector";
 import { Paths } from "../../../../routes";
 import { HighlightContext } from "../../../../context/highlightContext";
+import { useGetTournamentSeasons } from "../../../../react-query-hooks/tournament/useGetTournamentSeasons";
+import { useGetParticipants } from "../../../../react-query-hooks/participant/useGetParticipants";
 
 import styles from "./styles.module.scss";
 
@@ -30,6 +31,7 @@ const Header: FC<Props> = ({ title, season, tournament, onParticipants }) => {
   const { highlightId, setHighlightId } = useContext(HighlightContext);
   const [isPending, startTransition] = useTransition();
   const { data: availableTournaments } = useGetTournamentSeasons(true);
+  const { data: participants } = useGetParticipants(season, tournament);
 
   const { previousLink, nextLink } = useMemo(() => {
     const [start, finish] = (season || "").split("-").map((v) => Number(v));
@@ -89,14 +91,18 @@ const Header: FC<Props> = ({ title, season, tournament, onParticipants }) => {
         </div>
         <Button
           icon={isPending ? <LoadingOutlined /> : <TeamOutlined />}
-          title={t("tournament.participants.title")}
+          title={`${t("tournament.participants.title")} (${
+            participants?.length || 0
+          })`}
           onClick={() =>
             startTransition(() => {
               onParticipants();
             })
           }
         >
-          {t("tournament.participants.title")}
+          {`${t("tournament.participants.title")} (${
+            participants?.length || 0
+          })`}
         </Button>
       </div>
       <div className={styles.highlight}>
