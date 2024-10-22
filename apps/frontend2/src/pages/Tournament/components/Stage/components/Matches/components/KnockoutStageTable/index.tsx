@@ -1,11 +1,9 @@
 import {
   ClubWithWinner,
   Group,
-  GROUP_STAGES,
   MatchDto,
   Participant,
   Stage,
-  StageSchemeType,
   StageTableRow,
   TournamentStage,
   UKRAINE,
@@ -64,7 +62,7 @@ const KnockoutStageTable: FC<Props> = ({
   const { user } = useContext(UserContext);
   const { highlightId } = useContext(HighlightContext);
   const createMatch = useCreateMatch();
-  const deleteMatch = useDeleteMatch();
+  const deleteMatch = useDeleteMatch(stage.stageType);
 
   const [dataSource, setDataSource] = useState<StageTableRow[]>([]);
   const [adding, setAdding] = useState(false);
@@ -199,11 +197,7 @@ const KnockoutStageTable: FC<Props> = ({
                 <DeleteCell
                   record={record}
                   adding={adding}
-                  isKnockoutStage={
-                    ![...GROUP_STAGES, StageSchemeType.LEAGUE].includes(
-                      stage.stageScheme.type
-                    )
-                  }
+                  stageType={stage.stageType}
                 />
               ),
           },

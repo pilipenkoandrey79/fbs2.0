@@ -18,8 +18,8 @@ import {
 import { useTranslation } from "react-i18next";
 
 import { Club } from "../../../../../../../../components/Club";
-import { getGroupWinnersQuantity } from "../../../../utils";
 import { HighlightContext } from "../../../../../../../../context/highlightContext";
+import { getGroupWinnersQuantity } from "../../../../utils";
 
 import styles from "./styles.module.scss";
 import variables from "../../../../../../../../style/variables.module.scss";
@@ -59,7 +59,7 @@ const GroupTable: FC<Props> = ({
     {
       key: "team",
       dataIndex: "team",
-      width: isMdScreen && !isXlScreen ? 150 : 100,
+      width: isMdScreen && !isXlScreen ? 130 : 100,
       ellipsis: true,
       className: styles.team,
       render: (team: GroupRow["team"], _, index) =>
@@ -145,7 +145,7 @@ const GroupTable: FC<Props> = ({
     {
       key: "goals",
       dataIndex: "goals",
-      width: isXlScreen ? 48 : 60,
+      width: 48,
       render: (goals) => `${goals[0]}-${goals[1]}`,
       title: t("tournament.stages.tables.columns.goals"),
     },

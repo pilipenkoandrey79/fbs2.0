@@ -77,7 +77,7 @@ const ResultForm: FC<Props> = ({ onClose, row, stage, availableDates }) => {
     )?.points,
   } as ResultFormValues;
 
-  const updateMatch = useUpdateMatchResult();
+  const updateMatch = useUpdateMatchResult(stage.stageType);
   const createMatch = useCreateMatch();
 
   const isNotKnockoutStage = [...GROUP_STAGES, StageSchemeType.LEAGUE].includes(

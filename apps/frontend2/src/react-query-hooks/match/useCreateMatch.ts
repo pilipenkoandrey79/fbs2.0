@@ -19,9 +19,9 @@ export const useCreateMatch = () => {
         `${ApiEntities.Match}/${season}/${tournament}`,
         matchDto
       ),
-    onSettled: () => {
+    onSettled: (_, __, matchDto) => {
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEY.matches, season, tournament],
+        queryKey: [QUERY_KEY.matches, season, tournament, matchDto.stageType],
         refetchType: "all",
       });
     },

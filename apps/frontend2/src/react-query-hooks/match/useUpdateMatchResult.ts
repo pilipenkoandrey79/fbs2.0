@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ApiEntities, Match, MatchResultDto } from "@fbs2.0/types";
+import { ApiEntities, Match, MatchResultDto, StageType } from "@fbs2.0/types";
 import { AxiosError } from "axios";
 import { useParams } from "react-router";
 import { useTranslation } from "react-i18next";
@@ -8,7 +8,7 @@ import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
 import { MutationContext } from "../client";
 
-export const useUpdateMatchResult = () => {
+export const useUpdateMatchResult = (stageType: StageType) => {
   const { season, tournament } = useParams();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
@@ -26,7 +26,7 @@ export const useUpdateMatchResult = () => {
       ),
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEY.matches, season, tournament],
+        queryKey: [QUERY_KEY.matches, season, tournament, stageType],
         refetchType: "all",
       });
     },

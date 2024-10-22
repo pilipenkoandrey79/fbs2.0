@@ -135,6 +135,14 @@ export class TournamentService {
         previousStage: true,
         stageScheme: true,
         tournamentSeason: true,
+        stageSubstitutions: {
+          expelled: {
+            club: { city: { country: true, oldNames: true }, oldNames: true },
+          },
+          sub: {
+            club: { city: { country: true, oldNames: true }, oldNames: true },
+          },
+        },
       },
       where: { tournamentSeason: { tournament, season } },
     });

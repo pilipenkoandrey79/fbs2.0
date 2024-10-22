@@ -3,8 +3,8 @@ import { Form } from "antd";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Selector } from "../../../../../../components/selectors/Selector";
-import { Club } from "../../../../../../components/Club";
+import { Selector } from "../../../../../../../../../../components/selectors/Selector";
+import { Club } from "../../../../../../../../../../components/Club";
 
 interface Props {
   name: string;

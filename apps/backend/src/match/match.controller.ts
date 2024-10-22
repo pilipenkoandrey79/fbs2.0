@@ -12,20 +12,20 @@ import {
   Query,
   UseGuards,
 } from "@nestjs/common";
-import { ApiEntities, Tournament } from "@fbs2.0/types";
+import { ApiEntities, StageType, Tournament } from "@fbs2.0/types";
 import { isSeasonLabelValid, isTournamentValid } from "@fbs2.0/utils";
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiNoContentResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiParam,
   ApiTags,
 } from "@nestjs/swagger";
 
 import { MatchService } from "./match.service";
-import { Match } from "./entities/match.entity";
+import { BaseMatch, Match } from "./entities/match.entity";
 import { CreateMatchDto } from "./entities/match.dto";
 import { DeleteMatchDto } from "./entities/delete-match.dto";
 import { AccessTokenGuard } from "../auth/guards/access-token.guard";
@@ -50,7 +50,7 @@ export class MatchController {
   @Get("/:season")
   @ApiParam({ name: "season", type: "string" })
   @ApiOkResponse({ type: [Match] })
-  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
   public getAllSeasonMatches(@Param("season") season: string) {
     if (!isSeasonLabelValid(season, false)) {
       throw new NotFoundException();
@@ -62,7 +62,7 @@ export class MatchController {
   @Get("/:season/:tournament")
   @ApiParam({ name: "season", type: "string" })
   @ApiParam({ name: "tournament", enum: Tournament })
-  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
   @ApiOkResponse({ type: [TournamentPart] })
   public getMatches(
     @Param("season") season: string,
@@ -73,6 +73,24 @@ export class MatchController {
     }
 
     return this.service.getMatches(season, tournament);
+  }
+
+  @Get("/:season/:tournament/:stage")
+  @ApiParam({ name: "season", type: "string" })
+  @ApiParam({ name: "tournament", enum: Tournament })
+  @ApiParam({ name: "stage", enum: StageType })
+  @ApiNotFoundResponse()
+  @ApiOkResponse({ type: [BaseMatch] })
+  public getStageMatches(
+    @Param("season") season: string,
+    @Param("tournament") tournament: Tournament,
+    @Param("stage") stage: StageType
+  ) {
+    if (!isSeasonLabelValid(season, false) || !isTournamentValid(tournament)) {
+      throw new NotFoundException();
+    }
+
+    return this.service.getStageMatches(season, tournament, stage);
   }
 
   @Post("/:season/:tournament")

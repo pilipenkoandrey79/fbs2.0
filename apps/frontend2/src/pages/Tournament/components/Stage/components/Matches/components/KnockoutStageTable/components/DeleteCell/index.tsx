@@ -3,7 +3,7 @@ import {
   DeleteOutlined,
   EllipsisOutlined,
 } from "@ant-design/icons";
-import { StageTableRow } from "@fbs2.0/types";
+import { StageTableRow, StageType } from "@fbs2.0/types";
 import { Button, Dropdown, Popconfirm } from "antd";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
@@ -15,12 +15,12 @@ import variables from "../../../../../../../../../../style/variables.module.scss
 interface Props {
   record: StageTableRow;
   adding: boolean;
-  isKnockoutStage: boolean;
+  stageType: StageType;
 }
 
-const DeleteCell: FC<Props> = ({ record, isKnockoutStage }) => {
+const DeleteCell: FC<Props> = ({ record, stageType }) => {
   const { t } = useTranslation();
-  const deleteMatch = useDeleteMatch();
+  const deleteMatch = useDeleteMatch(stageType);
 
   const isLgScreen = useMediaQuery({
     query: `(min-width: ${variables.screenLg})`,

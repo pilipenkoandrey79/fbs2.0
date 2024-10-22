@@ -2,12 +2,16 @@
 @import "../../../../../../style/colors.module.scss";
 
 .participants {
+  h3 {
+    @include flex(row, space-between, center);
+  }
+
   .panels {
     @include flex(row, flex-start, flex-start);
 
     .panel {
       width: 50%;
-      min-width: 200px;
+      min-width: 177px;
     }
 
     .divider {

@@ -1,3 +1,4 @@
+import { Divider, Segmented, Skeleton } from "antd";
 import {
   AppstoreOutlined,
   BarsOutlined,
@@ -6,31 +7,29 @@ import {
 } from "@ant-design/icons";
 import {
   GROUP_STAGES,
-  Participant,
+  Stage as StageInterface,
   StageSchemeType,
-  TournamentPart,
+  Tournament,
 } from "@fbs2.0/types";
-import { Divider, Segmented } from "antd";
 import { FC, useState, useTransition } from "react";
+import { useParams } from "react-router";
 import { useTranslation } from "react-i18next";
 import { useMediaQuery } from "react-responsive";
 import classNames from "classnames";
 
 import { Participants } from "./components/Participants";
-import { Matches } from "./components/Matches";
 import { Standings } from "./components/Standings";
+import { Matches } from "./components/Matches";
+import { useGetTournamentPartMatches } from "../../../../react-query-hooks/match/useGetTournamentPartMatches";
+import { useGetParticipants } from "../../../../react-query-hooks/participant/useGetParticipants";
+import { prepareStageParticipants } from "./utils";
 
-import styles from "./styles.module.scss";
 import variables from "../../../../style/variables.module.scss";
+import styles from "./styles.module.scss";
 
-export interface StageProps {
-  tournamentPart: TournamentPart;
-  participants: {
-    seeded: Participant[] | undefined;
-    previousStageWinners: Participant[] | undefined;
-    skippers: Participant[];
-  };
-  loading: boolean;
+interface Props {
+  stage: StageInterface;
+  previousStages: [StageInterface | null, StageInterface | null];
 }
 
 enum Segments {
@@ -44,8 +43,30 @@ enum SecondarySegments {
   matches = "matches",
 }
 
-const Stage: FC<StageProps> = ({ tournamentPart, participants, loading }) => {
+const Stage: FC<Props> = ({ stage, previousStages }) => {
   const { t } = useTranslation();
+  const { season, tournament } = useParams();
+
+  const currentStageMatches = useGetTournamentPartMatches(
+    season,
+    tournament as Tournament,
+    stage
+  );
+
+  const previousStageMatches = useGetTournamentPartMatches(
+    season,
+    tournament as Tournament,
+    previousStages[0]
+  );
+
+  const prePreviousStageMatches = useGetTournamentPartMatches(
+    season,
+    tournament as Tournament,
+    previousStages[1]
+  );
+
+  const tournamentParticipants = useGetParticipants(season, tournament);
+
   const [isPending, startTransition] = useTransition();
   const [segment, setSegment] = useState(Segments.matches);
 
@@ -58,100 +79,125 @@ const Stage: FC<StageProps> = ({ tournamentPart, participants, loading }) => {
   });
 
   const hasTable = [...GROUP_STAGES, StageSchemeType.LEAGUE].includes(
-    tournamentPart.stage.stageScheme.type
+    stage.stageScheme.type
   );
 
-  return (
-    <div>
-      {!isMdScreen && (
-        <Segmented
-          options={[
-            {
-              label: t("tournament.stages.participants.title"),
-              value: Segments.participants,
-              icon: isPending ? <LoadingOutlined /> : <BarsOutlined />,
-            },
-            ...(hasTable
-              ? [
+  const participants = prepareStageParticipants(
+    tournamentParticipants.data,
+    currentStageMatches.data
+      ? { matches: currentStageMatches.data, stage }
+      : undefined,
+    previousStageMatches.data && previousStages[0]
+      ? { matches: previousStageMatches.data, stage: previousStages[0] }
+      : undefined,
+    prePreviousStageMatches.data && previousStages[1]
+      ? { matches: prePreviousStageMatches.data, stage: previousStages[1] }
+      : undefined
+  );
+
+  return [
+    currentStageMatches,
+    previousStageMatches,
+    prePreviousStageMatches,
+  ].some(({ isFetching }) => isFetching) ? (
+    <Skeleton active />
+  ) : (
+    currentStageMatches.data && (
+      <div>
+        {!isMdScreen && (
+          <Segmented
+            options={[
+              {
+                label: t("tournament.stages.participants.title"),
+                value: Segments.participants,
+                icon: isPending ? <LoadingOutlined /> : <BarsOutlined />,
+              },
+              ...(hasTable
+                ? [
+                    {
+                      label: t("tournament.stages.tables.title"),
+                      value: Segments.tables,
+                      icon: isPending ? <LoadingOutlined /> : <TableOutlined />,
+                    },
+                  ]
+                : []),
+              {
+                label: t("tournament.stages.matches.title"),
+                value: Segments.matches,
+                icon: isPending ? <LoadingOutlined /> : <AppstoreOutlined />,
+              },
+            ]}
+            onChange={(value: Segments) => {
+              startTransition(() => {
+                setSegment(value);
+              });
+            }}
+            value={segment}
+          />
+        )}
+        <div
+          className={classNames(styles.content, {
+            [styles.panels]: isMdScreen,
+          })}
+        >
+          <Participants
+            currentStage={stage}
+            participants={participants}
+            visible={isMdScreen || segment === Segments.participants}
+          />
+          <Divider type="vertical" className={styles.divider} />
+          <div>
+            {isMdScreen && hasTable && (
+              <Segmented
+                options={[
                   {
                     label: t("tournament.stages.tables.title"),
-                    value: Segments.tables,
+                    value: SecondarySegments.standings,
                     icon: isPending ? <LoadingOutlined /> : <TableOutlined />,
                   },
-                ]
-              : []),
-            {
-              label: t("tournament.stages.matches.title"),
-              value: Segments.matches,
-              icon: isPending ? <LoadingOutlined /> : <AppstoreOutlined />,
-            },
-          ]}
-          onChange={(value: Segments) => {
-            startTransition(() => {
-              setSegment(value);
-            });
-          }}
-          value={segment}
-          disabled={loading}
-        />
-      )}
-      <div
-        className={classNames(styles.content, { [styles.panels]: isMdScreen })}
-      >
-        <Participants
-          currentStage={tournamentPart.stage}
-          participants={participants}
-          visible={isMdScreen || segment === Segments.participants}
-        />
-        <Divider type="vertical" className={styles.divider} />
-        <div>
-          {isMdScreen && hasTable && (
-            <Segmented
-              options={[
-                {
-                  label: t("tournament.stages.tables.title"),
-                  value: SecondarySegments.standings,
-                  icon: isPending ? <LoadingOutlined /> : <TableOutlined />,
-                },
-                {
-                  label: t("tournament.stages.matches.title"),
-                  value: SecondarySegments.matches,
-                  icon: isPending ? <LoadingOutlined /> : <AppstoreOutlined />,
-                },
-              ]}
-              onChange={(value: SecondarySegments) =>
-                setSecondarySegment(value)
-              }
-              value={seconsarySegment}
-              disabled={loading}
-            />
-          )}
-          <div className={styles.results}>
-            {hasTable && (
-              <Standings
-                visible={
-                  isMdScreen
-                    ? seconsarySegment === SecondarySegments.standings
-                    : segment === Segments.tables
+                  {
+                    label: t("tournament.stages.matches.title"),
+                    value: SecondarySegments.matches,
+                    icon: isPending ? (
+                      <LoadingOutlined />
+                    ) : (
+                      <AppstoreOutlined />
+                    ),
+                  },
+                ]}
+                onChange={(value: SecondarySegments) =>
+                  setSecondarySegment(value)
                 }
-                tournamentPart={tournamentPart}
-                loading={loading}
+                value={seconsarySegment}
               />
             )}
-            <Matches
-              visible={
-                isMdScreen && hasTable
-                  ? seconsarySegment === SecondarySegments.matches
-                  : segment === Segments.matches
-              }
-              tournamentPart={tournamentPart}
-              participants={participants}
-              loading={loading}
-            />
+            <div className={styles.results}>
+              {hasTable && (
+                <Standings
+                  visible={
+                    isMdScreen
+                      ? seconsarySegment === SecondarySegments.standings
+                      : segment === Segments.tables
+                  }
+                  tournamentPart={{ matches: currentStageMatches.data, stage }}
+                  loading={currentStageMatches.isLoading}
+                />
+              )}
+              <Matches
+                visible={
+                  isMdScreen && hasTable
+                    ? seconsarySegment === SecondarySegments.matches
+                    : segment === Segments.matches
+                }
+                tournamentPart={{ matches: currentStageMatches.data, stage }}
+                participants={participants}
+                loading={currentStageMatches.isLoading}
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    )
   );
 };
 

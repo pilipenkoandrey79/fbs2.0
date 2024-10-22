@@ -1,31 +1,17 @@
-import { FC, useMemo, useState, useTransition } from "react";
-import { useParams } from "react-router";
-import {
-  getStageTransKey,
-  getTournamentTitle,
-  transformTournamentPart,
-} from "@fbs2.0/utils";
-import { StageSubstitution, Tournament as TournamentType } from "@fbs2.0/types";
+import { FC, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router";
+import { getStageTransKey, getTournamentTitle } from "@fbs2.0/utils";
+import { Tournament as TournamentType } from "@fbs2.0/types";
 import { Collapse, CollapseProps } from "antd";
-import {
-  CaretRightOutlined,
-  LoadingOutlined,
-  SwapOutlined,
-} from "@ant-design/icons";
+import { CaretRightOutlined, LoadingOutlined } from "@ant-design/icons";
 
 import { Page } from "../../components/Page";
-import { Stage, StageProps } from "./components/Stage";
-import { SubstitutionDialog } from "./components/SubstitutionDialog";
-import {
-  getPreviousTournamentPart,
-  prepareStageParticipants,
-} from "./components/Stage/utils";
-import { Participants } from "./components/Participants";
-import { Header } from "./components/Header";
 import { TournamentMenu } from "./components/TournamentMenu";
-import { useGetMatches } from "../../react-query-hooks/match/useGetMatches";
-import { useGetParticipants } from "../../react-query-hooks/participant/useGetParticipants";
+import { Header } from "./components/Header";
+import { Participants } from "./components/Participants";
+import { Stage } from "./components/Stage";
+import { useGetTournamentStages } from "../../react-query-hooks/tournament/useGetTournamentStages";
 
 import styles from "./styles.module.scss";
 
@@ -34,84 +20,10 @@ const Tournament: FC = () => {
   const { season, tournament } = useParams();
   const [isPending, startTransition] = useTransition();
 
-  const rawMatches = useGetMatches(season, tournament);
-  const participants = useGetParticipants(season, tournament);
-
   const [participantsDialogOpened, setParticipantsDialogOpened] =
     useState(false);
 
   const [activeKey, setActiveKey] = useState<(number | string)[]>();
-
-  const [substitutionDialogData, setSubstitutionDialogData] = useState<{
-    stageId: number;
-    stageParticipants: StageProps["participants"];
-    currentSubstitutions: StageSubstitution[] | undefined;
-  } | null>(null);
-
-  const items = useMemo<CollapseProps["items"]>(
-    () =>
-      rawMatches.data
-        ?.map((tournamentPart) => ({
-          stage: tournamentPart.stage,
-          matches: transformTournamentPart(tournamentPart),
-        }))
-        .map((tournamentPart, _, tournamentParts) => {
-          const previousTournamentPart = getPreviousTournamentPart(
-            tournamentParts,
-            tournamentPart.stage
-          );
-
-          const stageParticipants = prepareStageParticipants(
-            participants.data,
-            tournamentPart,
-            previousTournamentPart,
-            getPreviousTournamentPart(
-              tournamentParts,
-              previousTournamentPart?.stage
-            )
-          );
-
-          const stageHasParticipants = Object.values(stageParticipants).some(
-            (list) => (list?.length || 0) > 0
-          );
-
-          return {
-            key: tournamentPart.stage.id,
-            classNames: { header: styles["collapse-header"] },
-            children: (
-              <Stage
-                tournamentPart={tournamentPart}
-                participants={stageParticipants}
-                loading={rawMatches.isLoading}
-              />
-            ),
-            label: t(getStageTransKey(tournamentPart.stage.stageType)),
-            extra: stageHasParticipants && (
-              <SwapOutlined
-                onClick={(event) => {
-                  event.stopPropagation();
-                  setSubstitutionDialogData({
-                    stageId: tournamentPart.stage.id,
-                    stageParticipants,
-                    currentSubstitutions:
-                      tournamentPart.stage.stageSubstitutions,
-                  });
-                }}
-                disabled={
-                  substitutionDialogData?.stageId !== tournamentPart.stage.id
-                }
-              />
-            ),
-          };
-        }),
-    [
-      participants.data,
-      rawMatches.data,
-      rawMatches.isLoading,
-      substitutionDialogData?.stageId,
-      t,
-    ]
-  );
 
   const title = `${t(
     getTournamentTitle({
@@ -120,9 +32,27 @@ const Tournament: FC = () => {
     })
   )} ${season}`;
 
+  const stages = useGetTournamentStages(season, tournament as TournamentType);
+
+  const items: CollapseProps["items"] = stages.data?.map(
+    (stage, index, stages) => ({
+      key: stage.id,
+      classNames: { header: styles["collapse-header"] },
+      label: t(getStageTransKey(stage.stageType)),
+      children: (
+        <Stage
+          stage={stage}
+          previousStages={[
+            stages[index - 1] || null,
+            stages[index - 2] || null,
+          ]}
+        />
+      ),
+    })
+  );
+
   return (
     <Page
-      isLoading={rawMatches.isLoading}
       title={title}
       menu={<TournamentMenu />}
       className={styles[`tournament-${tournament}`]}
@@ -133,7 +63,6 @@ const Tournament: FC = () => {
         tournament={tournament}
         onParticipants={() => setParticipantsDialogOpened(true)}
       />
-
       <Participants
         onClose={() => setParticipantsDialogOpened(false)}
         open={participantsDialogOpened}
@@ -155,14 +84,6 @@ const Tournament: FC = () => {
           )
         }
       />
-      {substitutionDialogData !== null && (
-        <SubstitutionDialog
-          stageId={substitutionDialogData?.stageId}
-          stageParticipants={substitutionDialogData.stageParticipants}
-          currentSubstitutions={substitutionDialogData.currentSubstitutions}
-          close={() => setSubstitutionDialogData(null)}
-        />
-      )}
     </Page>
   );
 };

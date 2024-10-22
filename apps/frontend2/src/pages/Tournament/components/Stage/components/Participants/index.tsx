@@ -1,14 +1,16 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Participant, Stage } from "@fbs2.0/types";
 import { useTranslation } from "react-i18next";
 import { Divider } from "antd";
 import classNames from "classnames";
+import { SwapOutlined } from "@ant-design/icons";
 
 import { ParticipantsList } from "./components/ParticipantsList";
+import { SubstitutionDialog } from "./components/SubstitutionDialog";
 
 import styles from "./styles.module.scss";
 
-interface Props {
+export interface ParticipantProps {
   visible: boolean;
   participants: {
     seeded: Participant[] | undefined;
@@ -18,12 +20,20 @@ interface Props {
   currentStage: Stage;
 }
 
-const Participants: FC<Props> = ({
+const Participants: FC<ParticipantProps> = ({
   currentStage,
   visible,
-  participants: { seeded, skippers, previousStageWinners },
+  participants,
 }) => {
+  const { seeded, skippers, previousStageWinners } = participants;
   const { t } = useTranslation();
+
+  const [isSubstitutionsDialogOpen, setIsSubstitutionsDialogOpen] =
+    useState(false);
+
+  const stageHasParticipants = Object.values(participants).some(
+    (list) => (list?.length || 0) > 0
+  );
 
   return (
     <div
@@ -34,14 +44,24 @@ const Participants: FC<Props> = ({
       style={{ display: visible ? "block" : "none" }}
     >
       <h3>
-        {t("tournament.stages.participants.teams")}
-        {": "}
-        <span className={styles.num}>
-          {(seeded || []).length +
-            (previousStageWinners || []).length +
-            (skippers || []).length}
+        <span>
+          {t("tournament.stages.participants.teams")}
+          {": "}
+          <span className={styles.num}>
+            {(seeded || []).length +
+              (previousStageWinners || []).length +
+              (skippers || []).length}
+          </span>
         </span>
+        {stageHasParticipants && (
+          <SwapOutlined
+            onClick={() => {
+              setIsSubstitutionsDialogOpen(true);
+            }}
+          />
+        )}
       </h3>
+
       <div className={styles.panels}>
         <div className={styles.panel}>
           {(seeded?.length || 0) > 0 && (
@@ -70,6 +90,14 @@ const Participants: FC<Props> = ({
           )}
         </div>
       </div>
+      {isSubstitutionsDialogOpen && (
+        <SubstitutionDialog
+          stage={currentStage}
+          stageParticipants={participants}
+          currentSubstitutions={currentStage.stageSubstitutions}
+          close={() => setIsSubstitutionsDialogOpen(false)}
+        />
+      )}
     </div>
   );
 };

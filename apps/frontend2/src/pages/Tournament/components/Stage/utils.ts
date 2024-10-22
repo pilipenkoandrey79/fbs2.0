@@ -87,12 +87,12 @@ const getParticipantsSkippedPreviousStage = (
 
 const getSeededParticipants = (
   participants: Participant[] | undefined,
-  currentStage: Stage
+  currentStage: Stage | undefined
 ) =>
   participants?.filter(
     ({ startingStage, fromStage }) =>
-      startingStage === currentStage.stageType ||
-      fromStage?.linkedTournamentStage === currentStage.stageType
+      startingStage === currentStage?.stageType ||
+      fromStage?.linkedTournamentStage === currentStage?.stageType
   );
 
 const getPreviousStageWinners = (
@@ -211,11 +211,11 @@ export const getFilteredParticipants = (
 
 export const prepareStageParticipants = (
   participants: Participant[] | undefined,
-  currentTournamentPart: TournamentPart,
+  currentTournamentPart: TournamentPart | undefined,
   previousTournamentPart: TournamentPart | undefined,
   prePreviousTournamentPart: TournamentPart | undefined
 ) => ({
-  seeded: getSeededParticipants(participants, currentTournamentPart.stage),
+  seeded: getSeededParticipants(participants, currentTournamentPart?.stage),
   previousStageWinners: getPreviousStageWinners(
     participants,
     previousTournamentPart

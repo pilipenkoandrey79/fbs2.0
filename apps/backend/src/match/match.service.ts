@@ -1,7 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, Repository } from "typeorm";
-import { DeductedPointsDto, MatchResultDto, Tournament } from "@fbs2.0/types";
+import {
+  DeductedPointsDto,
+  MatchResultDto,
+  StageType,
+  Tournament,
+} from "@fbs2.0/types";
 import { isNotEmpty, prepareMatchesList } from "@fbs2.0/utils";
 
 import { Match } from "./entities/match.entity";
@@ -27,7 +32,11 @@ export class MatchService {
   @InjectRepository(TournamentSeason)
   private readonly tournamentSeasonRepository: Repository<TournamentSeason>;
 
-  private async findMatches(season: string, tournament?: Tournament) {
+  private async findMatches(
+    season: string,
+    tournament?: Tournament,
+    stageType?: StageType
+  ) {
     return await this.matchRepository.find({
       relations: {
         stage: {
@@ -68,6 +77,7 @@ export class MatchService {
       where: {
         stage: {
           tournamentSeason: { season, ...(tournament ? { tournament } : {}) },
+          ...(stageType ? { stageType } : {}),
         },
       },
     });
@@ -110,6 +120,16 @@ export class MatchService {
         }
       );
     });
+  }
+
+  public async getStageMatches(
+    season: string,
+    tournament: Tournament,
+    stage: StageType
+  ) {
+    return (await this.findMatches(season, tournament, stage)).sort((a) =>
+      a.answer ? 1 : -1
+    );
   }
 
   public async createMatch(
