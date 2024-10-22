@@ -176,5 +176,9 @@
         "current_empty": "No current substitutions"
       }
     }
+  },
+  "home": {
+    "title": "Home",
+    "create": "Create tournament"
   }
 }

@@ -1,0 +1,26 @@
+@import "../../style/variables.module.scss";
+@import "../../style/mixins.scss";
+
+.container {
+  max-width: $screen-xl;
+  margin: 0 auto;
+  padding: 10px;
+
+  .header {
+    @include flex(row, space-between);
+    gap: 20px;
+    margin-bottom: 20px;
+
+    .slider {
+      flex: 1;
+      margin-right: 10px;
+    }
+  }
+
+  .timeline {
+    .spin {
+      line-height: 300px;
+      width: 100%;
+    }
+  }
+}
