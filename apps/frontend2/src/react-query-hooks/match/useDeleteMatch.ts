@@ -5,7 +5,7 @@ import { useParams } from "react-router";
 import { useTranslation } from "react-i18next";
 
 import ApiClient from "../../api/api.client";
-import { QUERY_KEY } from "../query-key";
+import { MUTATION_KEY, QUERY_KEY } from "../query-key";
 import { MutationContext } from "../client";
 
 export const useDeleteMatch = (stageType: StageType) => {
@@ -23,6 +23,7 @@ export const useDeleteMatch = (stageType: StageType) => {
     },
     MutationContext
   >({
+    mutationKey: [MUTATION_KEY.deleteMatch],
     mutationFn: ({ matchId, answerMatchId, clearResults }) =>
       ApiClient.getInstance().delete<unknown, DeleteMatchDto>(
         `${ApiEntities.Match}/${matchId}${clearResults ? "/results" : ""}`,

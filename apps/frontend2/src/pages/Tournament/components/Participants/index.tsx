@@ -130,6 +130,7 @@ const Participants: FC<Props> = ({ open, onClose }) => {
             )}
             <ParticipantsList
               participants={participants.data}
+              loading={participants.isLoading}
               adding={isAddFormOpen}
               setSelectedCountryId={setSelectedCountryId}
             />

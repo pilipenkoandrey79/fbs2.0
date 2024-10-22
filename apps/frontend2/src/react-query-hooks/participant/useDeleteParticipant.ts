@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ApiEntities } from "@fbs2.0/types";
+import { ApiEntities, Participant } from "@fbs2.0/types";
 import { AxiosError } from "axios";
 import { useParams } from "react-router";
 import { useTranslation } from "react-i18next";
@@ -26,8 +26,16 @@ export const useDeleteParticipant = () => {
         })
       );
     },
-    onMutate: () => ({
-      success: t("tournament.participants.list.removed"),
-    }),
+    onMutate: (participantId) => {
+      queryClient.setQueryData(
+        [QUERY_KEY.participants, season, tournament],
+        (old: Participant[]): Participant[] =>
+          old.filter(({ id }) => id !== participantId)
+      );
+
+      return {
+        success: t("tournament.participants.list.removed"),
+      };
+    },
   });
 };

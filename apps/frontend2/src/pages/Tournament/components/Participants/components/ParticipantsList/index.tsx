@@ -25,6 +25,7 @@ import variables from "../../../../../../style/variables.module.scss";
 interface Props {
   participants: Participant[] | undefined;
   adding: boolean;
+  loading: boolean;
   setSelectedCountryId: (countryId: number | undefined) => void;
 }
 
@@ -33,6 +34,7 @@ type Filters = Record<"country" | "start", FilterValue | null> | null;
 const ParticipantsList: FC<Props> = ({
   participants,
   adding,
+  loading,
   setSelectedCountryId,
 }) => {
   const { season } = useParams();
@@ -139,6 +141,7 @@ const ParticipantsList: FC<Props> = ({
           body: { cell: EditableCell },
         }}
         columns={columns}
+        loading={loading}
         dataSource={participants}
         rowKey="id"
         size="small"

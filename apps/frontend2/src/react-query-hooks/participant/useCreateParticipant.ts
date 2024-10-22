@@ -1,5 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ApiEntities, Participant, ParticipantDto } from "@fbs2.0/types";
+import {
+  ApiEntities,
+  Club,
+  Participant,
+  ParticipantDto,
+  Tournament,
+} from "@fbs2.0/types";
 import { AxiosError } from "axios";
 import { useParams } from "react-router";
 import { useTranslation } from "react-i18next";
@@ -27,8 +33,33 @@ export const useCreateParticipant = () => {
         })
       );
     },
-    onMutate: () => ({
-      success: t("tournament.participants.list.added"),
-    }),
+    onMutate: (participantDto) => {
+      const clubs = queryClient.getQueryData<Club[]>([QUERY_KEY.clubs]);
+      const club = clubs?.find((club) => club.id === participantDto.clubId);
+
+      if (club && season && tournament) {
+        queryClient.setQueryData(
+          [QUERY_KEY.participants, season, tournament],
+          (old: Participant[]): Participant[] => [
+            ...old,
+            {
+              id: -1,
+              startingStage: participantDto.startingStage,
+              club,
+              tournamentSeason: {
+                season,
+                tournament: tournament as Tournament,
+                id: 0,
+              },
+              fromStage: null,
+            },
+          ]
+        );
+      }
+
+      return {
+        success: t("tournament.participants.list.added"),
+      };
+    },
   });
 };

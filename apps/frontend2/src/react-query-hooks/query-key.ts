@@ -8,3 +8,7 @@ export const QUERY_KEY = {
   clubs: "clubs",
   cities: "cities",
 };
+
+export const MUTATION_KEY = {
+  deleteMatch: "delete-match",
+};

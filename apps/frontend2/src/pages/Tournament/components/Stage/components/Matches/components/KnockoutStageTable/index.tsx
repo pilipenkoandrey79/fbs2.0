@@ -15,6 +15,7 @@ import { FC, useContext, useEffect, useMemo, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import classNames from "classnames";
 import { isNotEmpty } from "@fbs2.0/utils";
+import { useMutationState } from "@tanstack/react-query";
 
 import { EditableCell, EditableCellProps } from "./components/EditableCell";
 import { ResultsCell } from "./components/ResultsCell";
@@ -24,7 +25,7 @@ import { UserContext } from "../../../../../../../../context/userContext";
 import { HighlightContext } from "../../../../../../../../context/highlightContext";
 import { Club } from "../../../../../../../../components/Club";
 import { useCreateMatch } from "../../../../../../../../react-query-hooks/match/useCreateMatch";
-import { useDeleteMatch } from "../../../../../../../../react-query-hooks/match/useDeleteMatch";
+import { MUTATION_KEY } from "../../../../../../../../react-query-hooks/query-key";
 import { getFilteredParticipants } from "../../../../utils";
 
 import variables from "../../../../../../../../style/variables.module.scss";
@@ -62,7 +63,11 @@ const KnockoutStageTable: FC<Props> = ({
   const { user } = useContext(UserContext);
   const { highlightId } = useContext(HighlightContext);
   const createMatch = useCreateMatch();
-  const deleteMatch = useDeleteMatch(stage.stageType);
+
+  const deleteStatus = useMutationState({
+    filters: { mutationKey: [MUTATION_KEY.deleteMatch] },
+    select: (mutation) => mutation.state.status,
+  });
 
   const [dataSource, setDataSource] = useState<StageTableRow[]>([]);
   const [adding, setAdding] = useState(false);
@@ -250,7 +255,9 @@ const KnockoutStageTable: FC<Props> = ({
           pagination={false}
           showHeader={false}
           bordered
-          loading={loading || createMatch.isPending || deleteMatch.isPending}
+          loading={
+            loading || createMatch.isPending || deleteStatus.includes("pending")
+          }
         />
       </Form>
       {user?.isEditor && availableParticipants.length > 1 && (
@@ -265,7 +272,7 @@ const KnockoutStageTable: FC<Props> = ({
 
             setAdding(!adding);
           }}
-          disabled={createMatch.isPending || deleteMatch.isPending}
+          disabled={createMatch.isPending || deleteStatus.includes("pending")}
         />
       )}
       {!!resultEditing && (
