@@ -1,0 +1,72 @@
+@import "../../../../style//mixins.scss";
+
+.card {
+  & > div {
+    padding: 6px !important;
+  }
+
+  .container {
+    @include flex(row, space-between, stretch);
+
+    .coeff {
+      @include flex(row, flex-start, flex-start);
+
+      a {
+        color: inherit;
+        font-size: 150%;
+      }
+    }
+
+    .divider {
+      align-self: stretch;
+      height: unset;
+    }
+
+    .wrapper {
+      @include flex(row, flex-start, flex-start);
+
+      .years {
+        @include flex(column, flex-start, flex-start);
+        color: rgba($color: #000000, $alpha: 0.7);
+        flex: 1;
+        white-space: nowrap;
+
+        .start {
+          color: rgba($color: #000000, $alpha: 0.5);
+        }
+
+        .end {
+          font-size: 150%;
+        }
+      }
+
+      .tournaments {
+        ul {
+          list-style: none;
+          padding: 0;
+
+          li.tournament {
+            @include flex(row, flex-start, center);
+            margin: 6px 0;
+
+            .final {
+              @include flex(column, flex-start, flex-start);
+
+              .winner {
+                &:hover {
+                  text-decoration: underline;
+                }
+              }
+
+              .finalist {
+                padding-left: 10px;
+                font-size: 80%;
+                color: rgba($color: #000000, $alpha: 0.5);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

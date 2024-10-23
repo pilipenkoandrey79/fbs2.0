@@ -31,7 +31,7 @@ const Page: FC<Props> = (props) => {
   return (
     <Layout className={classNames(styles.layout, props.className)}>
       <Helmet>
-        <title>{props.title}</title>
+        <title>{["FBS2", props.title].join(" | ")}</title>
       </Helmet>
       <Layout.Header>
         <h1>

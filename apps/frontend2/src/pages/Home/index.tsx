@@ -1,24 +1,33 @@
-import {
-  FC,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Slider, Spin, Timeline } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useMediaQuery } from "react-responsive";
+import {
+  createSearchParams,
+  ParamKeyValuePair,
+  useSearchParams,
+} from "react-router-dom";
+import {
+  SEASON_FROM_SEARCH_PARAM,
+  SEASON_TO_SEARCH_PARAM,
+  TournamentSeason,
+} from "@fbs2.0/types";
 
 import { Page } from "../../components/Page";
+import { Season } from "./components/Season";
 import { useGetTournamentSeasons } from "../../react-query-hooks/tournament/useGetTournamentSeasons";
 import { getAvailableSeasonsKeys, getSliderMarks } from "./utils";
 
 import styles from "./styles.module.scss";
 import variables from "../../style/variables.module.scss";
+import { Tournament } from "./components/Tournament";
 
 const Home: FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const from = Number(searchParams.get(SEASON_FROM_SEARCH_PARAM));
+  const to = Number(searchParams.get(SEASON_TO_SEARCH_PARAM));
+
   const { t } = useTranslation();
   const availableTournaments = useGetTournamentSeasons(false);
 
@@ -29,8 +38,11 @@ const Home: FC = () => {
   const [filteredSeasons, setFilteredSeasons] = useState<string[]>([]);
   const [sliderValue, setSliderValue] = useState<number[]>();
 
+  const [tournamentToEdit, setTournamentToEdit] =
+    useState<TournamentSeason | null>(null);
+
   const { marks, max, min } = useMemo(
-    () => getSliderMarks(availableTournaments.data, isMdScreen ? 10 : 30),
+    () => getSliderMarks(availableTournaments.data, isMdScreen ? 10 : 20),
     [availableTournaments.data, isMdScreen]
   );
 
@@ -39,11 +51,9 @@ const Home: FC = () => {
     [availableTournaments.data]
   );
 
-  const onSliderChange = useCallback(
-    (value: SetStateAction<number[] | undefined>) => {
-      setSliderValue(value);
-
-      const [start, end] = [...(value as number[])];
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      const [start, end] = [...(sliderValue || [])];
 
       setFilteredSeasons(
         defaultSeasons.filter((season) => {
@@ -52,17 +62,43 @@ const Home: FC = () => {
           return year <= (end || 0) && year >= (start || 0);
         })
       );
-    },
-    [defaultSeasons]
-  );
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [defaultSeasons, sliderValue]);
 
   useEffect(() => {
-    setFilteredSeasons(defaultSeasons);
-  }, [availableTournaments.data, defaultSeasons]);
+    if (!sliderValue && availableTournaments.isSuccess) {
+      setSliderValue([
+        Number.isNaN(from) || !from ? min : from,
+        Number.isNaN(to) || !to ? max : to,
+      ]);
+    }
+  }, [availableTournaments.isSuccess, from, max, min, sliderValue, to]);
 
   useEffect(() => {
-    setSliderValue([min, max]);
-  }, [max, min]);
+    const [start, end] = [...(sliderValue || [])];
+
+    if (!start || !end) {
+      return;
+    }
+
+    if (
+      Number.isNaN(from) ||
+      from !== start ||
+      Number.isNaN(to) ||
+      to !== end
+    ) {
+      const params: ParamKeyValuePair[] = [
+        [SEASON_FROM_SEARCH_PARAM, `${start}`],
+        [SEASON_TO_SEARCH_PARAM, `${end}`],
+      ];
+
+      setSearchParams(createSearchParams(params), { replace: true });
+    }
+  }, [from, setSearchParams, sliderValue, to]);
 
   return (
     <Page title={t("home.title")}>
@@ -75,7 +111,7 @@ const Home: FC = () => {
               max={max}
               min={min}
               marks={marks}
-              onChange={onSliderChange}
+              onChange={setSliderValue}
               disabled={availableTournaments.isLoading}
             />
           </div>
@@ -97,18 +133,20 @@ const Home: FC = () => {
             items={filteredSeasons.map((season) => ({
               key: season,
               children: (
-                <div
-                  style={{
-                    border: "1px solid #dfdfdf",
-                    height: 50,
-                    width: 200,
-                  }}
-                >
-                  {season}
-                </div>
+                <Season
+                  season={season}
+                  tournaments={availableTournaments.data?.[season]}
+                  onEdit={setTournamentToEdit}
+                />
               ),
             }))}
             className={styles.timeline}
+          />
+        )}
+        {tournamentToEdit !== null && (
+          <Tournament
+            tournamentSeason={tournamentToEdit}
+            onClose={() => setTournamentToEdit(null)}
           />
         )}
       </div>

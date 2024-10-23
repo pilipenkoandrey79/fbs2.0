@@ -1,0 +1,75 @@
+@import "../../style/colors.module.scss";
+
+.badge {
+  display: inline-block;
+  padding: 4px;
+  margin: 0 2px;
+  border-radius: 3px;
+  width: 48px;
+  height: 30px;
+  text-align: center;
+
+  a {
+    color: inherit;
+  }
+
+  &.UCL {
+    background-color: $ucl-primary;
+    color: $ucl-background;
+
+    a {
+      &:hover,
+      &:active {
+        color: $ucl-primary-light;
+      }
+    }
+  }
+
+  &.UEL {
+    background-color: $uel-primary;
+    color: $uel-background;
+
+    a {
+      &:hover,
+      &:active {
+        color: $uel-primary-light;
+      }
+    }
+  }
+
+  &.UECL {
+    background-color: $uecl-primary;
+    color: $uecl-background;
+
+    a {
+      &:hover,
+      &:active {
+        color: $uecl-primary-light;
+      }
+    }
+  }
+
+  &.CWC {
+    background-color: $cwc-primary;
+    color: $cwc-background;
+
+    a {
+      &:hover,
+      &:active {
+        color: $cwc-primary-light;
+      }
+    }
+  }
+
+  &.ICFC {
+    background-color: $icfc-primary;
+    color: $icfc-background;
+
+    a {
+      &:hover,
+      &:active {
+        color: $icfc-primary-light;
+      }
+    }
+  }
+}

@@ -1,9 +1,9 @@
 {
-  "test": "тест",
   "common": {
     "clubs": "Клуби",
     "total": "{{from, number}} - {{to, number}} з {{total, number}}",
     "remove": "Видалення",
+    "edit": "Редагувати",
     "close": "Закрити",
     "add_more": "Додати ще",
     "save": "Зберегти",
@@ -180,6 +180,7 @@
   },
   "home": {
     "title": "Головна",
-    "create": "Створити турнір"
+    "create": "Створити турнір",
+    "finalist": "Фіналіст"
   }
 }

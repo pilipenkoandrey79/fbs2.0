@@ -1,0 +1,20 @@
+@import "../../../../style/variables.module.scss";
+@import "../../../../style/mixins.scss";
+
+.modal {
+  top: 0;
+
+  .content {
+    min-height: 100px;
+  }
+
+  :global {
+    .ant-modal-content {
+      padding: 10px;
+    }
+  }
+
+  @media (min-width: $screen-sm) {
+    top: 10px;
+  }
+}

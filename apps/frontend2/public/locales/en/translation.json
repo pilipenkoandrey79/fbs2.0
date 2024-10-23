@@ -3,6 +3,7 @@
     "clubs": "Clubs",
     "total": "{{from, number}} - {{to, number}} of {{total, number}} items",
     "remove": "Remove",
+    "edit": "Edit",
     "close": "Close",
     "add_more": "Add more",
     "save": "Save",
@@ -179,6 +180,7 @@
   },
   "home": {
     "title": "Home",
-    "create": "Create tournament"
+    "create": "Create tournament",
+    "finalist": "Runner-up"
   }
 }

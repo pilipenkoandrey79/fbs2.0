@@ -10,6 +10,7 @@ const myTheme: ThemeConfig = {
     colorLinkHover: colors.linkHover,
     borderRadius: 3,
     colorBorder: "#989898",
+    fontFamily: "-apple-system, 'Oswald', sans-serif",
   },
   components: {
     Table: { borderColor: colors.border },

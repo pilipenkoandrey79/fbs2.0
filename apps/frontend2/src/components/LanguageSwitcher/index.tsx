@@ -13,7 +13,7 @@ interface Props {
 const LanguageSwitcher: FC<Props> = ({ className }) => {
   const { i18n } = useTranslation();
   const { lang } = useParams();
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
 
   const navigate = useNavigate();
 
@@ -29,7 +29,7 @@ const LanguageSwitcher: FC<Props> = ({ className }) => {
 
         dayjs.locale(value);
 
-        navigate("/" + value + pathname.replace(`${lang}/`, ""));
+        navigate("/" + value + pathname.replace(`${lang}/`, "") + search);
       }}
       className={className}
     />
