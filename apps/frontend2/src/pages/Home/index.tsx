@@ -1,11 +1,7 @@
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Drawer, Slider, Spin, Timeline } from "antd";
-import {
-  ColumnWidthOutlined,
-  PlusOutlined,
-  TrophyOutlined,
-} from "@ant-design/icons";
+import { PlusOutlined, TrophyOutlined } from "@ant-design/icons";
 import { useMediaQuery } from "react-responsive";
 import {
   createSearchParams,
@@ -28,7 +24,9 @@ import { DEFAULT_MIN_SLIDER_VALUE, getSliderMarks } from "./utils";
 import styles from "./styles.module.scss";
 import variables from "../../style/variables.module.scss";
 
-export const DEBOUNCE_TIMEOUT = 300;
+export const DEBOUNCE_TIMEOUT = 500;
+
+let timeout: NodeJS.Timeout;
 
 const Home: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -42,8 +40,10 @@ const Home: FC = () => {
   });
 
   const [filteredSeasons, setFilteredSeasons] = useState<string[]>([]);
-  const [sliderValue, setSliderValue] = useState<number[]>();
+  const [limits, setLimits] = useState<number[]>();
+  const [defaultSliderValue, setDefaultSliderValue] = useState<number[]>();
   const [isWinnersOpen, setIsWinnersOpen] = useState(isMdScreen);
+  const [isPending, startTransition] = useTransition();
 
   const [tournamentToEdit, setTournamentToEdit] =
     useState<TournamentSeason | null>(null);
@@ -53,10 +53,32 @@ const Home: FC = () => {
     [availableTournaments.data, isMdScreen]
   );
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      const [start, end] = [...(sliderValue || [])];
+  const onSliderChange = (value: number[]) => {
+    clearTimeout(timeout);
 
+    timeout = setTimeout(() => {
+      setLimits(value);
+    }, DEBOUNCE_TIMEOUT);
+  };
+
+  /** Initial values for slider */
+  useEffect(() => {
+    if (!defaultSliderValue && availableTournaments.isSuccess) {
+      const values = [
+        Number.isNaN(from) || !from ? DEFAULT_MIN_SLIDER_VALUE : from,
+        Number.isNaN(to) || !to ? max : to,
+      ];
+
+      setDefaultSliderValue(values);
+      setLimits(values);
+    }
+  }, [availableTournaments.isSuccess, defaultSliderValue, from, max, to]);
+
+  /** Make cards filtration */
+  useEffect(() => {
+    const [start, end] = [...(limits || [])];
+
+    startTransition(() => {
       setFilteredSeasons(
         Object.keys(availableTournaments.data || {}).filter((season) => {
           const year = Number(season.split("-")[0]);
@@ -64,49 +86,31 @@ const Home: FC = () => {
           return year <= (end || 0) && year >= (start || 0);
         })
       );
-    }, DEBOUNCE_TIMEOUT);
+    });
+  }, [availableTournaments.data, limits]);
 
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [availableTournaments.data, sliderValue]);
-
+  /** Sync with search params */
   useEffect(() => {
-    if (!sliderValue && availableTournaments.isSuccess) {
-      setSliderValue([
-        Number.isNaN(from) || !from ? DEFAULT_MIN_SLIDER_VALUE : from,
-        Number.isNaN(to) || !to ? max : to,
-      ]);
+    const [start, end] = [...(limits || [])];
+
+    if (!start || !end) {
+      return;
     }
-  }, [availableTournaments.isSuccess, from, max, min, sliderValue, to]);
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      const [start, end] = [...(sliderValue || [])];
+    if (
+      Number.isNaN(from) ||
+      from !== start ||
+      Number.isNaN(to) ||
+      to !== end
+    ) {
+      const params: ParamKeyValuePair[] = [
+        [SEASON_FROM_SEARCH_PARAM, `${start}`],
+        [SEASON_TO_SEARCH_PARAM, `${end}`],
+      ];
 
-      if (!start || !end) {
-        return;
-      }
-
-      if (
-        Number.isNaN(from) ||
-        from !== start ||
-        Number.isNaN(to) ||
-        to !== end
-      ) {
-        const params: ParamKeyValuePair[] = [
-          [SEASON_FROM_SEARCH_PARAM, `${start}`],
-          [SEASON_TO_SEARCH_PARAM, `${end}`],
-        ];
-
-        setSearchParams(createSearchParams(params), { replace: true });
-      }
-    }, DEBOUNCE_TIMEOUT);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [from, setSearchParams, sliderValue, to]);
+      setSearchParams(createSearchParams(params), { replace: true });
+    }
+  }, [from, limits, setSearchParams, to]);
 
   return (
     <Page title={t("home.title")}>
@@ -121,16 +125,6 @@ const Home: FC = () => {
             >
               {isMdScreen ? t("home.create") : ""}
             </Button>
-            <Button
-              type="default"
-              size="large"
-              title={t("home.expand")}
-              icon={<ColumnWidthOutlined />}
-              disabled={sliderValue?.[0] === min && sliderValue?.[1] === max}
-              onClick={() => setSliderValue([min, max])}
-            >
-              {isMdScreen ? t("home.expand") : ""}
-            </Button>
             {!isMdScreen && (
               <Button
                 type="default"
@@ -142,43 +136,41 @@ const Home: FC = () => {
             )}
           </div>
           <div className={styles["slider-holder"]}>
-            <div
-              className={styles.slider}
-              style={{
-                display:
-                  availableTournaments.isSuccess && marks ? "block" : "none",
-              }}
-            >
-              <Slider
-                range={{ draggableTrack: true }}
-                value={sliderValue}
-                max={max}
-                min={min}
-                marks={marks}
-                onChange={setSliderValue}
-              />
+            <div className={styles.slider}>
+              {availableTournaments.isSuccess &&
+                defaultSliderValue?.[0] &&
+                defaultSliderValue?.[1] && (
+                  <Slider
+                    range={{ draggableTrack: true }}
+                    defaultValue={defaultSliderValue}
+                    max={max}
+                    min={min}
+                    marks={marks}
+                    onChange={onSliderChange}
+                  />
+                )}
             </div>
           </div>
         </div>
         <div className={styles.body}>
           <div className={styles.timeline}>
-            {availableTournaments.isLoading ? (
-              <Spin size="large" className={styles.spin} />
-            ) : (
-              <Timeline
-                items={filteredSeasons.map((season) => ({
-                  key: season,
-                  children: (
-                    <Season
-                      season={season}
-                      tournaments={availableTournaments.data?.[season]}
-                      onEdit={setTournamentToEdit}
-                    />
-                  ),
-                }))}
-                className={styles.timeline}
-              />
-            )}
+            <Spin
+              fullscreen
+              spinning={isPending || availableTournaments.isLoading}
+            />
+            <Timeline
+              items={filteredSeasons.map((season) => ({
+                key: season,
+                children: (
+                  <Season
+                    season={season}
+                    tournaments={availableTournaments.data?.[season]}
+                    onEdit={setTournamentToEdit}
+                  />
+                ),
+              }))}
+              className={styles.timeline}
+            />
             {tournamentToEdit !== null && (
               <Tournament
                 tournamentSeason={tournamentToEdit}
@@ -186,20 +178,21 @@ const Home: FC = () => {
               />
             )}
           </div>
-          {isMdScreen ? (
-            <div className={styles.winners}>
-              <Winners />
-            </div>
-          ) : (
-            <Drawer
-              open={isWinnersOpen}
-              onClose={() => setIsWinnersOpen(false)}
-              maskClosable={false}
-              title={t("home.winners")}
-            >
-              <Winners />
-            </Drawer>
-          )}
+          {availableTournaments.isSuccess &&
+            (isMdScreen ? (
+              <div className={styles.winners}>
+                <Winners />
+              </div>
+            ) : (
+              <Drawer
+                open={isWinnersOpen}
+                onClose={() => setIsWinnersOpen(false)}
+                maskClosable={false}
+                title={t("home.winners")}
+              >
+                <Winners />
+              </Drawer>
+            ))}
         </div>
       </div>
     </Page>

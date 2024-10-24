@@ -115,6 +115,8 @@ const Winners: FC = () => {
         size="small"
         bordered={false}
         pagination={false}
+        tableLayout="auto"
+        rowKey={({ item }) => item.id}
       />
     </div>
   );

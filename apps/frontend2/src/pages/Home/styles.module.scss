@@ -32,5 +32,9 @@
         max-width: 600px;
       }
     }
+
+    .winners {
+      @include flex(row, flex-end, flex-start);
+    }
   }
 }
