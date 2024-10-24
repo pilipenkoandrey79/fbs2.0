@@ -1,5 +1,7 @@
 {
   "common": {
+    "club": "Club",
+    "country": "Country",
     "clubs": "Clubs",
     "total": "{{from, number}} - {{to, number}} of {{total, number}} items",
     "remove": "Remove",
@@ -181,6 +183,12 @@
   "home": {
     "title": "Home",
     "create": "Create tournament",
-    "finalist": "Runner-up"
+    "finalist": "Runner-up",
+    "finalists": "Runners-up",
+    "expand": "Show all",
+    "winners": "Winners list",
+    "by_countries": "By countries",
+    "first_win_year": "First title year",
+    "first_final_year": "First final year"
   }
 }

@@ -1,17 +1,12 @@
 import { AvailableTournaments } from "@fbs2.0/types";
 
-export const getAvailableSeasonsKeys = (
-  availableTournaments: AvailableTournaments | undefined
-) =>
-  [...Object.keys(availableTournaments || {})].sort(
-    (a, b) => Number((a || "").split("-")[0]) - Number((b || "").split("-")[0])
-  );
+export const DEFAULT_MIN_SLIDER_VALUE = 2020;
 
 export const getSliderMarks = (
   availableTournaments: AvailableTournaments | undefined,
   granularity = 10
 ) => {
-  const keys = getAvailableSeasonsKeys(availableTournaments);
+  const keys = Object.keys(availableTournaments || {});
 
   if (keys.length < 1) {
     return { min: 0, max: 0, marks: {} };

@@ -53,28 +53,35 @@ const Season: FC<Props> = ({ season, tournaments, onEdit }) => {
                         tournament: type,
                       })}
                     />
-                    <div className={styles.tools}>
-                      {user?.isEditor && (
-                        <Button
-                          title={t("common.edit")}
-                          icon={<EditOutlined />}
-                          type="link"
-                          onClick={() =>
-                            onEdit({ id, tournament: type, season })
-                          }
-                        />
-                      )}
-                      {!hasMatches && (
-                        <Popconfirm title={t("common.delete")}>
+                    {user?.isEditor && (
+                      <>
+                        <div className={styles.tools}>
                           <Button
-                            title={t("common.delete")}
-                            icon={<DeleteOutlined />}
-                            danger
+                            title={t("common.edit")}
+                            icon={<EditOutlined />}
                             type="link"
+                            size="small"
+                            onClick={() =>
+                              onEdit({ id, tournament: type, season })
+                            }
                           />
-                        </Popconfirm>
-                      )}
-                    </div>
+                          <Popconfirm
+                            title={t("common.delete")}
+                            disabled={hasMatches}
+                          >
+                            <Button
+                              title={t("common.delete")}
+                              icon={<DeleteOutlined />}
+                              danger
+                              type="link"
+                              size="small"
+                              disabled={hasMatches}
+                            />
+                          </Popconfirm>
+                        </div>
+                        <Divider type="vertical" className={styles.divider} />
+                      </>
+                    )}
                     {winner && (
                       <div className={styles.final}>
                         <Link
@@ -108,7 +115,7 @@ const Season: FC<Props> = ({ season, tournaments, onEdit }) => {
           </div>
         </div>
         <div className={styles.coeff}>
-          <Divider type="vertical" className={styles.divider} />{" "}
+          <Divider type="vertical" className={styles.divider} />
           <Link to={generatePath(Paths.COEFFICIENT, { season })}>
             <OrderedListOutlined />
           </Link>

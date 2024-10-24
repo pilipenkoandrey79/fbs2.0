@@ -15,5 +15,16 @@ export const useGetTournamentSeasons = (simplified?: boolean) =>
     queryKey: [
       simplified ? QUERY_KEY.tournaments_simplified : QUERY_KEY.tournaments,
     ],
-    queryFn: () => fetchTournamentSeasons(simplified),
+    queryFn: async () => {
+      const availableTournaments = await fetchTournamentSeasons(simplified);
+
+      return [...Object.keys(availableTournaments || {})]
+        .sort(
+          (a, b) =>
+            Number((a || "").split("-")[0]) - Number((b || "").split("-")[0])
+        )
+        .reduce<AvailableTournaments>((acc, season) => {
+          return { ...acc, [season]: availableTournaments[season] };
+        }, {});
+    },
   });

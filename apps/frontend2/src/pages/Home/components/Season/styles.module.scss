@@ -48,9 +48,34 @@
           li.tournament {
             @include flex(row, flex-start, center);
             margin: 6px 0;
+            min-width: 250px;
+
+            @media (min-width: $screen-lg) {
+              min-width: 350px;
+
+              .final {
+                &,
+                & > a {
+                  max-width: 334px;
+                }
+              }
+            }
+
+            .tools {
+              white-space: nowrap;
+            }
 
             .final {
               @include flex(column, flex-start, flex-start);
+
+              &,
+              & > a {
+                max-width: 134px;
+
+                @media (min-width: $screen-lg) {
+                  max-width: 334px;
+                }
+              }
 
               .winner {
                 &:hover {

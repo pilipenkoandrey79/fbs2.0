@@ -64,7 +64,7 @@ const ParticipantsList: FC<Props> = ({
   const columns: TableProps<Participant>["columns"] = [
     {
       key: "country",
-      title: t("tournament.participants.list.columns.country"),
+      title: t("common.country"),
       dataIndex: "club",
       width: isMdScreen ? 120 : 50,
       ellipsis: true,
@@ -77,7 +77,7 @@ const ParticipantsList: FC<Props> = ({
     },
     {
       key: "club",
-      title: t("tournament.participants.list.columns.club"),
+      title: t("common.club"),
       dataIndex: "club",
       width: isMdScreen ? 300 : 120,
       render: (club: Participant["club"], { fromStage }: Participant) => (

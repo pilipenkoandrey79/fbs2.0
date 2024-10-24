@@ -7,20 +7,30 @@
   padding: 10px;
 
   .header {
-    @include flex(row, space-between);
-    gap: 20px;
+    @include flex(column, flex-start, stretch);
     margin-bottom: 20px;
 
-    .slider {
-      flex: 1;
-      margin-right: 10px;
+    .buttons {
+      @include flex(row, flex-start, center);
+      gap: 20px;
     }
   }
 
-  .timeline {
-    .spin {
-      line-height: 300px;
-      width: 100%;
+  .body {
+    @include flex(row, space-between, flex-start);
+    gap: 20px;
+
+    .timeline {
+      max-width: 400px;
+
+      .spin {
+        line-height: 300px;
+        width: 100%;
+      }
+
+      @media (min-width: $screen-lg) {
+        max-width: 600px;
+      }
     }
   }
 }

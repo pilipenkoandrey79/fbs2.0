@@ -1,0 +1,17 @@
+@import "../../../../style/mixins.scss";
+
+.tools {
+  @include flex(row, flex-start);
+  gap: 8px;
+  margin-bottom: 8px;
+
+  label {
+    margin-inline-end: 4px;
+  }
+}
+
+:global {
+  .ant-table-tbody .ant-table-cell {
+    white-space: nowrap;
+  }
+}

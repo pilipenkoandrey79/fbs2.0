@@ -1,5 +1,7 @@
 {
   "common": {
+    "club": "Клуб",
+    "country": "Країна",
     "clubs": "Клуби",
     "total": "{{from, number}} - {{to, number}} з {{total, number}}",
     "remove": "Видалення",
@@ -181,6 +183,12 @@
   "home": {
     "title": "Головна",
     "create": "Створити турнір",
-    "finalist": "Фіналіст"
+    "finalist": "Фіналіст",
+    "finalists": "Фіналісти",
+    "expand": "Показати всі",
+    "winners": "Список переможців",
+    "by_countries": "За країнами",
+    "first_win_year": "Рік першого титулу",
+    "first_final_year": "Рік першого фіналу"
   }
 }
