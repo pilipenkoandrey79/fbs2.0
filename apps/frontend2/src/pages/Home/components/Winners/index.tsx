@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import { Club as ClubInterface, Country } from "@fbs2.0/types";
-import { Switch, Table, TableProps } from "antd";
+import { Switch, Table, TableProps, Tooltip } from "antd";
 import { useTranslation } from "react-i18next";
 
 import { useGetTournamentSeasons } from "../../../../react-query-hooks/tournament/useGetTournamentSeasons";
@@ -70,8 +70,16 @@ const Winners: FC = () => {
     { key: "no", width: 30, render: (_, __, index) => index + 1 },
     {
       key: "year",
-      width: 100,
-      title: t(`home.${showFinalists ? "first_final_year" : "first_win_year"}`),
+      width: 60,
+      title: (
+        <Tooltip
+          title={t(
+            `home.${showFinalists ? "first_final_year" : "first_win_year"}`
+          )}
+        >
+          {t("common.year")}
+        </Tooltip>
+      ),
       dataIndex: "year",
     },
     {
@@ -79,7 +87,6 @@ const Winners: FC = () => {
       dataIndex: "item",
       title: t(`common.${byCountries ? "country" : "club"}`),
       width: 200,
-      ellipsis: true,
       render: (item) =>
         byCountries ? (
           <>

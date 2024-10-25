@@ -3,7 +3,7 @@ import {
   GROUP_STAGES,
   MatchResultDto,
   ONE_MATCH_STAGES,
-  Stage,
+  StageInternal,
   StageSchemeType,
   StageTableRow,
 } from "@fbs2.0/types";
@@ -39,7 +39,7 @@ interface ResultFormValues extends Omit<MatchResultDto, "deductions"> {
 
 interface Props {
   row: Result;
-  stage: Stage;
+  stage: StageInternal;
   availableDates: string[];
   onClose: () => void;
 }
@@ -213,7 +213,7 @@ const ResultForm: FC<Props> = ({ onClose, row, stage, availableDates }) => {
           onValuesChange={() => setPristine(false)}
           layout="horizontal"
           initialValues={initialValues}
-          disabled={updateMatch.isPending}
+          disabled={stage.nextStageHasMatches || updateMatch.isPending}
         >
           {/** #1: date, answer, tour */}
           <Form.Item

@@ -2,11 +2,12 @@ import {
   ApiEntities,
   BaseMatch,
   Stage,
+  StageInternal,
   StageType,
   Tournament,
   TournamentStage,
 } from "@fbs2.0/types";
-import { useQuery } from "@tanstack/react-query";
+import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { transformTournamentPart } from "@fbs2.0/utils";
 
@@ -22,24 +23,55 @@ const fetchStageMatches = async (
     `${ApiEntities.Match}/${season}/${tournament}/${encodeURIComponent(stage)}`
   );
 
+export const getTournamentPartMatchesQueryFn =
+  (
+    season: string | undefined,
+    tournament: Tournament | undefined,
+    stage: Stage | null,
+    queryClient: QueryClient
+  ) =>
+  async () => {
+    if (stage === null) {
+      return null;
+    }
+
+    const matches = await fetchStageMatches(
+      season,
+      tournament,
+      stage.stageType
+    );
+
+    if (matches.length > 0) {
+      const previousStageId = stage.previousStage?.id;
+
+      queryClient.setQueryData(
+        [QUERY_KEY.stages, tournament, season],
+        (old: StageInternal[]) =>
+          old.map((stage) =>
+            stage.id === previousStageId
+              ? { ...stage, nextStageHasMatches: true }
+              : stage
+          )
+      );
+    }
+
+    return transformTournamentPart({ matches, stage });
+  };
+
 export const useGetTournamentPartMatches = (
   season: string | undefined,
   tournament: Tournament | undefined,
   stage: Stage | null
-) =>
-  useQuery<TournamentStage | null, AxiosError>({
+) => {
+  const queryClient = useQueryClient();
+
+  return useQuery<TournamentStage | null, AxiosError>({
     queryKey: [QUERY_KEY.matches, season, tournament, stage?.stageType],
-    queryFn: async () => {
-      if (stage === null) {
-        return null;
-      }
-
-      const matches = await fetchStageMatches(
-        season,
-        tournament,
-        stage.stageType
-      );
-
-      return transformTournamentPart({ matches, stage });
-    },
+    queryFn: getTournamentPartMatchesQueryFn(
+      season,
+      tournament,
+      stage,
+      queryClient
+    ),
   });
+};

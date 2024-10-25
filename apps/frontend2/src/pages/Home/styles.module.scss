@@ -14,6 +14,10 @@
       @include flex(row, flex-start, center);
       gap: 20px;
     }
+
+    .slider-skeleton {
+      margin: 8px 0;
+    }
   }
 
   .body {
@@ -21,7 +25,10 @@
     gap: 20px;
 
     .timeline {
+      @include flex(column, flex-start, stretch);
+      flex: 1;
       max-width: 400px;
+      min-height: 400px;
 
       .spin {
         line-height: 300px;

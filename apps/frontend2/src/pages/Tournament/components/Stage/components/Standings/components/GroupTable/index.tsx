@@ -44,6 +44,10 @@ const GroupTable: FC<Props> = ({
     query: `(min-width: ${variables.screenMd})`,
   });
 
+  const isLgScreen = useMediaQuery({
+    query: `(min-width: ${variables.screenLg})`,
+  });
+
   const isXlScreen = useMediaQuery({
     query: `(min-width: ${variables.screenXl})`,
   });
@@ -91,7 +95,7 @@ const GroupTable: FC<Props> = ({
           />
         ) : null,
     },
-    ...(isMdScreen &&
+    ...(isLgScreen &&
     tournamentPart.stage.stageScheme.type !== StageSchemeType.LEAGUE
       ? new Array(
           getTeamsQuantityInGroup(tournamentPart.stage.stageScheme.type)

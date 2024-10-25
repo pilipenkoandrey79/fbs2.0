@@ -1,6 +1,6 @@
 import { FC, useEffect, useMemo, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, Drawer, Slider, Spin, Timeline } from "antd";
+import { Button, Drawer, Skeleton, Slider, Spin, Timeline } from "antd";
 import { PlusOutlined, TrophyOutlined } from "@ant-design/icons";
 import { useMediaQuery } from "react-responsive";
 import {
@@ -115,6 +115,10 @@ const Home: FC = () => {
   return (
     <Page title={t("home.title")}>
       <div className={styles.container}>
+        <Spin
+          fullscreen
+          spinning={isPending || availableTournaments.isLoading}
+        />
         <div className={styles.header}>
           <div className={styles.buttons}>
             <Button
@@ -138,39 +142,46 @@ const Home: FC = () => {
           <div className={styles["slider-holder"]}>
             <div className={styles.slider}>
               {availableTournaments.isSuccess &&
-                defaultSliderValue?.[0] &&
-                defaultSliderValue?.[1] && (
-                  <Slider
-                    range={{ draggableTrack: true }}
-                    defaultValue={defaultSliderValue}
-                    max={max}
-                    min={min}
-                    marks={marks}
-                    onChange={onSliderChange}
-                  />
-                )}
+              defaultSliderValue?.[0] &&
+              defaultSliderValue?.[1] ? (
+                <Slider
+                  range={{ draggableTrack: true }}
+                  defaultValue={defaultSliderValue}
+                  max={max}
+                  min={min}
+                  marks={marks}
+                  onChange={onSliderChange}
+                />
+              ) : (
+                <Skeleton.Input
+                  active
+                  size="large"
+                  block
+                  className={styles["slider-skeleton"]}
+                />
+              )}
             </div>
           </div>
         </div>
         <div className={styles.body}>
           <div className={styles.timeline}>
-            <Spin
-              fullscreen
-              spinning={isPending || availableTournaments.isLoading}
-            />
-            <Timeline
-              items={filteredSeasons.map((season) => ({
-                key: season,
-                children: (
-                  <Season
-                    season={season}
-                    tournaments={availableTournaments.data?.[season]}
-                    onEdit={setTournamentToEdit}
-                  />
-                ),
-              }))}
-              className={styles.timeline}
-            />
+            {availableTournaments.isLoading ? (
+              <Skeleton active />
+            ) : (
+              <Timeline
+                items={filteredSeasons.map((season) => ({
+                  key: season,
+                  children: (
+                    <Season
+                      season={season}
+                      tournaments={availableTournaments.data?.[season]}
+                      onEdit={setTournamentToEdit}
+                    />
+                  ),
+                }))}
+                className={styles.timeline}
+              />
+            )}
             {tournamentToEdit !== null && (
               <Tournament
                 tournamentSeason={tournamentToEdit}

@@ -2,6 +2,7 @@
   "common": {
     "club": "Club",
     "country": "Country",
+    "year": "Year",
     "clubs": "Clubs",
     "total": "{{from, number}} - {{to, number}} of {{total, number}} items",
     "remove": "Remove",

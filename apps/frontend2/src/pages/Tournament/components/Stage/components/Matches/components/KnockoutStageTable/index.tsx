@@ -3,7 +3,7 @@ import {
   Group,
   MatchDto,
   Participant,
-  Stage,
+  StageInternal,
   StageTableRow,
   TournamentStage,
   UKRAINE,
@@ -45,7 +45,7 @@ interface Props {
     skippers: Participant[] | undefined;
   };
   matches: TournamentStage;
-  stage: Stage;
+  stage: StageInternal;
   loading: boolean;
   tour: number | undefined;
   group: Group | undefined;
@@ -69,7 +69,7 @@ const KnockoutStageTable: FC<Props> = ({
     select: (mutation) => mutation.state.status,
   });
 
-  const [dataSource, setDataSource] = useState<StageTableRow[]>([]);
+  const [dataSource, setDataSource] = useState<StageTableRow[]>();
   const [adding, setAdding] = useState(false);
   const [addMore, setAddMore] = useState(true);
   const [resultEditing, setResultEditing] = useState<Result | null>(null);
@@ -145,7 +145,7 @@ const KnockoutStageTable: FC<Props> = ({
   });
 
   const columns: TableProps<StageTableRow>["columns"] = [
-    ...(dataSource?.length > 5
+    ...((dataSource?.length || 0) > 5
       ? [
           {
             key: "no",
@@ -191,7 +191,7 @@ const KnockoutStageTable: FC<Props> = ({
         } as EditableCellProps),
     },
     getTeamColumn("guest"),
-    ...(user?.isEditor
+    ...(user?.isEditor && !stage.nextStageHasMatches
       ? [
           {
             key: "delete",

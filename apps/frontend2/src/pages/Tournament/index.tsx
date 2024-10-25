@@ -73,6 +73,7 @@ const Tournament: FC = () => {
         />
         <Collapse
           bordered={false}
+          collapsible="header"
           activeKey={activeKey}
           items={items}
           onChange={(key) => {

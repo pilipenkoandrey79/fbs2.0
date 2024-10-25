@@ -2,6 +2,7 @@
   "common": {
     "club": "Клуб",
     "country": "Країна",
+    "year": "Рік",
     "clubs": "Клуби",
     "total": "{{from, number}} - {{to, number}} з {{total, number}}",
     "remove": "Видалення",

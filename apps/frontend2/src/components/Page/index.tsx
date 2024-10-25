@@ -1,4 +1,4 @@
-import { Layout } from "antd";
+import { FloatButton, Layout } from "antd";
 import { FC, ReactNode } from "react";
 import { DatabaseOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
@@ -57,6 +57,7 @@ const Page: FC<Props> = (props) => {
         {props.isLoading ? <Fallback /> : props.children}
       </Layout.Content>
       <Layout.Footer>FBS ©{new Date().getFullYear()}</Layout.Footer>
+      <FloatButton.BackTop />
     </Layout>
   );
 };

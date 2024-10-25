@@ -1,9 +1,10 @@
-import { ApiEntities, Stage, Tournament } from "@fbs2.0/types";
-import { useQuery } from "@tanstack/react-query";
+import { ApiEntities, Stage, StageInternal, Tournament } from "@fbs2.0/types";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
 import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
+import { getTournamentPartMatchesQueryFn } from "../match/useGetTournamentPartMatches";
 
 const getTournamentStages = async (
   season: string | undefined,
@@ -16,8 +17,27 @@ const getTournamentStages = async (
 export const useGetTournamentStages = (
   season: string | undefined,
   tournament: Tournament | undefined
-) =>
-  useQuery<Stage[], AxiosError>({
+) => {
+  const queryClient = useQueryClient();
+
+  return useQuery<StageInternal[], AxiosError>({
     queryKey: [QUERY_KEY.stages, tournament, season],
-    queryFn: () => getTournamentStages(season, tournament),
+    queryFn: async () => {
+      const stages = await getTournamentStages(season, tournament);
+
+      stages.forEach((stage) => {
+        queryClient.prefetchQuery({
+          queryKey: [QUERY_KEY.matches, season, tournament, stage?.stageType],
+          queryFn: getTournamentPartMatchesQueryFn(
+            season,
+            tournament,
+            stage,
+            queryClient
+          ),
+        });
+      });
+
+      return stages.map((stage) => ({ ...stage, nextStageHasMatches: false }));
+    },
   });
+};
