@@ -87,6 +87,13 @@ export interface TournamentSeason {
   season: string;
 }
 
+export interface TournamentDto {
+  tournament: Tournament;
+  start: number;
+  end: number;
+  stages: StageDto[];
+}
+
 export interface Stage {
   id: number;
   tournamentSeason: TournamentSeason;

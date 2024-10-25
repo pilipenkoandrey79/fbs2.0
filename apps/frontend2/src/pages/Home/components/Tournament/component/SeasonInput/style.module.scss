@@ -1,0 +1,52 @@
+@import "../../../../../../style/variables.module.scss";
+@import "../../../../../../style/mixins.scss";
+
+.season {
+  @include flex(row, center, center);
+  margin-bottom: 12px;
+  position: relative;
+
+  .forward {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .input {
+    @include flex(row, center, center);
+
+    & > div {
+      width: 100px;
+    }
+
+    :global {
+      .ant-form-item-control-input {
+        justify-content: center;
+
+        & > div {
+          flex: unset;
+        }
+      }
+    }
+  }
+
+  .icons {
+    @include flex(column, center, center);
+
+    button {
+      margin-bottom: 6px;
+    }
+  }
+
+  & > div {
+    flex: 0;
+
+    label {
+      white-space: nowrap;
+    }
+  }
+
+  .lock {
+    margin: 0 10px;
+  }
+}

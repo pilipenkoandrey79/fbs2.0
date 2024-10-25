@@ -86,6 +86,9 @@ const ResultForm: FC<Props> = ({ onClose, row, stage, availableDates }) => {
 
   const isOneMatchStage = ONE_MATCH_STAGES.includes(stage.stageScheme.type);
 
+  const formDisabled =
+    (stage.nextStageHasMatches && !!row.date) || updateMatch.isPending;
+
   const submit = async (values: ResultFormValues) => {
     const { hostDeduction, guestDeduction, ...payload } = values;
 
@@ -213,7 +216,7 @@ const ResultForm: FC<Props> = ({ onClose, row, stage, availableDates }) => {
           onValuesChange={() => setPristine(false)}
           layout="horizontal"
           initialValues={initialValues}
-          disabled={stage.nextStageHasMatches || updateMatch.isPending}
+          disabled={formDisabled}
         >
           {/** #1: date, answer, tour */}
           <Form.Item
@@ -382,14 +385,17 @@ const ResultForm: FC<Props> = ({ onClose, row, stage, availableDates }) => {
               </div>
             </div>
           )}
-
-          <Divider type="horizontal" />
-          <SubmitButton
-            form={form}
-            size="small"
-            label={t("common.save")}
-            forceDisabled={pristine}
-          />
+          {!formDisabled && (
+            <>
+              <Divider type="horizontal" />
+              <SubmitButton
+                form={form}
+                size="small"
+                label={t("common.save")}
+                forceDisabled={pristine}
+              />
+            </>
+          )}
         </Form>
       </div>
     </Modal>

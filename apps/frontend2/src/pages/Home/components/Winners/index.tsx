@@ -12,6 +12,7 @@ import styles from "./styles.module.scss";
 interface ListItem {
   item: ClubInterface | Country;
   year: number;
+  number?: number;
 }
 
 const Winners: FC = () => {
@@ -29,35 +30,43 @@ const Winners: FC = () => {
           return acc;
         }
 
-        const isExistAsWinner = acc.find(
+        const existWinnerIndex = acc.findIndex(
           ({ item }) =>
             item?.id ===
             (byCountries ? winner?.club.city.country.id : winner?.club.id)
         );
 
-        if (!isExistAsWinner) {
+        if (existWinnerIndex < 0) {
           acc.push({
             item: (byCountries ? winner?.club.city.country : winner?.club) as
               | ClubInterface
               | Country,
             year: end,
+            number: 1,
           });
+        } else {
+          acc[existWinnerIndex].number =
+            (acc[existWinnerIndex].number || 0) + 1;
         }
 
         if (showFinalists) {
-          const isExistAsFinalist = acc.find(
+          const existFinalistIndex = acc.findIndex(
             ({ item }) =>
               item?.id ===
               (byCountries ? finalist?.club.city.country.id : finalist?.club.id)
           );
 
-          if (!isExistAsFinalist) {
+          if (existFinalistIndex < 0) {
             acc.push({
               item: (byCountries
                 ? finalist?.club.city.country
                 : finalist?.club) as ClubInterface | Country,
               year: end,
+              number: 1,
             });
+          } else {
+            acc[existFinalistIndex].number =
+              (acc[existFinalistIndex].number || 0) + 1;
           }
         }
       });
@@ -87,14 +96,20 @@ const Winners: FC = () => {
       dataIndex: "item",
       title: t(`common.${byCountries ? "country" : "club"}`),
       width: 200,
-      render: (item) =>
-        byCountries ? (
-          <>
-            <Flag country={item as Country} /> <span>{item?.name}</span>
-          </>
-        ) : (
-          <Club club={item} />
-        ),
+      render: (item, { number }) => (
+        <>
+          {byCountries ? (
+            <>
+              <Flag country={item as Country} /> <span>{item?.name}</span>
+            </>
+          ) : (
+            <Club club={item} />
+          )}
+          <span className={styles["item-number"]}>
+            {t(`home.${showFinalists ? "finals" : "titles"}`, { number })}
+          </span>
+        </>
+      ),
     },
   ];
 

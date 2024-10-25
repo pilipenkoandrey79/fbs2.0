@@ -45,8 +45,9 @@ const Home: FC = () => {
   const [isWinnersOpen, setIsWinnersOpen] = useState(isMdScreen);
   const [isPending, startTransition] = useTransition();
 
-  const [tournamentToEdit, setTournamentToEdit] =
-    useState<TournamentSeason | null>(null);
+  const [tournamentToEdit, setTournamentToEdit] = useState<
+    TournamentSeason | Record<string, never> | null
+  >(null);
 
   const { marks, max, min } = useMemo(
     () => getSliderMarks(availableTournaments.data, isMdScreen ? 10 : 20),
@@ -126,6 +127,7 @@ const Home: FC = () => {
               size="large"
               title={t("home.create")}
               icon={<PlusOutlined />}
+              onClick={() => setTournamentToEdit({})}
             >
               {isMdScreen ? t("home.create") : ""}
             </Button>

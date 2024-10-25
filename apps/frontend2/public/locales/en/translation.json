@@ -190,6 +190,15 @@
     "winners": "Winners list",
     "by_countries": "By countries",
     "first_win_year": "First title year",
-    "first_final_year": "First final year"
+    "first_final_year": "First final year",
+    "titles": "titles: {{number}}",
+    "finals": "finals: {{number}}",
+    "tournament": {
+      "stages": "Stages: ",
+      "start": "Start of season",
+      "end": "End of season",
+      "lock": "Connect start en end to have 1 year between",
+      "forward": "Set the next season from now"
+    }
   }
 }
