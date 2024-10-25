@@ -1,4 +1,10 @@
-import { Participant, Stage, Tournament, UKRAINE, USSR } from "@fbs2.0/types";
+import {
+  Participant,
+  StageInternal,
+  Tournament,
+  UKRAINE,
+  USSR,
+} from "@fbs2.0/types";
 import { Table, TableProps } from "antd";
 import { FC, useContext } from "react";
 import { useTranslation } from "react-i18next";
@@ -13,7 +19,7 @@ import styles from "./styles.module.scss";
 interface Props {
   title: string;
   participants: Participant[] | undefined;
-  stage: Stage;
+  stage: StageInternal;
 }
 
 const getParticipantClasses = (

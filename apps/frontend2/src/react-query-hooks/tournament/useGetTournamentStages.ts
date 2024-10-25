@@ -28,16 +28,14 @@ export const useGetTournamentStages = (
       stages.forEach((stage) => {
         queryClient.prefetchQuery({
           queryKey: [QUERY_KEY.matches, season, tournament, stage?.stageType],
-          queryFn: getTournamentPartMatchesQueryFn(
-            season,
-            tournament,
-            stage,
-            queryClient
-          ),
+          queryFn: getTournamentPartMatchesQueryFn(season, tournament, stage),
         });
       });
 
-      return stages.map((stage) => ({ ...stage, nextStageHasMatches: false }));
+      return stages.map((stage, index, stages) => ({
+        ...stage,
+        nextStage: stages[index + 1] ? stages[index + 1] : null,
+      }));
     },
   });
 };

@@ -7,7 +7,7 @@ import {
 } from "@ant-design/icons";
 import {
   GROUP_STAGES,
-  Stage as StageInterface,
+  StageInternal,
   StageSchemeType,
   Tournament,
 } from "@fbs2.0/types";
@@ -28,8 +28,8 @@ import variables from "../../../../style/variables.module.scss";
 import styles from "./styles.module.scss";
 
 interface Props {
-  stage: StageInterface;
-  previousStages: [StageInterface | null, StageInterface | null];
+  stage: StageInternal;
+  previousStages: [StageInternal | null, StageInternal | null];
 }
 
 enum Segments {

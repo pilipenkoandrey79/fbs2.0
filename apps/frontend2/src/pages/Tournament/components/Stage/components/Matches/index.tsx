@@ -2,6 +2,7 @@ import {
   Group,
   GROUP_STAGES,
   Participant,
+  StageInternal,
   StageSchemeType,
   TournamentPart,
 } from "@fbs2.0/types";
@@ -70,7 +71,7 @@ const Matches: FC<Props> = ({
                 <KnockoutStageTable
                   participants={participants}
                   matches={tournamentPart.matches}
-                  stage={tournamentPart.stage}
+                  stage={tournamentPart.stage as StageInternal}
                   loading={loading}
                   tour={
                     [...GROUP_STAGES, StageSchemeType.LEAGUE].includes(

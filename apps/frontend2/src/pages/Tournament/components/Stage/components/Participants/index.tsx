@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { Participant, Stage } from "@fbs2.0/types";
+import { Participant, StageInternal } from "@fbs2.0/types";
 import { useTranslation } from "react-i18next";
 import { Divider } from "antd";
 import classNames from "classnames";
@@ -17,7 +17,7 @@ export interface ParticipantProps {
     previousStageWinners: Participant[] | undefined;
     skippers: Participant[] | undefined;
   };
-  currentStage: Stage;
+  currentStage: StageInternal;
 }
 
 const Participants: FC<ParticipantProps> = ({

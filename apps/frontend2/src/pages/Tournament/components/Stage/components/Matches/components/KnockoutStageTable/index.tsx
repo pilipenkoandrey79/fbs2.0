@@ -26,6 +26,7 @@ import { HighlightContext } from "../../../../../../../../context/highlightConte
 import { Club } from "../../../../../../../../components/Club";
 import { useCreateMatch } from "../../../../../../../../react-query-hooks/match/useCreateMatch";
 import { MUTATION_KEY } from "../../../../../../../../react-query-hooks/query-key";
+import { useGetTournamentPartMatches } from "../../../../../../../../react-query-hooks/match/useGetTournamentPartMatches";
 import { getFilteredParticipants } from "../../../../utils";
 
 import variables from "../../../../../../../../style/variables.module.scss";
@@ -73,6 +74,14 @@ const KnockoutStageTable: FC<Props> = ({
   const [adding, setAdding] = useState(false);
   const [addMore, setAddMore] = useState(true);
   const [resultEditing, setResultEditing] = useState<Result | null>(null);
+
+  const { data: nexStageMatches } = useGetTournamentPartMatches(
+    stage.tournamentSeason.season,
+    stage.tournamentSeason.tournament,
+    stage.nextStage
+  );
+
+  const nextStageHasMatches = Object.keys(nexStageMatches ?? {}).length > 0;
 
   const isLgScreen = useMediaQuery({
     query: `(min-width: ${variables.screenLg})`,
@@ -191,7 +200,7 @@ const KnockoutStageTable: FC<Props> = ({
         } as EditableCellProps),
     },
     getTeamColumn("guest"),
-    ...(user?.isEditor && !stage.nextStageHasMatches
+    ...(user?.isEditor && !nextStageHasMatches
       ? [
           {
             key: "delete",
@@ -281,6 +290,7 @@ const KnockoutStageTable: FC<Props> = ({
           stage={stage}
           onClose={() => setResultEditing(null)}
           availableDates={availableDates}
+          nextStageHasMatches={nextStageHasMatches}
         />
       )}
     </>

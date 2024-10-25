@@ -1,7 +1,11 @@
 import { Divider, Form, Input, Modal, Typography } from "antd";
 import { FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Stage, StageSubstitution, StageSubstitutionDto } from "@fbs2.0/types";
+import {
+  StageInternal,
+  StageSubstitution,
+  StageSubstitutionDto,
+} from "@fbs2.0/types";
 import { useParams } from "react-router";
 import { ArrowRightOutlined } from "@ant-design/icons";
 
@@ -16,7 +20,7 @@ import { Club } from "../../../../../../../../components/Club";
 import styles from "./styles.module.scss";
 
 interface Props {
-  stage: Stage;
+  stage: StageInternal;
   stageParticipants: ParticipantProps["participants"];
   currentSubstitutions: StageSubstitution[] | undefined;
   close: () => void;

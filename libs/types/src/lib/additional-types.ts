@@ -84,11 +84,13 @@ export interface TournamentStageGroup {
 }
 
 export type TournamentStage = Record<Group, TournamentStageGroup>;
+
 export type TournamentPart = {
   stage: Stage | StageInternal;
   matches: TournamentStage;
 };
-export type StageInternal = Stage & { nextStageHasMatches?: boolean };
+
+export type StageInternal = Stage & { nextStage: Stage | null };
 
 export type ChessCell = {
   label: string;

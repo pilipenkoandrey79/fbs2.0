@@ -3,7 +3,7 @@ import {
   GROUP_STAGES,
   MatchResultDto,
   ONE_MATCH_STAGES,
-  StageInternal,
+  Stage,
   StageSchemeType,
   StageTableRow,
 } from "@fbs2.0/types";
@@ -39,12 +39,19 @@ interface ResultFormValues extends Omit<MatchResultDto, "deductions"> {
 
 interface Props {
   row: Result;
-  stage: StageInternal;
+  stage: Stage;
   availableDates: string[];
+  nextStageHasMatches: boolean;
   onClose: () => void;
 }
 
-const ResultForm: FC<Props> = ({ onClose, row, stage, availableDates }) => {
+const ResultForm: FC<Props> = ({
+  onClose,
+  row,
+  stage,
+  availableDates,
+  nextStageHasMatches,
+}) => {
   const { t } = useTranslation();
   const [form] = Form.useForm<ResultFormValues>();
   const values = Form.useWatch([], form);
@@ -87,7 +94,7 @@ const ResultForm: FC<Props> = ({ onClose, row, stage, availableDates }) => {
   const isOneMatchStage = ONE_MATCH_STAGES.includes(stage.stageScheme.type);
 
   const formDisabled =
-    (stage.nextStageHasMatches && !!row.date) || updateMatch.isPending;
+    updateMatch.isPending || (nextStageHasMatches && !!row.date);
 
   const submit = async (values: ResultFormValues) => {
     const { hostDeduction, guestDeduction, ...payload } = values;
