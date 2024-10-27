@@ -198,7 +198,8 @@
       "start": "Start of season",
       "end": "End of season",
       "lock": "Connect start en end to have 1 year between",
-      "forward": "Set the next season from now"
+      "forward": "Set the next season from now",
+      "existed": "This tournament is already existed"
     }
   }
 }

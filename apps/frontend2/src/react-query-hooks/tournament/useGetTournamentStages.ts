@@ -16,14 +16,19 @@ const getTournamentStages = async (
 
 export const useGetTournamentStages = (
   season: string | undefined,
-  tournament: Tournament | undefined
+  tournament: Tournament | undefined,
+  preloadMatches = true
 ) => {
   const queryClient = useQueryClient();
 
-  return useQuery<StageInternal[], AxiosError>({
+  return useQuery<(StageInternal | Stage)[], AxiosError>({
     queryKey: [QUERY_KEY.stages, tournament, season],
     queryFn: async () => {
       const stages = await getTournamentStages(season, tournament);
+
+      if (!preloadMatches) {
+        return stages;
+      }
 
       stages.forEach((stage) => {
         queryClient.prefetchQuery({

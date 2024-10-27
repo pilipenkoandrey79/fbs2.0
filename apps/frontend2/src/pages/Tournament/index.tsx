@@ -2,7 +2,7 @@ import { FC, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
 import { getStageTransKey, getTournamentTitle } from "@fbs2.0/utils";
-import { Tournament as TournamentType } from "@fbs2.0/types";
+import { StageInternal, Tournament as TournamentType } from "@fbs2.0/types";
 import { Collapse, CollapseProps } from "antd";
 import { CaretRightOutlined, LoadingOutlined } from "@ant-design/icons";
 
@@ -44,10 +44,10 @@ const Tournament: FC = () => {
       label: t(getStageTransKey(stage.stageType)),
       children: (
         <Stage
-          stage={stage}
+          stage={stage as StageInternal}
           previousStages={[
-            stages[index - 1] || null,
-            stages[index - 2] || null,
+            (stages[index - 1] as StageInternal) || null,
+            (stages[index - 2] as StageInternal) || null,
           ]}
         />
       ),

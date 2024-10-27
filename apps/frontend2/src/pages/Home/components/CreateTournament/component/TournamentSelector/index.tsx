@@ -4,20 +4,22 @@ import { Form, Segmented, SegmentedProps } from "antd";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useGetTournamentSeasons } from "../../../../../../react-query-hooks/tournament/useGetTournamentSeasons";
+
 interface Props {
   startOfSeason: number | undefined;
-  disabled: boolean;
   name?: string;
   className?: string;
 }
 
 const TournamentSelector: FC<Props> = ({
   startOfSeason,
-  disabled,
   name = "tournament",
   className,
 }) => {
   const { t } = useTranslation();
+
+  const { data: availableTournaments } = useGetTournamentSeasons(true);
 
   const options: SegmentedProps["options"] = Object.values(Tournament)
     .filter((tournament) => {
@@ -49,9 +51,20 @@ const TournamentSelector: FC<Props> = ({
     <Form.Item
       name={name}
       className={className}
-      rules={[{ required: true, message: "" }]}
+      dependencies={["start", "end"]}
+      rules={[
+        { required: true, message: "" },
+        ({ getFieldValue }) => ({
+          validator: (_, tournament: Tournament) =>
+            availableTournaments?.[
+              [getFieldValue("start"), getFieldValue("end")].join("-")
+            ]?.find(({ type }) => type === tournament)
+              ? Promise.reject(new Error(t("home.tournament.existed")))
+              : Promise.resolve(),
+        }),
+      ]}
     >
-      <Segmented options={options} disabled={disabled} />
+      <Segmented options={options} />
     </Form.Item>
   );
 };

@@ -5,6 +5,7 @@
   @include flex(row, center, center);
   margin-bottom: 12px;
   position: relative;
+  min-height: 44px;
 
   .forward {
     position: absolute;
@@ -48,5 +49,14 @@
 
   .lock {
     margin: 0 10px;
+  }
+
+  @media (min-width: $screen-md) {
+    .input {
+      & > div {
+        width: unset;
+        flex-flow: unset;
+      }
+    }
   }
 }

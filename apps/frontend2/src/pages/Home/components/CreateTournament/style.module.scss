@@ -1,0 +1,25 @@
+@import "../../../../style/variables.module.scss";
+@import "../../../../style/mixins.scss";
+
+.modal {
+  top: 0;
+
+  .content {
+    min-height: 100px;
+
+    .stage {
+      @include flex(column);
+      row-gap: 16px;
+    }
+  }
+
+  :global {
+    .ant-modal-content {
+      padding: 10px;
+    }
+  }
+
+  @media (min-width: $screen-sm) {
+    top: 10px;
+  }
+}

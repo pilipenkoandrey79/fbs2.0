@@ -16,8 +16,9 @@ import {
 
 import { Page } from "../../components/Page";
 import { Season } from "./components/Season";
-import { Tournament } from "./components/Tournament";
+import { CreateTournament } from "./components/CreateTournament";
 import { Winners } from "./components/Winners";
+import { EditTournament } from "./components/EditTournament";
 import { useGetTournamentSeasons } from "../../react-query-hooks/tournament/useGetTournamentSeasons";
 import { DEFAULT_MIN_SLIDER_VALUE, getSliderMarks } from "./utils";
 
@@ -44,10 +45,10 @@ const Home: FC = () => {
   const [defaultSliderValue, setDefaultSliderValue] = useState<number[]>();
   const [isWinnersOpen, setIsWinnersOpen] = useState(isMdScreen);
   const [isPending, startTransition] = useTransition();
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
-  const [tournamentToEdit, setTournamentToEdit] = useState<
-    TournamentSeason | Record<string, never> | null
-  >(null);
+  const [tournamentToEdit, setTournamentToEdit] =
+    useState<TournamentSeason | null>(null);
 
   const { marks, max, min } = useMemo(
     () => getSliderMarks(availableTournaments.data, isMdScreen ? 10 : 20),
@@ -127,7 +128,7 @@ const Home: FC = () => {
               size="large"
               title={t("home.create")}
               icon={<PlusOutlined />}
-              onClick={() => setTournamentToEdit({})}
+              onClick={() => setIsCreateDialogOpen(true)}
             >
               {isMdScreen ? t("home.create") : ""}
             </Button>
@@ -184,8 +185,11 @@ const Home: FC = () => {
                 className={styles.timeline}
               />
             )}
+            {isCreateDialogOpen && (
+              <CreateTournament onClose={() => setIsCreateDialogOpen(false)} />
+            )}
             {tournamentToEdit !== null && (
-              <Tournament
+              <EditTournament
                 tournamentSeason={tournamentToEdit}
                 onClose={() => setTournamentToEdit(null)}
               />

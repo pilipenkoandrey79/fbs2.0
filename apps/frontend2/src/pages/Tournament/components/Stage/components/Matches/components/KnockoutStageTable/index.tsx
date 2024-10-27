@@ -200,20 +200,36 @@ const KnockoutStageTable: FC<Props> = ({
         } as EditableCellProps),
     },
     getTeamColumn("guest"),
-    ...(user?.isEditor && !nextStageHasMatches
+    ...(user?.isEditor
       ? [
           {
             key: "delete",
             width: isLgScreen ? 60 : 26,
             className: styles.delete,
-            render: (record: StageTableRow) =>
-              record.id === templateRow.id ? null : (
+            render: (record: StageTableRow) => {
+              if (nextStageHasMatches) {
+                return null;
+              }
+
+              return record.id === templateRow.id && adding ? (
+                <Button
+                  icon={<CloseOutlined />}
+                  size="small"
+                  type="text"
+                  onClick={() => {
+                    form.resetFields();
+                    setAdding(false);
+                  }}
+                  style={{ margin: 8 }}
+                />
+              ) : (
                 <DeleteCell
                   record={record}
                   adding={adding}
                   stageType={stage.stageType}
                 />
-              ),
+              );
+            },
           },
         ]
       : []),
@@ -269,18 +285,12 @@ const KnockoutStageTable: FC<Props> = ({
           }
         />
       </Form>
-      {user?.isEditor && availableParticipants.length > 1 && (
+      {user?.isEditor && availableParticipants.length > 1 && !adding && (
         <Button
-          icon={adding ? <CloseOutlined /> : <PlusOutlined />}
-          type="primary"
+          icon={<PlusOutlined />}
+          type={"primary"}
           size="small"
-          onClick={() => {
-            if (adding) {
-              form.resetFields();
-            }
-
-            setAdding(!adding);
-          }}
+          onClick={() => setAdding(true)}
           disabled={createMatch.isPending || deleteStatus.includes("pending")}
         />
       )}

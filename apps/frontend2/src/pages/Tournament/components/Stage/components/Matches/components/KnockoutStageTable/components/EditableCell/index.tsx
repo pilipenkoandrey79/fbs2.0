@@ -44,7 +44,12 @@ const EditableCell: FC<PropsWithChildren<EditableCellProps>> = ({
   const node =
     dataIndex === "results" ? (
       <div className={styles.submission}>
-        <SubmitButton form={form} size="small" loading={loading} />
+        <SubmitButton
+          form={form}
+          size="small"
+          loading={loading}
+          label={t("common.save")}
+        />
         <Checkbox checked={addMore} onChange={() => setAddMore?.(!addMore)}>
           {t("common.add_more")}
         </Checkbox>
