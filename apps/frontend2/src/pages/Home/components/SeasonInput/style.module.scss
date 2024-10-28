@@ -1,8 +1,9 @@
-@import "../../../../../../style/variables.module.scss";
-@import "../../../../../../style/mixins.scss";
+@import "../../../../style/variables.module.scss";
+@import "../../../../style/mixins.scss";
 
 .season {
   @include flex(row, center, center);
+  width: 100%;
   margin-bottom: 12px;
   position: relative;
   min-height: 44px;
@@ -15,6 +16,7 @@
 
   .input {
     @include flex(row, center, center);
+    margin-inline-end: unset;
 
     & > div {
       width: 100px;
@@ -49,14 +51,5 @@
 
   .lock {
     margin: 0 10px;
-  }
-
-  @media (min-width: $screen-md) {
-    .input {
-      & > div {
-        width: unset;
-        flex-flow: unset;
-      }
-    }
   }
 }

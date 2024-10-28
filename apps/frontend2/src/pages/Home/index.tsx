@@ -1,4 +1,11 @@
-import { FC, useEffect, useMemo, useState, useTransition } from "react";
+import {
+  FC,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Drawer, Skeleton, Slider, Spin, Timeline } from "antd";
 import { PlusOutlined, TrophyOutlined } from "@ant-design/icons";
@@ -21,6 +28,7 @@ import { Winners } from "./components/Winners";
 import { EditTournament } from "./components/EditTournament";
 import { useGetTournamentSeasons } from "../../react-query-hooks/tournament/useGetTournamentSeasons";
 import { DEFAULT_MIN_SLIDER_VALUE, getSliderMarks } from "./utils";
+import { UserContext } from "../../context/userContext";
 
 import styles from "./styles.module.scss";
 import variables from "../../style/variables.module.scss";
@@ -34,6 +42,7 @@ const Home: FC = () => {
   const from = Number(searchParams.get(SEASON_FROM_SEARCH_PARAM));
   const to = Number(searchParams.get(SEASON_TO_SEARCH_PARAM));
   const { t } = useTranslation();
+  const { user } = useContext(UserContext);
   const availableTournaments = useGetTournamentSeasons(false);
 
   const isMdScreen = useMediaQuery({
@@ -43,7 +52,7 @@ const Home: FC = () => {
   const [filteredSeasons, setFilteredSeasons] = useState<string[]>([]);
   const [limits, setLimits] = useState<number[]>();
   const [defaultSliderValue, setDefaultSliderValue] = useState<number[]>();
-  const [isWinnersOpen, setIsWinnersOpen] = useState(isMdScreen);
+  const [isWinnersOpen, setIsWinnersOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
@@ -123,15 +132,17 @@ const Home: FC = () => {
         />
         <div className={styles.header}>
           <div className={styles.buttons}>
-            <Button
-              type="primary"
-              size="large"
-              title={t("home.create")}
-              icon={<PlusOutlined />}
-              onClick={() => setIsCreateDialogOpen(true)}
-            >
-              {isMdScreen ? t("home.create") : ""}
-            </Button>
+            {user?.isEditor && (
+              <Button
+                type="primary"
+                size="large"
+                title={t("home.create")}
+                icon={<PlusOutlined />}
+                onClick={() => setIsCreateDialogOpen(true)}
+              >
+                {isMdScreen ? t("home.create") : ""}
+              </Button>
+            )}
             {!isMdScreen && (
               <Button
                 type="default"

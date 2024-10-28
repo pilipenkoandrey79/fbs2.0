@@ -7,6 +7,10 @@
   .content {
     min-height: 100px;
 
+    & > form {
+      display: block;
+    }
+
     .stage {
       @include flex(column);
       row-gap: 16px;

@@ -39,6 +39,7 @@ const SeasonInput: FC<Props> = ({ form }) => {
         dependencies={["end", "tournament"]}
         rules={[{ required: true, message: "" }]}
         label={t("home.tournament.start")}
+        layout="vertical"
         className={styles.input}
       >
         <InputNumber
@@ -67,6 +68,7 @@ const SeasonInput: FC<Props> = ({ form }) => {
         dependencies={["start", "tournament"]}
         rules={[{ required: true, message: "" }]}
         label={t("home.tournament.end")}
+        layout="vertical"
         className={styles.input}
       >
         <InputNumber

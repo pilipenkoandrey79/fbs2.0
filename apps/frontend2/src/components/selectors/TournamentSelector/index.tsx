@@ -4,18 +4,22 @@ import { Form, Segmented, SegmentedProps } from "antd";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useGetTournamentSeasons } from "../../../../../../react-query-hooks/tournament/useGetTournamentSeasons";
+import { useGetTournamentSeasons } from "../../../react-query-hooks/tournament/useGetTournamentSeasons";
 
 interface Props {
   startOfSeason: number | undefined;
-  name?: string;
+  name?: string | (string | number)[];
   className?: string;
+  existenceValidation?: boolean;
+  exclude?: Tournament[];
 }
 
 const TournamentSelector: FC<Props> = ({
   startOfSeason,
   name = "tournament",
   className,
+  existenceValidation = true,
+  exclude,
 }) => {
   const { t } = useTranslation();
 
@@ -26,6 +30,7 @@ const TournamentSelector: FC<Props> = ({
       if (startOfSeason === 0) {
         return true;
       }
+
       switch (tournament) {
         case Tournament.CUP_WINNERS_CUP:
           return (
@@ -42,27 +47,34 @@ const TournamentSelector: FC<Props> = ({
           return true;
       }
     })
+    .filter((tournament) => !(exclude || []).includes(tournament))
     .map((tournament) => ({
       value: tournament,
       label: t(getTournamentTitle({ tournament, season: `${startOfSeason}-` })),
     }));
+
+  const baseRule = { required: true, message: "" };
 
   return (
     <Form.Item
       name={name}
       className={className}
       dependencies={["start", "end"]}
-      rules={[
-        { required: true, message: "" },
-        ({ getFieldValue }) => ({
-          validator: (_, tournament: Tournament) =>
-            availableTournaments?.[
-              [getFieldValue("start"), getFieldValue("end")].join("-")
-            ]?.find(({ type }) => type === tournament)
-              ? Promise.reject(new Error(t("home.tournament.existed")))
-              : Promise.resolve(),
-        }),
-      ]}
+      rules={
+        existenceValidation
+          ? [
+              baseRule,
+              ({ getFieldValue }) => ({
+                validator: (_, tournament: Tournament) =>
+                  availableTournaments?.[
+                    [getFieldValue("start"), getFieldValue("end")].join("-")
+                  ]?.find(({ type }) => type === tournament)
+                    ? Promise.reject(new Error(t("home.tournament.existed")))
+                    : Promise.resolve(),
+              }),
+            ]
+          : [baseRule]
+      }
     >
       <Segmented options={options} />
     </Form.Item>

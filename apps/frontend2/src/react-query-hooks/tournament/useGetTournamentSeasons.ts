@@ -1,4 +1,4 @@
-import { ApiEntities, AvailableTournaments } from "@fbs2.0/types";
+import { ApiEntities, AvailableTournaments, Tournament } from "@fbs2.0/types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
@@ -27,14 +27,27 @@ export const useGetTournamentSeasons = (simplified?: boolean) => {
 
       const availableTournaments = await fetchTournamentSeasons(simplified);
 
+      const tournamentSequence = Object.values(Tournament).reduce<
+        Record<Tournament, number>
+      >(
+        (acc, value, index) => ({ ...acc, [value]: index }),
+        {} as Record<Tournament, number>
+      );
+
       return [...Object.keys(availableTournaments || {})]
         .sort(
           (a, b) =>
             Number((a || "").split("-")[0]) - Number((b || "").split("-")[0])
         )
-        .reduce<AvailableTournaments>((acc, season) => {
-          return { ...acc, [season]: availableTournaments[season] };
-        }, {});
+        .reduce<AvailableTournaments>(
+          (acc, season) => ({
+            ...acc,
+            [season]: availableTournaments[season].sort(
+              (a, b) => tournamentSequence[a.type] - tournamentSequence[b.type]
+            ),
+          }),
+          {}
+        );
     },
   });
 };

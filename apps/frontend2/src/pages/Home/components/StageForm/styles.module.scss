@@ -1,0 +1,42 @@
+@import "../../../../style/mixins.scss";
+@import "../../../../style/variables.module.scss";
+
+.stage {
+  width: 100%;
+  position: relative;
+
+  .remove {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+  }
+
+  .container {
+    @include flex(column, flex-start, flex-start);
+    margin-top: 20px;
+
+    .stage-section {
+      width: 100%;
+    }
+
+    .linked-tournament {
+      margin-top: 12px;
+    }
+
+    @media (min-width: $screen-md) {
+      @include flex(row, flex-start, flex-start);
+      flex-wrap: wrap;
+
+      .stage-section {
+        width: unset;
+      }
+
+      :global {
+        .ant-divider-vertical {
+          height: unset;
+          align-self: stretch;
+        }
+      }
+    }
+  }
+}

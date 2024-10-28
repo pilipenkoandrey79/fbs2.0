@@ -18,6 +18,7 @@ import { TournamentBadge } from "../../../../components/TournamentBadge";
 import { Paths } from "../../../../routes";
 import { UserContext } from "../../../../context/userContext";
 import { Club } from "../../../../components/Club";
+import { useDeleteTournament } from "../../../../react-query-hooks/tournament/useDeleteTournament";
 
 import styles from "./styles.module.scss";
 
@@ -31,6 +32,8 @@ const Season: FC<Props> = ({ season, tournaments, onEdit }) => {
   const { t } = useTranslation();
   const { user } = useContext(UserContext);
   const [start, end] = season.split("-").map(Number);
+
+  const deleteTournament = useDeleteTournament();
 
   return (
     <Card className={styles.card} hoverable>
@@ -54,34 +57,35 @@ const Season: FC<Props> = ({ season, tournaments, onEdit }) => {
                       })}
                     />
                     {user?.isEditor && (
-                      <>
-                        <div className={styles.tools}>
+                      <div className={styles.tools}>
+                        <Button
+                          title={t("common.edit")}
+                          icon={<EditOutlined />}
+                          type="link"
+                          size="small"
+                          onClick={() =>
+                            onEdit({ id, tournament: type, season })
+                          }
+                        />
+                        <Popconfirm
+                          title={t("common.delete")}
+                          disabled={hasMatches}
+                          onConfirm={async () =>
+                            await deleteTournament.mutateAsync(id)
+                          }
+                        >
                           <Button
-                            title={t("common.edit")}
-                            icon={<EditOutlined />}
+                            title={t("common.delete")}
+                            icon={<DeleteOutlined />}
+                            danger
                             type="link"
                             size="small"
-                            onClick={() =>
-                              onEdit({ id, tournament: type, season })
-                            }
-                          />
-                          <Popconfirm
-                            title={t("common.delete")}
                             disabled={hasMatches}
-                          >
-                            <Button
-                              title={t("common.delete")}
-                              icon={<DeleteOutlined />}
-                              danger
-                              type="link"
-                              size="small"
-                              disabled={hasMatches}
-                            />
-                          </Popconfirm>
-                        </div>
-                        <Divider type="vertical" className={styles.divider} />
-                      </>
+                          />
+                        </Popconfirm>
+                      </div>
                     )}
+                    <Divider type="vertical" className={styles.divider} />
                     {winner && (
                       <div className={styles.final}>
                         <Link

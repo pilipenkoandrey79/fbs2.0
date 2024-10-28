@@ -2,7 +2,7 @@ import { Participant } from "@fbs2.0/types";
 import { FC, HTMLAttributes, PropsWithChildren } from "react";
 
 import { ParticipantSelector } from "../../../../../ParticipantSelector";
-import { StageTypeSelector } from "../../../../../../../../components/selectors/StageTypeSelector";
+import { StageSelector } from "../../../../../../../../components/selectors/StageSelector";
 
 export interface EditableCellProps extends HTMLAttributes<HTMLElement> {
   editing: boolean;
@@ -26,7 +26,7 @@ const EditableCell: FC<PropsWithChildren<EditableCellProps>> = ({
         name="club"
       />
     ) : dataIndex === "startingStage" ? (
-      <StageTypeSelector name="startingStage" startingStages />
+      <StageSelector name="startingStage" startingStages />
     ) : null;
 
   return <td {...restProps}>{editing ? node : children}</td>;

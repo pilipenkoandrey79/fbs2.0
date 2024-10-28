@@ -11,7 +11,9 @@ export class DeductedPoints implements DeductedPointsInterface {
   @ApiProperty({ type: "number" })
   id: number;
 
-  @ManyToOne(() => Match, (match) => match.deductedPointsList)
+  @ManyToOne(() => Match, (match) => match.deductedPointsList, {
+    onDelete: "CASCADE",
+  })
   @ApiProperty({ type: () => Match })
   match: Match;
 

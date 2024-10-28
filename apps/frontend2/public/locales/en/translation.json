@@ -16,6 +16,8 @@
       "club": "Select club",
       "city": "Select city",
       "stage": "Select stage",
+      "stage_type": "Select stage type",
+      "stage_scheme": "Select stage scheme",
       "starting_stage": "Select starting stage",
       "enter_name": "Enter name"
     }
@@ -199,7 +201,31 @@
       "end": "End of season",
       "lock": "Connect start en end to have 1 year between",
       "forward": "Set the next season from now",
-      "existed": "This tournament is already existed"
+      "existed": "This tournament is already existed",
+      "deleted": "Tournament is deleted",
+      "created": "Tournament is created",
+      "stage": {
+        "add": "Add stage",
+        "type": "Stage type",
+        "isStarting": "Participants can start from this stage",
+        "scheme": {
+          "title": "Stage scheme",
+          "OLYMPIC_1": "One match knockout",
+          "OLYMPIC_2": "Two match knockout",
+          "GROUP": "Two match group",
+          "GROUP_5": "One match group",
+          "GROUP_1/2F": "Semi-final group",
+          "GROUP_ICFC": "Group of Intercities Fair Cup",
+          "LEAGUE": "\"Swiss\" scheme"
+        },
+        "replay": "Replay additional match",
+        "pen": "After-match penalties",
+        "awayGoal": "Away score is more important",
+        "relegation": "Losers of this stage go to another tournament",
+        "group": "Number of groups",
+        "swiss": "Number of teams",
+        "error": "At least 1 stage"
+      }
     }
   }
 }

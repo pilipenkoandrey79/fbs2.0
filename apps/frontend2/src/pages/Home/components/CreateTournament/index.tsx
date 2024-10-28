@@ -1,11 +1,13 @@
 import { Tournament, TournamentDto } from "@fbs2.0/types";
-import { Button, Card, Divider, Form, Input, Modal, Space } from "antd";
+import { Button, Divider, Form, Modal } from "antd";
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { CloseOutlined, SaveOutlined } from "@ant-design/icons";
+import { SaveOutlined } from "@ant-design/icons";
 
-import { TournamentSelector } from "./component/TournamentSelector";
-import { SeasonInput } from "./component/SeasonInput";
+import { TournamentSelector } from "../../../../components/selectors/TournamentSelector";
+import { SeasonInput } from "../SeasonInput";
+import { StageForm, StageFormItemType } from "../StageForm";
+import { useCreateTournament } from "../../../../react-query-hooks/tournament/useCreateTournament";
 
 import styles from "./style.module.scss";
 
@@ -19,8 +21,10 @@ const CreateTournament: FC<Props> = ({ onClose }) => {
   const values = Form.useWatch([], form);
   const [valid, setValid] = useState(true);
 
-  const submit = (values: TournamentDto) => {
-    console.log(values);
+  const createTournament = useCreateTournament();
+
+  const submit = async (values: TournamentDto) => {
+    await createTournament.mutateAsync(values);
 
     onClose();
   };
@@ -51,6 +55,7 @@ const CreateTournament: FC<Props> = ({ onClose }) => {
         <Form
           form={form}
           onFinish={submit}
+          layout="inline"
           initialValues={{
             start: new Date().getFullYear(),
             end: new Date().getFullYear() + 1,
@@ -62,79 +67,34 @@ const CreateTournament: FC<Props> = ({ onClose }) => {
           <TournamentSelector startOfSeason={values?.start} />
           <Divider />
           <h4>{t("home.tournament.stages")}</h4>
-          <Form.List name="stages">
+          <Form.List
+            name="stages"
+            rules={[
+              {
+                validator: async (_, names) => {
+                  if (!names || names.length < 1) {
+                    return Promise.reject(
+                      new Error(t("home.tournament.stage.error"))
+                    );
+                  }
+                },
+              },
+            ]}
+          >
             {(fields, { add, remove }) => (
-              <div className={styles.stage}>
-                {fields.map((field) => (
-                  <Card
-                    size="small"
-                    title={`Item ${field.name + 1}`}
+              <div className={styles.stage} key="stages">
+                {(fields as StageFormItemType[]).map((field) => (
+                  <StageForm
                     key={field.key}
-                    extra={
-                      <CloseOutlined
-                        onClick={() => {
-                          remove(field.name);
-                        }}
-                      />
-                    }
-                  >
-                    <Form.Item label="Name" name={[field.name, "name"]}>
-                      <Input />
-                    </Form.Item>
-
-                    {/* Nest Form.List */}
-                    <Form.Item label="List">
-                      <Form.List name={[field.name, "list"]}>
-                        {(subFields, subOpt) => (
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              rowGap: 16,
-                            }}
-                          >
-                            {subFields.map((subField) => (
-                              <Space key={subField.key}>
-                                <Form.Item
-                                  noStyle
-                                  name={[subField.name, "first"]}
-                                >
-                                  <Input placeholder="first" />
-                                </Form.Item>
-                                <Form.Item
-                                  noStyle
-                                  name={[subField.name, "second"]}
-                                >
-                                  <Input placeholder="second" />
-                                </Form.Item>
-                                <CloseOutlined
-                                  onClick={() => {
-                                    subOpt.remove(subField.name);
-                                  }}
-                                />
-                              </Space>
-                            ))}
-                            <Button
-                              type="dashed"
-                              onClick={() => subOpt.add()}
-                              block
-                            >
-                              + Add Sub Item
-                            </Button>
-                          </div>
-                        )}
-                      </Form.List>
-                    </Form.Item>
-                  </Card>
+                    form={form}
+                    stage={field}
+                    remove={() => {
+                      remove(field.name);
+                    }}
+                  />
                 ))}
-
-                <Button
-                  type="dashed"
-                  onClick={() => add()}
-                  block
-                  disabled={!valid}
-                >
-                  + Add Item
+                <Button type="dashed" onClick={() => add()} block>
+                  + {t("home.tournament.stage.add")}
                 </Button>
               </div>
             )}

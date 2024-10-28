@@ -1,58 +1,48 @@
-import { StageType, Tournament } from "@fbs2.0/types";
+import { StageType } from "@fbs2.0/types";
 import { Form, Select } from "antd";
+import { BaseOptionType } from "antd/es/select";
 import { FC } from "react";
-import { useParams } from "react-router";
-import { BaseOptionType } from "rc-select/lib/Select";
 import { useTranslation } from "react-i18next";
 
-import { useGetTournamentStages } from "../../../react-query-hooks/tournament/useGetTournamentStages";
-
 interface Props {
-  name?: string;
+  name: string | (string | number)[];
+  label: string;
+  required?: boolean;
   className?: string;
-  startingStages?: boolean;
+  onChange?: (value: StageType) => void;
 }
 
 const StageTypeSelector: FC<Props> = ({
-  name = "stageType",
+  name,
+  label,
+  required = true,
   className,
-  startingStages = false,
+  onChange,
 }) => {
   const { t } = useTranslation();
-  const { season, tournament } = useParams();
-  const { data } = useGetTournamentStages(season, tournament as Tournament);
 
-  const options = data?.reduce<BaseOptionType[]>(
-    (acc, { stageScheme, stageType }) =>
-      startingStages && stageScheme.isStarting
-        ? [
-            ...acc,
-            {
-              value: stageType,
-              label: t(
-                `tournament.stage.${stageType}${
-                  stageType === StageType.GROUP ||
-                  stageType === StageType.GROUP_2
-                    ? ".short"
-                    : ""
-                }`
-              ),
-            },
-          ]
-        : acc,
-    []
-  );
+  const options = Object.values(StageType).map<BaseOptionType>((value) => ({
+    value,
+    label: t(
+      `tournament.stage.${value}${
+        value === StageType.GROUP || value === StageType.GROUP_2 ? ".short" : ""
+      }`
+    ),
+  }));
 
   return (
-    <Form.Item name={name} rules={[{ required: true }]}>
+    <Form.Item
+      label={label}
+      name={name}
+      rules={required ? [{ required: true, message: "" }] : undefined}
+      className={className}
+    >
       <Select
         size="small"
         showSearch
         options={options}
-        className={className}
-        placeholder={t(
-          `common.placeholder.${startingStages ? "starting_" : ""}stage`
-        )}
+        placeholder={t(`common.placeholder.stage_type`)}
+        onChange={onChange}
       />
     </Form.Item>
   );
