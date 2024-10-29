@@ -24,6 +24,11 @@ const CreateTournament: FC<Props> = ({ onClose }) => {
   const createTournament = useCreateTournament();
 
   const submit = async (values: TournamentDto) => {
+    values.stages = values.stages.map((stage, index, stages) => ({
+      ...stage,
+      previousStageType: stages[index - 1]?.stageType || null,
+    }));
+
     await createTournament.mutateAsync(values);
 
     onClose();
@@ -81,19 +86,35 @@ const CreateTournament: FC<Props> = ({ onClose }) => {
               },
             ]}
           >
-            {(fields, { add, remove }) => (
+            {(fields, { add, remove }, { errors }) => (
               <div className={styles.stage} key="stages">
+                {errors.length > 0 && (
+                  <Form.Item>
+                    <Form.ErrorList errors={errors} />
+                  </Form.Item>
+                )}
                 {(fields as StageFormItemType[]).map((field) => (
                   <StageForm
                     key={field.key}
                     form={form}
                     stage={field}
-                    remove={() => {
-                      remove(field.name);
+                    remove={() => remove(field.name)}
+                    addAfter={() => {
+                      add({ pen: true, awayGoal: false }, field.name + 1);
                     }}
                   />
                 ))}
-                <Button type="dashed" onClick={() => add()} block>
+                <Button
+                  type="dashed"
+                  onClick={() => {
+                    add({
+                      pen: true,
+                      awayGoal: false,
+                      isStarting: fields.length < 1,
+                    });
+                  }}
+                  block
+                >
                   + {t("home.tournament.stage.add")}
                 </Button>
               </div>

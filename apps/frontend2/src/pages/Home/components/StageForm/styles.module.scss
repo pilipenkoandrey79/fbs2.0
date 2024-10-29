@@ -11,6 +11,12 @@
     right: 8px;
   }
 
+  .plus {
+    position: absolute;
+    bottom: -12px;
+    right: 40px;
+  }
+
   .container {
     @include flex(column, flex-start, flex-start);
     margin-top: 20px;

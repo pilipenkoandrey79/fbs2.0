@@ -1,4 +1,4 @@
-import { CloseOutlined } from "@ant-design/icons";
+import { CloseOutlined, PlusOutlined } from "@ant-design/icons";
 import {
   DEFAULT_GROUPS_QUANTITY,
   DEFAULT_SWISS_LENGTH,
@@ -8,6 +8,7 @@ import {
   TournamentDto,
 } from "@fbs2.0/types";
 import {
+  Button,
   Card,
   Checkbox,
   Divider,
@@ -35,9 +36,10 @@ interface Props {
   form: FormInstance<TournamentDto>;
   stage: StageFormItemType;
   remove: () => void;
+  addAfter: () => void;
 }
 
-const StageForm: FC<Props> = ({ stage, remove, form }) => {
+const StageForm: FC<Props> = ({ stage, remove, addAfter, form }) => {
   const { t } = useTranslation();
 
   const [hasLinked, setHasLinked] = useState(false);
@@ -49,14 +51,22 @@ const StageForm: FC<Props> = ({ stage, remove, form }) => {
   return (
     <Card size="small" className={styles.stage}>
       <CloseOutlined
-        onClick={(e) => {
-          e.preventDefault();
+        onClick={() => {
           remove();
         }}
         className={styles.remove}
       />
+      <Button
+        icon={<PlusOutlined />}
+        className={styles.plus}
+        size="small"
+        onClick={() => {
+          addAfter();
+        }}
+      />
       <div className={styles.container}>
         <div className={styles["stage-section"]}>
+          <Form.Item noStyle name="previousStageType"></Form.Item>
           <StageTypeSelector
             name={[stage.name, "stageType"]}
             label={t("home.tournament.stage.type")}
