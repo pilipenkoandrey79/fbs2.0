@@ -1,30 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import {
-  AvailableTournament as AvailableTournamentInterface,
-  Tournament,
-} from "@fbs2.0/types";
+import { AvailableTournament as AvailableTournamentInterface } from "@fbs2.0/types";
 
-import { Participant } from "../../participant/entities/participant.entity";
+import { TournamentSummary } from "./tournament-summary";
 
-export class AvailableTournament implements AvailableTournamentInterface {
-  @ApiProperty({ type: "number" })
-  id: number;
-
-  @ApiProperty({ enum: Tournament })
-  type: Tournament;
-
+export class AvailableTournament
+  extends TournamentSummary
+  implements AvailableTournamentInterface
+{
   @ApiPropertyOptional({ type: "string" })
   season?: string;
 
   @ApiProperty({ type: "boolean" })
   hasLinkedTournaments: boolean;
-
-  @ApiProperty({ type: "boolean" })
-  hasMatches: boolean;
-
-  @ApiProperty({ type: () => Participant })
-  winner: Participant;
-
-  @ApiProperty({ type: () => Participant })
-  finalist: Participant;
 }

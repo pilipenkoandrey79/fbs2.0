@@ -1,4 +1,4 @@
-import { Button, Card, Divider, Popconfirm } from "antd";
+import { Button, Card, Divider, Popconfirm, Skeleton } from "antd";
 import { FC, useContext } from "react";
 import {
   AvailableTournament,
@@ -19,6 +19,7 @@ import { Paths } from "../../../../routes";
 import { UserContext } from "../../../../context/userContext";
 import { Club } from "../../../../components/Club";
 import { useDeleteTournament } from "../../../../react-query-hooks/tournament/useDeleteTournament";
+import { useGetSeasonSummary } from "../../../../react-query-hooks/tournament/useGetSeasonSummary";
 
 import styles from "./styles.module.scss";
 
@@ -33,10 +34,11 @@ const Season: FC<Props> = ({ season, tournaments, onEdit }) => {
   const { user } = useContext(UserContext);
   const [start, end] = season.split("-").map(Number);
 
-  const deleteTournament = useDeleteTournament();
+  const deleteTournament = useDeleteTournament(season);
+  const summary = useGetSeasonSummary(season);
 
   return (
-    <Card className={styles.card} hoverable>
+    <Card className={styles.card}>
       <div className={styles.container}>
         <div className={styles.wrapper}>
           <div className={styles.years}>
@@ -46,8 +48,12 @@ const Season: FC<Props> = ({ season, tournaments, onEdit }) => {
           <Divider type="vertical" className={styles.divider} />
           <div className={styles.tournaments}>
             <ul>
-              {tournaments?.map(
-                ({ id, type, hasMatches, winner, finalist }) => (
+              {tournaments?.map(({ id, type }) => {
+                const tournamentSummary = summary.data?.find(
+                  (item) => item.type === type
+                );
+
+                return (
                   <li key={id} className={styles.tournament}>
                     <TournamentBadge
                       tournamentSeason={{ id, tournament: type, season }}
@@ -56,7 +62,7 @@ const Season: FC<Props> = ({ season, tournaments, onEdit }) => {
                         tournament: type,
                       })}
                     />
-                    {user?.isEditor && (
+                    {user?.isEditor && summary.isSuccess && (
                       <div className={styles.tools}>
                         <Button
                           title={t("common.edit")}
@@ -69,7 +75,7 @@ const Season: FC<Props> = ({ season, tournaments, onEdit }) => {
                         />
                         <Popconfirm
                           title={t("common.delete")}
-                          disabled={hasMatches}
+                          disabled={tournamentSummary?.hasMatches}
                           onConfirm={async () =>
                             await deleteTournament.mutateAsync(id)
                           }
@@ -80,13 +86,16 @@ const Season: FC<Props> = ({ season, tournaments, onEdit }) => {
                             danger
                             type="link"
                             size="small"
-                            disabled={hasMatches}
+                            disabled={tournamentSummary?.hasMatches}
                           />
                         </Popconfirm>
                       </div>
                     )}
                     <Divider type="vertical" className={styles.divider} />
-                    {winner && (
+                    {summary.isLoading && (
+                      <Skeleton.Input size="small" active />
+                    )}
+                    {tournamentSummary?.winner && (
                       <div className={styles.final}>
                         <Link
                           to={
@@ -97,24 +106,27 @@ const Season: FC<Props> = ({ season, tournaments, onEdit }) => {
                             `?${createSearchParams([
                               [
                                 HIGHLIGHTED_CLUB_ID_SEARCH_PARAM,
-                                `${winner?.club?.id}`,
+                                `${tournamentSummary?.winner?.club?.id}`,
                               ],
                             ])}`
                           }
                         >
-                          <Club club={winner?.club} className={styles.winner} />
-                        </Link>
-                        {finalist && (
                           <Club
-                            club={finalist?.club}
+                            club={tournamentSummary?.winner?.club}
+                            className={styles.winner}
+                          />
+                        </Link>
+                        {tournamentSummary?.finalist && (
+                          <Club
+                            club={tournamentSummary?.finalist?.club}
                             className={styles.finalist}
                           />
                         )}
                       </div>
                     )}
                   </li>
-                )
-              )}
+                );
+              })}
             </ul>
           </div>
         </div>

@@ -21,8 +21,16 @@ export const useCreateTournament = () => {
         `${ApiEntities.Tournament}/${[start, end].join("-")}/${tournament}`,
         stages
       ),
-    onSettled: () => {
-      queryClient.resetQueries({ queryKey: [QUERY_KEY.tournaments] });
+    onSettled: (_, __, { start, end }) => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.seasons] });
+
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY.integrated_summary],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY.summary, [start, end].join("-")],
+      });
     },
     onMutate: () => ({
       success: t("home.tournament.created"),

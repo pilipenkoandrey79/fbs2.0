@@ -30,6 +30,7 @@ import { AccessTokenGuard } from "../auth/guards/access-token.guard";
 import { Stage } from "../match/entities/stage.entity";
 import { TournamentSeason } from "../shared/entities/tournament-season.entity";
 import { StageSubstitution } from "./entities/stage-substitution.entity";
+import { TournamentSummary } from "./entities/tournament-summary";
 
 @Controller(ApiEntities.Tournament)
 @ApiTags(ApiEntities.Tournament)
@@ -38,9 +39,20 @@ export class TournamentController {
   private readonly service: TournamentService;
 
   @Get("seasons")
-  // @ApiOkResponse({ type: AvailableTournament })
   public getSeasons(@Query("simplified") simplified: boolean) {
     return this.service.getAvailableTournaments(simplified);
+  }
+
+  @Get("/:season/summary")
+  @ApiParam({ name: "season", type: "string" })
+  @ApiOkResponse({ type: [TournamentSummary] })
+  @ApiBadRequestResponse()
+  public getSeasonSummary(@Param("season") season: string) {
+    if (!isSeasonLabelValid(season, false)) {
+      throw new NotFoundException();
+    }
+
+    return this.service.getSeasonSummary(season);
   }
 
   @Get("/:season/:tournament")

@@ -30,7 +30,7 @@ const Header: FC<Props> = ({ title, season, tournament, onParticipants }) => {
   const { t } = useTranslation();
   const { highlightId, setHighlightId } = useContext(HighlightContext);
   const [isPending, startTransition] = useTransition();
-  const { data: availableTournaments } = useGetTournamentSeasons(true);
+  const { data: availableTournaments } = useGetTournamentSeasons();
   const { data: participants } = useGetParticipants(season, tournament);
 
   const { previousLink, nextLink } = useMemo(() => {

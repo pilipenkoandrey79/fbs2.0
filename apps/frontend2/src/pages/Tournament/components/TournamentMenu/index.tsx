@@ -15,7 +15,7 @@ const TournamentMenu: FC = () => {
   const { t } = useTranslation();
   const { setHighlightId } = useContext(HighlightContext);
   const { season, tournament } = useParams();
-  const { data: availableTournaments } = useGetTournamentSeasons(true);
+  const { data: availableTournaments } = useGetTournamentSeasons();
 
   const getNavLinks = () => {
     const tournaments = (availableTournaments as AvailableTournaments)?.[

@@ -1,31 +1,20 @@
 import { ApiEntities, AvailableTournaments, Tournament } from "@fbs2.0/types";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
 import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
 
-const fetchTournamentSeasons = async (simplified?: boolean) =>
+const fetchTournamentSeasons = async () =>
   await ApiClient.getInstance().get<AvailableTournaments>(
-    `${ApiEntities.Tournament}/seasons${simplified ? "?simplified=true" : ""}`
+    `${ApiEntities.Tournament}/seasons?simplified=true`
   );
 
-export const useGetTournamentSeasons = (simplified?: boolean) => {
-  const queryClient = useQueryClient();
-
-  return useQuery<AvailableTournaments, AxiosError>({
-    queryKey: [
-      simplified ? QUERY_KEY.tournaments_simplified : QUERY_KEY.tournaments,
-    ],
+export const useGetTournamentSeasons = () =>
+  useQuery<AvailableTournaments, AxiosError>({
+    queryKey: [QUERY_KEY.seasons],
     queryFn: async () => {
-      const cachedAvailableTournaments =
-        queryClient.getQueryData<AvailableTournaments>([QUERY_KEY.tournaments]);
-
-      if (cachedAvailableTournaments) {
-        return cachedAvailableTournaments;
-      }
-
-      const availableTournaments = await fetchTournamentSeasons(simplified);
+      const availableTournaments = await fetchTournamentSeasons();
 
       const tournamentSequence = Object.values(Tournament).reduce<
         Record<Tournament, number>
@@ -50,4 +39,3 @@ export const useGetTournamentSeasons = (simplified?: boolean) => {
         );
     },
   });
-};

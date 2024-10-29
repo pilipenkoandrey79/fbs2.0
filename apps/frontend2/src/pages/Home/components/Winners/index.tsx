@@ -1,9 +1,9 @@
 import { FC, useState } from "react";
 import { Club as ClubInterface, Country } from "@fbs2.0/types";
-import { Switch, Table, TableProps, Tooltip } from "antd";
+import { Skeleton, Switch, Table, TableProps, Tooltip } from "antd";
 import { useTranslation } from "react-i18next";
 
-import { useGetTournamentSeasons } from "../../../../react-query-hooks/tournament/useGetTournamentSeasons";
+import { useGetIntegratedSummary } from "../../../../react-query-hooks/tournament/useGetIntegratedSummary";
 import { Flag } from "../../../../components/Flag";
 import { Club } from "../../../../components/Club";
 
@@ -17,11 +17,11 @@ interface ListItem {
 
 const Winners: FC = () => {
   const { t } = useTranslation();
-  const availableTournaments = useGetTournamentSeasons(false);
+  const integratedSummary = useGetIntegratedSummary();
   const [showFinalists, setShowFinalists] = useState(false);
   const [byCountries, setByCountries] = useState(false);
 
-  const list = Object.entries(availableTournaments.data || {})
+  const list = Object.entries(integratedSummary.data || {})
     .reduce<ListItem[]>((acc, [season, tournaments]) => {
       const end = Number(season.split("-")[1]);
 
@@ -113,7 +113,9 @@ const Winners: FC = () => {
     },
   ];
 
-  return (
+  return integratedSummary.isLoading ? (
+    <Skeleton active />
+  ) : (
     <div>
       <div className={styles.tools}>
         <div>

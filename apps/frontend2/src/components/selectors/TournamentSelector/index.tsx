@@ -23,7 +23,7 @@ const TournamentSelector: FC<Props> = ({
 }) => {
   const { t } = useTranslation();
 
-  const { data: availableTournaments } = useGetTournamentSeasons(true);
+  const { data: availableTournaments } = useGetTournamentSeasons();
 
   const options: SegmentedProps["options"] = Object.values(Tournament)
     .filter((tournament) => {

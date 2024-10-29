@@ -6,6 +6,10 @@
   @include flex(column, flex-start, center);
   min-width: $minimal;
 
+  main {
+    background-image: url(../../assets/bg.webp);
+  }
+
   header,
   main,
   footer {

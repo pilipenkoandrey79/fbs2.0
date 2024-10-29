@@ -32,7 +32,7 @@ const Participants: FC<Props> = ({ open, onClose }) => {
   const { user } = useContext(UserContext);
 
   const participants = useGetParticipants(season, tournament);
-  const { data: availableTournaments } = useGetTournamentSeasons(true);
+  const { data: availableTournaments } = useGetTournamentSeasons();
 
   const [isAddFormOpen, setIsAddFormOpen] = useState(false);
   const [selectedCountryId, setSelectedCountryId] = useState<number>();

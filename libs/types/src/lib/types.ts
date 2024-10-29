@@ -272,14 +272,17 @@ export enum ApiEntities {
   Coefficient = "coefficient",
 }
 
-export interface AvailableTournament {
+export interface TournamentSummary {
   id: number;
   type: Tournament;
-  season?: string;
-  hasLinkedTournaments: boolean;
   hasMatches: boolean;
   winner: Participant | undefined;
   finalist: Participant | undefined;
+}
+
+export interface AvailableTournament extends TournamentSummary {
+  season?: string;
+  hasLinkedTournaments: boolean;
 }
 
 export type AvailableTournaments = Record<string, AvailableTournament[]>;

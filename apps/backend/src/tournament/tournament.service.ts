@@ -6,6 +6,7 @@ import {
   AvailableTournaments,
   StageType,
   Tournament,
+  TournamentSummary,
 } from "@fbs2.0/types";
 
 import { TournamentSeason } from "../shared/entities/tournament-season.entity";
@@ -126,6 +127,66 @@ export class TournamentService {
         return acc;
       },
       {}
+    );
+  }
+
+  public async getSeasonSummary(season: string) {
+    const rawTournamentSeasons = await this.tournamentSeasonRepository.find({
+      where: { season },
+    });
+
+    return await Promise.all(
+      rawTournamentSeasons.map(async (tournamentSeason) => {
+        const { season, tournament, id } = tournamentSeason;
+
+        const matches = await this.matchRepository.find({
+          where: { stage: { tournamentSeason: { season, tournament } } },
+        });
+
+        const finalMatches = await this.matchRepository.find({
+          relations: {
+            stage: {
+              tournamentSeason: true,
+              stageScheme: true,
+            },
+            host: {
+              club: {
+                city: { country: true, oldNames: { country: true } },
+                oldNames: true,
+              },
+            },
+            guest: {
+              club: {
+                city: { country: true, oldNames: { country: true } },
+                oldNames: true,
+              },
+            },
+            forceWinner: {
+              club: {
+                city: { country: true, oldNames: { country: true } },
+                oldNames: true,
+              },
+            },
+          },
+          where: {
+            stage: {
+              stageType: StageType.FINAL,
+              tournamentSeason: { season, tournament },
+            },
+          },
+          order: { date: "ASC" },
+        });
+
+        const { winner, finalist } = { ...getWinners(finalMatches)?.[0] };
+
+        return {
+          id,
+          type: tournament,
+          hasMatches: matches.length > 0,
+          winner,
+          finalist,
+        } as TournamentSummary;
+      })
     );
   }
 

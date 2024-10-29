@@ -43,7 +43,7 @@ const Home: FC = () => {
   const to = Number(searchParams.get(SEASON_TO_SEARCH_PARAM));
   const { t } = useTranslation();
   const { user } = useContext(UserContext);
-  const availableTournaments = useGetTournamentSeasons(false);
+  const availableTournaments = useGetTournamentSeasons();
 
   const isMdScreen = useMediaQuery({
     query: `(min-width: ${variables.screenMd})`,

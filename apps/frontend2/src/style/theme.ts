@@ -27,6 +27,9 @@ const myTheme: ThemeConfig = {
     Menu: {
       itemPaddingInline: 12,
     },
+    Timeline: {
+      tailWidth: 5,
+    },
   },
 };
 

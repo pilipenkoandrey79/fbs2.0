@@ -1,16 +1,24 @@
 @import "../../style/colors.module.scss";
+@import "../../style/variables.module.scss";
 
 .badge {
   display: inline-block;
   padding: 4px;
   margin: 0 2px;
   border-radius: 3px;
-  width: 48px;
-  height: 30px;
+  width: 40px;
+  height: 26px;
   text-align: center;
+  font-size: 12px;
 
   a {
     color: inherit;
+  }
+
+  @media (min-width: $screen-md) {
+    font-size: 14px;
+    width: 48px;
+    height: 30px;
   }
 
   &.UCL {

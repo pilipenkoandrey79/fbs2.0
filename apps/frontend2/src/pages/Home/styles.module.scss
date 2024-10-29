@@ -1,5 +1,6 @@
 @import "../../style/variables.module.scss";
 @import "../../style/mixins.scss";
+@import "../../style/colors.module.scss";
 
 .container {
   max-width: $screen-xl;
@@ -9,6 +10,8 @@
   .header {
     @include flex(column, flex-start, stretch);
     margin-bottom: 20px;
+    padding: 8px 20px 4px;
+    background-color: $contentBg;
 
     .buttons {
       @include flex(row, flex-start, center);
@@ -29,6 +32,8 @@
       flex: 1;
       max-width: 400px;
       min-height: 400px;
+      padding: 8px 4px;
+      background-color: $contentBg;
 
       .spin {
         line-height: 300px;
@@ -42,6 +47,8 @@
 
     .winners {
       @include flex(row, flex-end, flex-start);
+      padding: 8px 4px;
+      background-color: $contentBg;
     }
   }
 }
