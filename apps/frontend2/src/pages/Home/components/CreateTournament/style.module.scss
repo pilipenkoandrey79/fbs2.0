@@ -11,6 +11,10 @@
       display: block;
     }
 
+    .stages-header {
+      @include flex(row, space-between);
+    }
+
     .stage {
       @include flex(column);
       row-gap: 16px;

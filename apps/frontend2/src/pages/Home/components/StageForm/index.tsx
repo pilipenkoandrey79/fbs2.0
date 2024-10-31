@@ -18,7 +18,7 @@ import {
   InputNumber,
   Segmented,
 } from "antd";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useMediaQuery } from "react-responsive";
 
@@ -39,7 +39,7 @@ interface Props {
   addAfter?: () => void;
 }
 
-const StageForm: FC<Props> = ({ stage, remove, addAfter, form }) => {
+const StageForm: FC<Props> = ({ stage, form, remove, addAfter }) => {
   const { t } = useTranslation();
 
   const [hasLinked, setHasLinked] = useState(false);
@@ -47,6 +47,16 @@ const StageForm: FC<Props> = ({ stage, remove, addAfter, form }) => {
   const isMdScreen = useMediaQuery({
     query: `(min-width: ${variables.screenMd})`,
   });
+
+  useEffect(() => {
+    if (
+      !hasLinked &&
+      form.getFieldValue(["stages", stage.name, "linkedTournament"]) &&
+      form.getFieldValue(["stages", stage.name, "linkedStage"])
+    ) {
+      setHasLinked(true);
+    }
+  }, [form, hasLinked, stage.name]);
 
   return (
     <Card size="small" className={styles.stage}>

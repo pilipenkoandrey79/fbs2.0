@@ -6,7 +6,7 @@ import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
 import { getTournamentPartMatchesQueryFn } from "../match/useGetTournamentPartMatches";
 
-const getTournamentStages = async (
+export const getTournamentStages = async (
   season: string | undefined,
   tournament: Tournament | undefined
 ) =>
@@ -23,6 +23,7 @@ export const useGetTournamentStages = (
 
   return useQuery<(StageInternal | Stage)[], AxiosError>({
     queryKey: [QUERY_KEY.stages, tournament, season],
+    enabled: !!season && !!tournament,
     queryFn: async () => {
       const stages = await getTournamentStages(season, tournament);
 

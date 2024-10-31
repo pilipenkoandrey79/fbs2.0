@@ -1,13 +1,14 @@
-import { Tournament, TournamentDto } from "@fbs2.0/types";
+import { StageDto, Tournament, TournamentDto } from "@fbs2.0/types";
 import { Button, Divider, Form, Modal } from "antd";
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { SaveOutlined } from "@ant-design/icons";
+import { ImportOutlined, SaveOutlined } from "@ant-design/icons";
 
 import { TournamentSelector } from "../../../../components/selectors/TournamentSelector";
 import { SeasonInput } from "../SeasonInput";
 import { StageForm, StageFormItemType } from "../StageForm";
 import { useCreateTournament } from "../../../../react-query-hooks/tournament/useCreateTournament";
+import { useCopyFromPrevious } from "../../../../react-query-hooks/tournament/useCopyFromPrevious";
 
 import styles from "./style.module.scss";
 
@@ -22,6 +23,7 @@ const CreateTournament: FC<Props> = ({ onClose }) => {
   const [valid, setValid] = useState(true);
 
   const createTournament = useCreateTournament();
+  const copyFromPrevious = useCopyFromPrevious();
 
   const submit = async (values: TournamentDto) => {
     values.stages = values.stages.map((stage, index, stages) => ({
@@ -32,6 +34,41 @@ const CreateTournament: FC<Props> = ({ onClose }) => {
     await createTournament.mutateAsync(values);
 
     onClose();
+  };
+
+  const onCopyFromPrevious = async () => {
+    if (!values?.start || !values?.end || !values?.tournament) {
+      return;
+    }
+
+    const stages = await copyFromPrevious.mutateAsync({
+      tournament: values.tournament,
+      season: [values.start - 1, values.end - 1].join("-"),
+    });
+
+    form.setFieldValue(
+      "stages",
+      stages.map<StageDto>(
+        ({
+          stageType,
+          previousStage,
+          linkedTournament,
+          linkedTournamentStage,
+          stageScheme: { isStarting, pen, type, awayGoal, groups, swissNum },
+        }) => ({
+          stageType,
+          stageSchemeType: type,
+          isStarting,
+          pen: pen ?? undefined,
+          awayGoal: awayGoal ?? undefined,
+          groups,
+          swissNum: swissNum ?? undefined,
+          previousStageType: previousStage?.stageType,
+          linkedTournament,
+          linkedStage: linkedTournamentStage,
+        })
+      )
+    );
   };
 
   useEffect(() => {
@@ -71,7 +108,17 @@ const CreateTournament: FC<Props> = ({ onClose }) => {
           <SeasonInput form={form} />
           <TournamentSelector startOfSeason={values?.start} />
           <Divider />
-          <h4>{t("home.tournament.stages")}</h4>
+          <div className={styles["stages-header"]}>
+            <h4>{t("home.tournament.stages")}</h4>
+            <Button
+              size="small"
+              icon={<ImportOutlined />}
+              disabled={values?.stages.length > 0}
+              onClick={() => onCopyFromPrevious()}
+            >
+              {t("home.tournament.stage.copy")}
+            </Button>
+          </div>
           <Form.List
             name="stages"
             rules={[

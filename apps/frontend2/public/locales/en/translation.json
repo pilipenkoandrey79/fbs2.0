@@ -228,7 +228,8 @@
         "updated": "Stage is updated",
         "remove": "Remove stage?",
         "removed": "Stage is removed",
-        "appended": "Added stage as the last"
+        "appended": "Added stage as the last",
+        "copy": "Copy from previous season"
       }
     }
   }
