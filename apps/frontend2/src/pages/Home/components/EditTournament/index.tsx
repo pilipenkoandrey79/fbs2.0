@@ -1,9 +1,12 @@
 import { TournamentSeason } from "@fbs2.0/types";
 import { FC } from "react";
-import { Form, Modal } from "antd";
+import { Modal } from "antd";
 import { useTranslation } from "react-i18next";
 import { getTournamentTitle } from "@fbs2.0/utils";
+import classNames from "classnames";
 
+import { StageItem } from "./components/StageItem";
+import { AppendStage } from "./components/AppendStage";
 import { useGetTournamentStages } from "../../../../react-query-hooks/tournament/useGetTournamentStages";
 
 import styles from "./style.module.scss";
@@ -35,10 +38,26 @@ const EditTournament: FC<Props> = ({ tournamentSeason, onClose }) => {
       maskClosable={false}
       footer={[]}
     >
-      <div className={styles.content}>
-        {stages.data?.map((stage) => (
-          <Form>{stage.stageType}</Form>
+      <div
+        className={classNames(
+          styles.content,
+          styles[`edit-${tournamentSeason.tournament}`]
+        )}
+      >
+        {stages.data?.map((stage, index) => (
+          <StageItem
+            stage={stage}
+            index={index}
+            key={stage.id}
+            tournamentSeason={tournamentSeason}
+          />
         ))}
+        {stages.data?.[stages.data?.length - 1]?.stageType !== undefined && (
+          <AppendStage
+            tournamentSeason={tournamentSeason}
+            lastStageType={stages.data?.[stages.data?.length - 1]?.stageType}
+          />
+        )}
       </div>
     </Modal>
   );

@@ -7,11 +7,12 @@ import {
   NotFoundException,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Query,
   UseGuards,
 } from "@nestjs/common";
-import { ApiEntities, Tournament } from "@fbs2.0/types";
+import { ApiEntities, StageUpdateDto, Tournament } from "@fbs2.0/types";
 import { isSeasonLabelValid, isTournamentValid } from "@fbs2.0/utils";
 import {
   ApiBadRequestResponse,
@@ -105,5 +106,45 @@ export class TournamentController {
   @ApiCreatedResponse({ type: StageSubstitution })
   public createStageSubstitution(@Body() body: StageSubstitutionDto) {
     return this.service.createStageSubstitution(body);
+  }
+
+  @Post("/:season/:tournament/stage")
+  @UseGuards(AccessTokenGuard)
+  @ApiBearerAuth()
+  @ApiParam({ name: "season", type: "string" })
+  @ApiParam({ name: "tournament", enum: Tournament })
+  @ApiCreatedResponse({ type: Stage })
+  @ApiBadRequestResponse()
+  public appendStage(
+    @Param("season") season: string,
+    @Param("tournament") tournament: Tournament,
+    @Body() body: StageDto
+  ) {
+    if (!isSeasonLabelValid(season, false) || !isTournamentValid(tournament)) {
+      throw new NotFoundException();
+    }
+
+    return this.service.appendStage(season, tournament, body);
+  }
+
+  @Patch("/stage/:id")
+  @UseGuards(AccessTokenGuard)
+  @ApiBearerAuth()
+  @ApiParam({ name: "id", type: "number" })
+  @ApiOkResponse({ type: Stage })
+  public updateStage(
+    @Param("id", new ParseIntPipe()) id: number,
+    @Body() body: StageUpdateDto
+  ) {
+    return this.service.updateStage(id, body);
+  }
+
+  @Delete("/stage/:id")
+  @UseGuards(AccessTokenGuard)
+  @ApiBearerAuth()
+  @ApiParam({ name: "id", type: "number" })
+  @ApiNoContentResponse()
+  public deleteStage(@Param("id", new ParseIntPipe()) id: number) {
+    return this.service.removeStage(id);
   }
 }

@@ -104,19 +104,23 @@ export interface Stage {
   linkedTournament: Tournament;
   linkedTournamentStage: StageType;
   stageSubstitutions?: StageSubstitution[];
+  matchesCount?: number;
 }
 
-export interface StageDto {
-  stageType: StageType;
-  stageSchemeType: StageSchemeType;
+export interface StageUpdateDto {
   isStarting: boolean;
-  groups?: number;
   pen?: boolean;
   awayGoal?: boolean;
+  groups?: number;
   swissNum?: number;
+}
+
+export interface StageDto extends StageUpdateDto {
+  stageType: StageType;
+  stageSchemeType: StageSchemeType;
+  previousStageType?: StageType;
   linkedTournament?: Tournament;
   linkedStage?: StageType;
-  previousStageType?: StageType;
 }
 
 export interface TournamentSeasonDto {

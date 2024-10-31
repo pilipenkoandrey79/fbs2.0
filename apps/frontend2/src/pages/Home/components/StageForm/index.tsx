@@ -23,9 +23,9 @@ import { useTranslation } from "react-i18next";
 import { useMediaQuery } from "react-responsive";
 
 import { StageTypeSelector } from "../../../../components/selectors/StageTypeSelector";
-import { StageSchemeSelector } from "../../../../components/selectors/StageSchemeSelector";
-import { getDefaultSchemeByType, isGroup, isOlimpic } from "./utils";
+import { getDefaultSchemeByType, isGroup, isOlimpic } from "../../utils";
 import { TournamentSelector } from "../../../../components/selectors/TournamentSelector";
+import { StageSchemeSelector } from "../../../../components/selectors/StageSchemeSelector";
 
 import styles from "./styles.module.scss";
 import variables from "../../../../style/variables.module.scss";
@@ -36,7 +36,7 @@ interface Props {
   form: FormInstance<TournamentDto>;
   stage: StageFormItemType;
   remove: () => void;
-  addAfter: () => void;
+  addAfter?: () => void;
 }
 
 const StageForm: FC<Props> = ({ stage, remove, addAfter, form }) => {
@@ -56,14 +56,16 @@ const StageForm: FC<Props> = ({ stage, remove, addAfter, form }) => {
         }}
         className={styles.remove}
       />
-      <Button
-        icon={<PlusOutlined />}
-        className={styles.plus}
-        size="small"
-        onClick={() => {
-          addAfter();
-        }}
-      />
+      {addAfter && (
+        <Button
+          icon={<PlusOutlined />}
+          className={styles.plus}
+          size="small"
+          onClick={() => {
+            addAfter();
+          }}
+        />
+      )}
       <div className={styles.container}>
         <div className={styles["stage-section"]}>
           <Form.Item noStyle name="previousStageType"></Form.Item>

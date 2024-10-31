@@ -5,10 +5,7 @@
 .layout {
   @include flex(column, flex-start, center);
   min-width: $minimal;
-
-  main {
-    background-image: url(../../assets/bg.webp);
-  }
+  background-color: transparent;
 
   header,
   main,
@@ -65,7 +62,6 @@
   main {
     min-height: calc(100vh - 64px - 69px);
     padding: 4px;
-    background-color: $contentBg;
 
     &.fallback {
       @include flex(column);

@@ -49,6 +49,11 @@
       @include flex(row, flex-end, flex-start);
       padding: 8px 4px;
       background-color: $contentBg;
+      min-width: 328px;
+
+      @media (min-width: $screen-lg) {
+        padding: 8px 4px;
+      }
     }
   }
 }

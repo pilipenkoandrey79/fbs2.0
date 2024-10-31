@@ -29,7 +29,7 @@ const Page: FC<Props> = (props) => {
   const isClubsPage = currentPath === Paths.CLUBS;
 
   return (
-    <Layout className={classNames(styles.layout, props.className)}>
+    <Layout className={classNames(props.className, styles.layout)}>
       <Helmet>
         <title>{["FBS2", props.title].join(" | ")}</title>
       </Helmet>

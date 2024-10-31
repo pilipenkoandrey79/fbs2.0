@@ -11,15 +11,15 @@ export class StageSubstitution implements StageSubstitutionInterface {
   @ApiProperty({ type: "number" })
   id: number;
 
-  @ManyToOne(() => Stage)
+  @ManyToOne(() => Stage, { onDelete: "CASCADE" })
   @ApiProperty({ type: () => Stage })
   stage: Stage;
 
-  @ManyToOne(() => Participant)
+  @ManyToOne(() => Participant, { onDelete: "CASCADE" })
   @ApiProperty({ type: () => Participant })
   expelled: Participant;
 
-  @ManyToOne(() => Participant)
+  @ManyToOne(() => Participant, { onDelete: "CASCADE" })
   @ApiProperty({ type: () => Participant })
   sub: Participant;
 }

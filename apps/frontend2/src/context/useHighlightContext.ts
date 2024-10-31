@@ -9,7 +9,7 @@ export const useHighlightContext = (): HighlightContextValue => {
   const initValue = Number(searchParams.get(HIGHLIGHTED_CLUB_ID_SEARCH_PARAM));
 
   const [id, setId] = useState<number | null>(() =>
-    Number.isNaN(initValue) ? null : initValue
+    Number.isNaN(initValue) || !initValue ? null : initValue
   );
 
   useEffect(() => {

@@ -76,10 +76,10 @@ const Winners: FC = () => {
     .sort((a, b) => a.year - b.year);
 
   const columns: TableProps<ListItem>["columns"] = [
-    { key: "no", width: 30, render: (_, __, index) => index + 1 },
+    { key: "no", width: 25, render: (_, __, index) => index + 1 },
     {
       key: "year",
-      width: 60,
+      width: 45,
       title: (
         <Tooltip
           title={t(
@@ -95,7 +95,7 @@ const Winners: FC = () => {
       key: "item",
       dataIndex: "item",
       title: t(`common.${byCountries ? "country" : "club"}`),
-      width: 200,
+      width: 250,
       render: (item, { number }) => (
         <>
           {byCountries ? (
@@ -139,7 +139,7 @@ const Winners: FC = () => {
         size="small"
         bordered={false}
         pagination={false}
-        tableLayout="auto"
+        tableLayout="fixed"
         rowKey={({ item }) => item.id}
       />
     </div>

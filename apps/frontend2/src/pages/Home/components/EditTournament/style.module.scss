@@ -1,11 +1,32 @@
 @import "../../../../style/variables.module.scss";
 @import "../../../../style/mixins.scss";
+@import "../../../../style/colors.module.scss";
 
 .modal {
   top: 0;
 
   .content {
     min-height: 100px;
+
+    &.edit-UCL {
+      background-color: $ucl-background;
+    }
+
+    &.edit-UEL {
+      background-color: $uel-background;
+    }
+
+    &.edit-UECL {
+      background-color: $uecl-background;
+    }
+
+    &.edit-CWC {
+      background-color: $cwc-background;
+    }
+
+    &.edit-ICFC {
+      background-color: $icfc-background;
+    }
   }
 
   :global {

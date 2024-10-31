@@ -5,6 +5,7 @@ import {
   AvailableTournament,
   AvailableTournaments,
   StageType,
+  StageUpdateDto,
   Tournament,
   TournamentSummary,
 } from "@fbs2.0/types";
@@ -208,7 +209,15 @@ export class TournamentService {
       where: { tournamentSeason: { tournament, season } },
     });
 
-    return getSecuencedStagesList(stages);
+    return await Promise.all(
+      getSecuencedStagesList(stages).map(async (stage) => {
+        const matchesCount = await this.matchRepository.count({
+          where: { stage: { id: stage.id } },
+        });
+
+        return { ...stage, matchesCount };
+      })
+    );
   }
 
   private async createStage(
@@ -318,5 +327,72 @@ export class TournamentService {
     stageSubstitution.sub = sub;
 
     return await this.stageSubstitutionRepository.save(stageSubstitution);
+  }
+
+  public async updateStage(id: number, stageUpdateDto: StageUpdateDto) {
+    const stage = await this.stageRepository.findOne({
+      relations: { stageScheme: true },
+      where: { id },
+    });
+
+    let stageScheme = await this.stageSchemeRepository.findOne({
+      where: {
+        type: stage.stageScheme.type,
+        isStarting: !!stageUpdateDto.isStarting,
+        pen: !!stageUpdateDto.pen,
+        awayGoal: !!stageUpdateDto.awayGoal,
+        groups: stageUpdateDto.groups ?? null,
+        swissNum: stageUpdateDto.swissNum ?? null,
+      },
+    });
+
+    if (!stageScheme) {
+      const newStageScheme = await this.stageSchemeRepository.save({
+        type: stage.stageScheme.type,
+        isStarting: stageUpdateDto.isStarting,
+        groups: stageUpdateDto.groups ?? null,
+        swissNum: stageUpdateDto.swissNum ?? null,
+        pen: !!stageUpdateDto.pen,
+        awayGoal: !!stageUpdateDto.awayGoal,
+      } as StageScheme);
+
+      stageScheme = newStageScheme;
+    }
+
+    stage.stageScheme = stageScheme;
+
+    return await this.stageRepository.save(stage);
+  }
+
+  public async removeStage(id: number) {
+    const item = await this.stageRepository.findOne({
+      where: { id },
+    });
+
+    return this.stageRepository.remove(item);
+  }
+
+  public async appendStage(
+    season: string,
+    tournament: Tournament,
+    stageDto: StageDto
+  ) {
+    const tournamentSeason = await this.tournamentSeasonRepository.findOne({
+      where: { season, tournament },
+    });
+
+    await this.createStage(stageDto, tournamentSeason);
+
+    const stage = await this.stageRepository.findOne({
+      where: { tournamentSeason, stageType: stageDto.stageType },
+    });
+
+    const previousStage = await this.stageRepository.findOne({
+      where: { tournamentSeason, stageType: stageDto.previousStageType },
+    });
+
+    stage.previousStage = previousStage;
+
+    return await this.stageRepository.save(stage);
   }
 }

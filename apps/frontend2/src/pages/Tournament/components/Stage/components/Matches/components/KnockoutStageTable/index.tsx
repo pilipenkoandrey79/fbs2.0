@@ -120,7 +120,7 @@ const KnockoutStageTable: FC<Props> = ({
   const getTeamColumn = (key: "host" | "guest") => ({
     key,
     dataIndex: key,
-    width: isLgScreen ? 200 : 100,
+    width: isLgScreen ? 200 : 90,
     ellipsis: true,
     render: (team: StageTableRow["host"] | StageTableRow["guest"]) =>
       team.club ? (
@@ -170,7 +170,7 @@ const KnockoutStageTable: FC<Props> = ({
     {
       key: "results",
       dataIndex: "results",
-      width: 126,
+      width: 120,
       className: styles["results-cell"],
       render: (results: StageTableRow["results"], record: StageTableRow) => (
         <ResultsCell
@@ -200,18 +200,14 @@ const KnockoutStageTable: FC<Props> = ({
         } as EditableCellProps),
     },
     getTeamColumn("guest"),
-    ...(user?.isEditor
+    ...(user?.isEditor && !nextStageHasMatches
       ? [
           {
             key: "delete",
-            width: isLgScreen ? 60 : 26,
+            width: isLgScreen ? 50 : 26,
             className: styles.delete,
-            render: (record: StageTableRow) => {
-              if (nextStageHasMatches) {
-                return null;
-              }
-
-              return record.id === templateRow.id && adding ? (
+            render: (record: StageTableRow) =>
+              record.id === templateRow.id && adding ? (
                 <Button
                   icon={<CloseOutlined />}
                   size="small"
@@ -228,8 +224,7 @@ const KnockoutStageTable: FC<Props> = ({
                   adding={adding}
                   stageType={stage.stageType}
                 />
-              );
-            },
+              ),
           },
         ]
       : []),

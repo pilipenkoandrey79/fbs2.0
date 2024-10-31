@@ -169,6 +169,10 @@ export default class ApiClient {
     return this.request<R, T>("PUT", requestUrl, params);
   }
 
+  patch<R, T = undefined>(requestUrl: string, params?: T) {
+    return this.request<R, T>("PATCH", requestUrl, params);
+  }
+
   delete<R, T = undefined>(requestUrl: string, params?: T) {
     return this.request<R, T>("DELETE", requestUrl, params);
   }
