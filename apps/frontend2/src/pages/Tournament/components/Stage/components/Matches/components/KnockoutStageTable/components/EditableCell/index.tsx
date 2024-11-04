@@ -5,6 +5,10 @@ import { MatchDto, Participant } from "@fbs2.0/types";
 
 import { Club } from "../../../../../../../../../../components/Club";
 import { SubmitButton } from "../../../../../../../../../../components/SubmitButton";
+import {
+  BCP47Locales,
+  Language,
+} from "../../../../../../../../../../i18n/locales";
 
 import styles from "./styles.module.scss";
 
@@ -30,7 +34,10 @@ const EditableCell: FC<PropsWithChildren<EditableCellProps>> = ({
   ...restProps
 }) => {
   const { i18n, t } = useTranslation();
-  const collator = new Intl.Collator(i18n.resolvedLanguage);
+
+  const collator = new Intl.Collator(
+    BCP47Locales[i18n.resolvedLanguage as Language]
+  );
 
   const selectedRivalId = Form.useWatch(
     dataIndex === "guestId" ? "hostId" : "guestId",
@@ -39,7 +46,16 @@ const EditableCell: FC<PropsWithChildren<EditableCellProps>> = ({
 
   const options = participants
     ?.filter(({ id }) => selectedRivalId !== id)
-    .sort((a, b) => collator.compare(a.club.name, b.club.name));
+    .sort((a, b) =>
+      collator.compare(
+        (i18n.resolvedLanguage === Language.en
+          ? a.club.name
+          : a.club.name_ua) || a.club.name,
+        (i18n.resolvedLanguage === Language.en
+          ? b.club.name
+          : b.club.name_ua) || b.club.name
+      )
+    );
 
   const node =
     dataIndex === "results" ? (

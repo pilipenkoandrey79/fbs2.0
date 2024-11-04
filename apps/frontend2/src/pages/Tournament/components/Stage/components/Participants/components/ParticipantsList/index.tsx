@@ -13,6 +13,7 @@ import classNames from "classnames";
 
 import { StageParticipant } from "../StageParticipant";
 import { HighlightContext } from "../../../../../../../../context/highlightContext";
+import { BCP47Locales, Language } from "../../../../../../../../i18n/locales";
 
 import styles from "./styles.module.scss";
 
@@ -36,7 +37,11 @@ const getParticipantClasses = (
 
 const ParticipantsList: FC<Props> = ({ title, participants, stage }) => {
   const { t, i18n } = useTranslation();
-  const collator = new Intl.Collator(i18n.resolvedLanguage);
+
+  const collator = new Intl.Collator(
+    BCP47Locales[i18n.resolvedLanguage as Language]
+  );
+
   const { highlightId } = useContext(HighlightContext);
 
   const columns: TableProps<Participant>["columns"] = [
@@ -53,7 +58,14 @@ const ParticipantsList: FC<Props> = ({ title, participants, stage }) => {
       ellipsis: true,
       showSorterTooltip: { target: "full-header" },
       sorter: (a: Participant, b: Participant) =>
-        collator.compare(a.club.name, b.club.name),
+        collator.compare(
+          (i18n.resolvedLanguage === Language.en
+            ? a.club.name
+            : a.club.name_ua) || a.club.name,
+          (i18n.resolvedLanguage === Language.en
+            ? b.club.name
+            : b.club.name_ua) || b.club.name
+        ),
       render: (participant: Participant) => (
         <StageParticipant
           stage={stage}

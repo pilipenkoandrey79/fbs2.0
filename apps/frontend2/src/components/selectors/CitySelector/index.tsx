@@ -9,6 +9,7 @@ import {
   getCitiesByCountry,
   useGetCities,
 } from "../../../react-query-hooks/city/useGetCities";
+import { Language } from "../../../i18n/locales";
 
 import styles from "./styles.module.scss";
 
@@ -33,9 +34,10 @@ const CitySelector: FC<Props> = ({ countryId, name = "cityId", className }) => {
         size="small"
         mode="tags"
         maxCount={1}
-        options={data?.map(({ id, name }) => ({
+        options={data?.map(({ id, name, name_ua }) => ({
           value: id,
-          label: name,
+          label:
+            (i18n.resolvedLanguage === Language.en ? name : name_ua) || name,
         }))}
         className={classNames(className, { [styles.new]: isNew })}
         placeholder={t("common.placeholder.city")}

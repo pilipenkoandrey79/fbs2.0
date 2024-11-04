@@ -18,6 +18,7 @@ import {
   useGetCountries,
 } from "../../../../../../react-query-hooks/country/useGetCountries";
 import { UserContext } from "../../../../../../context/userContext";
+import { Language } from "../../../../../../i18n/locales";
 
 import "./styles.module.scss";
 import variables from "../../../../../../style/variables.module.scss";
@@ -38,7 +39,7 @@ const ParticipantsList: FC<Props> = ({
   setSelectedCountryId,
 }) => {
   const { season } = useParams();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [form] = Form.useForm();
   const { user } = useContext(UserContext);
 
@@ -70,7 +71,11 @@ const ParticipantsList: FC<Props> = ({
       ellipsis: true,
       render: (club) => <CountryCell club={club} />,
       filters:
-        countries?.map(({ id, name }) => ({ text: name, value: id })) || [],
+        countries?.map(({ id, name, name_ua }) => ({
+          text:
+            (i18n.resolvedLanguage === Language.en ? name : name_ua) || name,
+          value: id,
+        })) || [],
       onFilter: (value, record) => record.club.city.country.id === value,
       filteredValue: filterInfo?.country || null,
       filterMultiple: false,

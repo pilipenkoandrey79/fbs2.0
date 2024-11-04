@@ -8,7 +8,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Drawer, Skeleton, Slider, Spin, Timeline } from "antd";
-import { PlusOutlined, TrophyOutlined } from "@ant-design/icons";
+import { CloseOutlined, PlusOutlined, TrophyOutlined } from "@ant-design/icons";
 import { useMediaQuery } from "react-responsive";
 import {
   createSearchParams,
@@ -143,15 +143,13 @@ const Home: FC = () => {
                 {isMdScreen ? t("home.create") : ""}
               </Button>
             )}
-            {!isMdScreen && (
-              <Button
-                type="default"
-                size="large"
-                title={t("home.winners")}
-                icon={<TrophyOutlined />}
-                onClick={() => setIsWinnersOpen(true)}
-              />
-            )}
+            <Button
+              type="default"
+              size="large"
+              title={t("home.winners")}
+              icon={<TrophyOutlined />}
+              onClick={() => setIsWinnersOpen(true)}
+            />
           </div>
           <div className={styles["slider-holder"]}>
             <div className={styles.slider}>
@@ -208,9 +206,17 @@ const Home: FC = () => {
           </div>
           {availableTournaments.isSuccess &&
             (isMdScreen ? (
-              <div className={styles.winners}>
-                <Winners />
-              </div>
+              isWinnersOpen ? (
+                <div className={styles.winners}>
+                  <Button
+                    icon={<CloseOutlined />}
+                    type="text"
+                    className={styles["close-button"]}
+                    onClick={() => setIsWinnersOpen(false)}
+                  />
+                  <Winners />
+                </div>
+              ) : null
             ) : (
               <Drawer
                 open={isWinnersOpen}

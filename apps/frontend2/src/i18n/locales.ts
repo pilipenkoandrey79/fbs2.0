@@ -14,7 +14,7 @@ export const antLocales = {
   [Language.ua]: ukUA,
 };
 
-export const dayJsLocales = {
+export const BCP47Locales = {
   [Language.en]: "en",
   [Language.ua]: "uk",
 };

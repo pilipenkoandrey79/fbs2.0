@@ -12,7 +12,7 @@ import { Fallback } from "../Fallback";
 import { routes } from "../../routes";
 import { queryClient } from "../../react-query-hooks/client";
 import { myTheme } from "../../style/theme";
-import { Language, antLocales, dayJsLocales } from "../../i18n/locales";
+import { Language, antLocales, BCP47Locales } from "../../i18n/locales";
 import { UserContext } from "../../context/userContext";
 import { useUserContext } from "../../context/useUserContext";
 
@@ -26,7 +26,7 @@ const App: FC = () => {
 
   useEffect(() => {
     setLang(i18n.resolvedLanguage as Language);
-    dayjs.locale(dayJsLocales[i18n.resolvedLanguage as Language]);
+    dayjs.locale(BCP47Locales[i18n.resolvedLanguage as Language]);
   }, [i18n.resolvedLanguage, setLang]);
 
   return (

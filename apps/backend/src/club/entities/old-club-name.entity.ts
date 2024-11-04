@@ -18,6 +18,10 @@ export class OldClubName implements OldClubNameInterface {
   @ApiProperty({ type: "string" })
   public name: string;
 
+  @Column({ type: "varchar", length: 120, nullable: true })
+  @ApiProperty({ type: "string" })
+  public name_ua?: string;
+
   @ManyToOne(() => Club, { nullable: false })
   @ApiProperty({ type: () => Club })
   club: Club;

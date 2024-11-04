@@ -21,6 +21,10 @@ export class Club implements ClubInterface {
   @ApiProperty({ type: "string" })
   public name: string;
 
+  @Column({ type: "varchar", length: 120, nullable: true })
+  @ApiProperty({ type: "string" })
+  public name_ua?: string;
+
   @ManyToOne(() => City)
   @ApiProperty({ type: () => City })
   city: City;

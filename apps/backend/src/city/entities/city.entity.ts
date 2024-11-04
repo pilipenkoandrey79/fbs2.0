@@ -27,6 +27,10 @@ export class City implements CityInterface {
   @ApiProperty({ type: "string" })
   name: string;
 
+  @Column({ type: "varchar", length: 120, nullable: true })
+  @ApiProperty({ type: "string" })
+  name_ua?: string;
+
   @ManyToOne(() => Country)
   @ApiProperty()
   country: Country;

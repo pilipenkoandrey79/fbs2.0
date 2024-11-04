@@ -12,6 +12,10 @@ export class Country implements CounntryInterface {
   @ApiProperty({ type: "string" })
   name: string;
 
+  @Column({ type: "varchar", length: 120, nullable: true })
+  @ApiProperty({ type: "string" })
+  name_ua?: string;
+
   @Column({ type: "varchar", length: 6 })
   @ApiProperty({ type: "string" })
   code: string;

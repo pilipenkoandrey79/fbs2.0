@@ -3,6 +3,7 @@ import { Balance } from "./additional-types";
 export interface Country {
   id: number;
   name: string;
+  name_ua?: string;
   code: string;
   from: string | null;
   till: string | null;
@@ -11,6 +12,7 @@ export interface Country {
 export interface City {
   id: number;
   name: string;
+  name_ua?: string;
   country: Country;
   oldNames?: OldCityName[];
 }
@@ -18,6 +20,7 @@ export interface City {
 export interface OldCityName {
   id: number;
   name?: string;
+  name_ua?: string;
   city: City;
   till: string;
   country?: Country;
@@ -37,6 +40,7 @@ export interface CityDto {
 
 export interface Club {
   name: string;
+  name_ua?: string;
   id: number;
   city: City;
   oldNames?: OldClubName[];
@@ -44,6 +48,7 @@ export interface Club {
 
 export interface OldClubName {
   name: string;
+  name_ua?: string;
   id: number;
   till: string;
   club: Club;

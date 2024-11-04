@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 
 import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
+import { BCP47Locales, Language } from "../../i18n/locales";
 
 const fetchParticipants = async (
   season: string | undefined,
@@ -25,7 +26,9 @@ export const useGetParticipants = <T extends any[] = Participant[]>(
   const startOfSeason = (season || "").split("-")[0];
 
   const defaultSelect = (data: Participant[]): Participant[] => {
-    const collator = new Intl.Collator(i18n.resolvedLanguage);
+    const collator = new Intl.Collator(
+      BCP47Locales[i18n.resolvedLanguage as Language]
+    );
 
     return data
       .map((participant) => ({
@@ -33,7 +36,14 @@ export const useGetParticipants = <T extends any[] = Participant[]>(
         club: prepareClub(participant.club, startOfSeason),
       }))
       .sort((a, b) =>
-        collator.compare(a.club.city.country.name, b.club.city.country.name)
+        collator.compare(
+          (i18n.resolvedLanguage === Language.en
+            ? a.club.city.country.name
+            : a.club.city.country.name_ua) || a.club.city.country.name,
+          (i18n.resolvedLanguage === Language.en
+            ? b.club.city.country.name
+            : b.club.city.country.name_ua) || b.club.city.country.name
+        )
       );
   };
 

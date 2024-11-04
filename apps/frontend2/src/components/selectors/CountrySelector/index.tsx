@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useGetCountries } from "../../../react-query-hooks/country/useGetCountries";
 import { Flag } from "../../Flag";
 import { Selector } from "../Selector";
+import { BCP47Locales, Language } from "../../../i18n/locales";
 
 interface OldCountriesConfigProp {
   disable?: boolean;
@@ -23,7 +24,7 @@ interface Props extends SelectProps {
 const getOptions = (
   countries: Country[] | undefined,
   config: OldCountriesConfigProp | undefined,
-  locale: string | undefined
+  resolvedLanguage: string | undefined
 ) => {
   if (!config?.toTop) {
     return countries;
@@ -45,11 +46,23 @@ const getOptions = (
     { old: [], current: [] }
   );
 
-  const collator = new Intl.Collator(locale);
+  const collator = new Intl.Collator(
+    BCP47Locales[resolvedLanguage as Language]
+  );
 
   return [
-    ...old.sort((a, b) => collator.compare(a.name, b.name)),
-    ...current.sort((a, b) => collator.compare(a.name, b.name)),
+    ...old.sort((a, b) =>
+      collator.compare(
+        (resolvedLanguage === Language.en ? a.name : a.name_ua) || a.name,
+        (resolvedLanguage === Language.en ? b.name : b.name_ua) || b.name
+      )
+    ),
+    ...current.sort((a, b) =>
+      collator.compare(
+        (resolvedLanguage === Language.en ? a.name : a.name_ua) || a.name,
+        (resolvedLanguage === Language.en ? b.name : b.name_ua) || b.name
+      )
+    ),
   ];
 };
 
@@ -69,7 +82,10 @@ const CountrySelector: FC<Props> = ({
       options={getOptions(data, oldCountriesConfig, i18n.resolvedLanguage)}
       renderOption={(option) => (
         <span>
-          <Flag country={option} /> {option.name}
+          <Flag country={option} />{" "}
+          {(i18n.resolvedLanguage === Language.en
+            ? option.name
+            : option.name_ua) || option.name}
         </span>
       )}
       className={className}

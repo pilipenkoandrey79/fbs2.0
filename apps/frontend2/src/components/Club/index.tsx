@@ -2,10 +2,12 @@ import { Club as ClubInterface } from "@fbs2.0/types";
 import { FC } from "react";
 import classNames from "classnames";
 import { Typography } from "antd";
+import { useTranslation } from "react-i18next";
 
 import { Flag } from "../Flag";
 
 import styles from "./styles.module.scss";
+import { Language } from "../../i18n/locales";
 
 interface Props {
   club: Partial<ClubInterface>;
@@ -24,8 +26,16 @@ const Club: FC<Props> = ({
   dimmed,
   className,
 }) => {
-  const city =
-    showCity && (club?.name === club?.city?.name ? "" : club?.city?.name);
+  const { i18n } = useTranslation();
+
+  const cityName =
+    club?.name === club?.city?.name
+      ? ""
+      : (i18n.resolvedLanguage === Language.en
+          ? club?.city?.name
+          : club.city?.name_ua) || club?.city?.name;
+
+  const city = showCity && cityName;
 
   return (
     <Typography.Text
@@ -37,7 +47,8 @@ const Club: FC<Props> = ({
       {showCountry && (
         <Flag country={club?.city?.country} className={styles.flag} />
       )}
-      {club?.name}
+      {(i18n.resolvedLanguage === Language.en ? club?.name : club.name_ua) ||
+        club.name}
       {city && <small className={styles.city}>{`(${city})`}</small>}
     </Typography.Text>
   );

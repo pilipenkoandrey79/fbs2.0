@@ -16,6 +16,11 @@ export class UpdateCountryDto implements Country {
   @IsString()
   @IsOptional()
   @ApiPropertyOptional({ type: "string" })
+  public name_ua: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiPropertyOptional({ type: "string" })
   public code: string;
 
   @IsString()

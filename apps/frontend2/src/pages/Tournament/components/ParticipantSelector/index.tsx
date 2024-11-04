@@ -11,6 +11,7 @@ import {
 import { useGetParticipants } from "../../../../react-query-hooks/participant/useGetParticipants";
 import { Club } from "../../../../components/Club";
 import { Selector } from "../../../../components/selectors/Selector";
+import { BCP47Locales, Language } from "../../../../i18n/locales";
 
 interface Props extends SelectProps {
   formItem?: boolean;
@@ -43,7 +44,9 @@ const ParticipantSelector: FC<Props> = ({
     (data: Participant[]) => data.map(({ club }) => club.id)
   );
 
-  const collator = new Intl.Collator(i18n.resolvedLanguage);
+  const collator = new Intl.Collator(
+    BCP47Locales[i18n.resolvedLanguage as Language]
+  );
 
   const options = clubs
     ?.filter(({ id, city }) => {
@@ -54,7 +57,12 @@ const ParticipantSelector: FC<Props> = ({
         (byCountryId ? byCountryId === city.country.id : true)
       );
     })
-    .sort((a, b) => collator.compare(a.name, b.name));
+    .sort((a, b) =>
+      collator.compare(
+        (i18n.resolvedLanguage === Language.en ? a.name : a.name_ua) || a.name,
+        (i18n.resolvedLanguage === Language.en ? b.name : b.name_ua) || b.name
+      )
+    );
 
   const node = (
     <Selector<ClubInterface>
