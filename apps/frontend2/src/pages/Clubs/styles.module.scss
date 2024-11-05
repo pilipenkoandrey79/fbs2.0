@@ -1,0 +1,13 @@
+@import "../../style/variables.module.scss";
+@import "../../style/mixins.scss";
+@import "../../style/colors.module.scss";
+
+.container {
+  max-width: $screen-xl;
+  margin: 0 auto;
+  padding: 10px;
+
+  .header {
+    margin-bottom: 0;
+  }
+}

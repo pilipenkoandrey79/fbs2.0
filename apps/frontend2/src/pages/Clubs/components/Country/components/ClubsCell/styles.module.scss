@@ -1,0 +1,33 @@
+@import "../../../../../../style/mixins.scss";
+@import "../../../../../../style/colors.module.scss";
+
+.clubs {
+  @include flex(row);
+  gap: 6px;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  .club {
+    padding: 2px 8px;
+    background-color: $headerColor;
+    border: 1px transparent solid;
+    border-radius: 3px;
+    margin: 0;
+    cursor: pointer;
+
+    &:hover,
+    &.active {
+      border-color: $border;
+
+      span {
+        text-decoration: underline;
+      }
+    }
+
+    &.active {
+      pointer-events: none;
+    }
+  }
+}

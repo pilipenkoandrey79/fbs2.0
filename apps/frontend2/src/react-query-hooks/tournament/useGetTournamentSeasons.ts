@@ -32,7 +32,8 @@ export const useGetTournamentSeasons = () =>
           (acc, season) => ({
             ...acc,
             [season]: availableTournaments[season].sort(
-              (a, b) => tournamentSequence[a.type] - tournamentSequence[b.type]
+              (a, b) =>
+                tournamentSequence[a?.type] - tournamentSequence[b?.type]
             ),
           }),
           {}

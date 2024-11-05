@@ -1,0 +1,46 @@
+@import "../../../../style/variables.module.scss";
+@import "../../../../style/mixins.scss";
+@import "../../../../style/colors.module.scss";
+
+.countries {
+  @include flex(row, center, flex-start);
+  flex-wrap: wrap;
+  margin-top: 20px;
+
+  .country {
+    @include flex(row, flex-start, center);
+    flex-wrap: nowrap;
+    width: 150px;
+    margin: 6px;
+    background-color: $contentBg;
+    border-radius: 3px;
+    border: 1px solid $border;
+    color: inherit;
+
+    &.old {
+      background-color: $headerColor;
+
+      img {
+        -webkit-filter: grayscale(100%);
+        filter: grayscale(100%);
+      }
+
+      &:hover {
+        img {
+          filter: unset;
+          -webkit-filter: unset;
+        }
+      }
+    }
+
+    .name {
+      padding: 0 6px;
+    }
+
+    &:hover {
+      background-color: $border;
+      border-color: $primaryBase;
+      text-decoration: underline;
+    }
+  }
+}

@@ -1,8 +1,17 @@
 import { FC, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
-import { getStageTransKey, getTournamentTitle } from "@fbs2.0/utils";
-import { StageInternal, Tournament as TournamentType } from "@fbs2.0/types";
+import {
+  getStageTransKey,
+  getTournamentTitle,
+  getWinner,
+  isNotEmpty,
+} from "@fbs2.0/utils";
+import {
+  StageInternal,
+  StageType,
+  Tournament as TournamentType,
+} from "@fbs2.0/types";
 import { Collapse, CollapseProps } from "antd";
 import { CaretRightOutlined, LoadingOutlined } from "@ant-design/icons";
 
@@ -14,6 +23,7 @@ import { Header } from "./components/Header";
 import { Participants } from "./components/Participants";
 import { Stage } from "./components/Stage";
 import { useGetTournamentStages } from "../../react-query-hooks/tournament/useGetTournamentStages";
+import { useGetTournamentPartMatches } from "../../react-query-hooks/match/useGetTournamentPartMatches";
 
 import styles from "./styles.module.scss";
 
@@ -36,6 +46,27 @@ const Tournament: FC = () => {
   )} ${season}`;
 
   const stages = useGetTournamentStages(season, tournament as TournamentType);
+
+  const finalMatches = useGetTournamentPartMatches(
+    season,
+    tournament as TournamentType,
+    stages.data?.find(({ stageType }) => stageType === StageType.FINAL) ?? null
+  );
+
+  const { results, forceWinnerId, host } = {
+    ...finalMatches.data?.A?.tours?.["1"]?.[0],
+  };
+
+  const winnerInfo = getWinner(
+    results || [],
+    !!stages.data?.find(({ stageType }) => stageType === StageType.FINAL)
+      ?.stageScheme.awayGoal,
+    isNotEmpty(forceWinnerId)
+      ? forceWinnerId === host?.id
+        ? "guest"
+        : "host"
+      : undefined
+  );
 
   const items: CollapseProps["items"] = stages.data?.map(
     (stage, index, stages) => ({
@@ -70,6 +101,7 @@ const Tournament: FC = () => {
         <Participants
           onClose={() => setParticipantsDialogOpened(false)}
           open={participantsDialogOpened}
+          finished={winnerInfo.host || winnerInfo.guest}
         />
         <Collapse
           bordered={false}

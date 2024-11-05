@@ -13,10 +13,7 @@ import { FromCell } from "./components/FromCell";
 import { Club } from "../../../../../../components/Club";
 import { ActionsCell } from "./components/ActionsCell";
 import { EditableCell, EditableCellProps } from "./components/EditableCell";
-import {
-  getYearSelector,
-  useGetCountries,
-} from "../../../../../../react-query-hooks/country/useGetCountries";
+import { useGetCountries } from "../../../../../../react-query-hooks/country/useGetCountries";
 import { UserContext } from "../../../../../../context/userContext";
 import { Language } from "../../../../../../i18n/locales";
 
@@ -27,6 +24,7 @@ interface Props {
   participants: Participant[] | undefined;
   adding: boolean;
   loading: boolean;
+  finished: boolean;
   setSelectedCountryId: (countryId: number | undefined) => void;
 }
 
@@ -36,6 +34,7 @@ const ParticipantsList: FC<Props> = ({
   participants,
   adding,
   loading,
+  finished,
   setSelectedCountryId,
 }) => {
   const { season } = useParams();
@@ -47,10 +46,7 @@ const ParticipantsList: FC<Props> = ({
     query: `(min-width: ${variables.screenMd})`,
   });
 
-  const { data: countries } = useGetCountries(
-    getYearSelector(season?.split("-")?.[0])
-  );
-
+  const { data: countries } = useGetCountries(season?.split("-")?.[0]);
   const [filterInfo, setFilterInfo] = useState<Filters>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [pristine, setPristine] = useState(true);
@@ -120,7 +116,7 @@ const ParticipantsList: FC<Props> = ({
       key: "actions",
       width: 60,
       render: (_: string, record: Participant) =>
-        adding || !user?.isEditor ? null : (
+        adding || !user?.isEditor || finished ? null : (
           <ActionsCell
             record={record}
             form={form}

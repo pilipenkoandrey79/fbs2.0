@@ -9,14 +9,17 @@ import {
   Delete,
   Put,
   UseGuards,
+  Query,
 } from "@nestjs/common";
 import { ApiEntities } from "@fbs2.0/types";
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiNoContentResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiParam,
+  ApiQuery,
   ApiTags,
 } from "@nestjs/swagger";
 
@@ -36,8 +39,10 @@ export class ClubController {
 
   @Get()
   @ApiOkResponse({ type: [Club] })
-  public getClubs(): Promise<Club[]> {
-    return this.service.getClubs();
+  @ApiQuery({ name: "countryId", type: Number })
+  @ApiNotFoundResponse()
+  public getClubs(@Query("countryId") countryId: number): Promise<Club[]> {
+    return this.service.getClubs(countryId);
   }
 
   @Get("/:id")

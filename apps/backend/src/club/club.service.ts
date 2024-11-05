@@ -1,6 +1,6 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { FindManyOptions, Repository } from "typeorm";
 import {
   KnockoutStageTableRowResult,
   Balance,
@@ -16,11 +16,15 @@ import { City } from "../city/entities/city.entity";
 import { OldClubName } from "./entities/old-club-name.entity";
 import { Participant } from "../participant/entities/participant.entity";
 import { Match } from "../match/entities/match.entity";
+import { Country } from "../country/entities/country.entity";
 
 @Injectable()
 export class ClubService {
   @InjectRepository(Club)
   private readonly clubRepository: Repository<Club>;
+
+  @InjectRepository(Country)
+  private readonly countryRepository: Repository<Country>;
 
   @InjectRepository(OldClubName)
   private readonly clubOldNameRepository: Repository<OldClubName>;
@@ -56,13 +60,27 @@ export class ClubService {
     return this.clubOldNameRepository.remove(clubOldName);
   }
 
-  public getClubs(): Promise<Club[]> {
-    return this.clubRepository.find({
+  public async getClubs(countryId: number | undefined): Promise<Club[]> {
+    const findOptions: FindManyOptions<Club> = {
       relations: {
         city: { country: true, oldNames: { country: true } },
         oldNames: true,
       },
-    });
+    };
+
+    if (countryId) {
+      const country = await this.countryRepository.findOne({
+        where: { id: countryId },
+      });
+
+      if (!country) {
+        throw new NotFoundException();
+      }
+
+      findOptions.where = { city: { country: { id: countryId } } };
+    }
+
+    return await this.clubRepository.find(findOptions);
   }
 
   public getClub(id: number): Promise<Club> {

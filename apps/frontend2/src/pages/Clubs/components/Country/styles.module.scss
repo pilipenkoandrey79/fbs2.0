@@ -1,0 +1,33 @@
+@import "../../../../style/mixins.scss";
+@import "../../../../style/variables.module.scss";
+
+.container {
+  @include flex(row, space-between, flex-start);
+
+  .table {
+    width: 100%;
+
+    @media (min-width: $screen-md) {
+      width: 50%;
+    }
+  }
+
+  .cv {
+    @include flex(row, flex-end, flex-start);
+    padding: 8px 4px;
+    background-color: $contentBg;
+    min-width: 328px;
+    width: calc(50% - 20px);
+    position: relative;
+
+    .close-button {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+    }
+
+    @media (min-width: $screen-lg) {
+      padding: 8px 4px;
+    }
+  }
+}

@@ -22,6 +22,7 @@ import {
 } from "@fbs2.0/types";
 
 import { Page } from "../../components/Page";
+import { Header } from "../../components/Header";
 import { Season } from "./components/Season";
 import { CreateTournament } from "./components/CreateTournament";
 import { Winners } from "./components/Winners";
@@ -130,7 +131,10 @@ const Home: FC = () => {
           fullscreen
           spinning={isPending || availableTournaments.isLoading}
         />
-        <div className={styles.header}>
+        <Header
+          loading={isPending || availableTournaments.isLoading}
+          className={styles.header}
+        >
           <div className={styles.buttons}>
             {user?.isEditor && (
               <Button
@@ -174,7 +178,7 @@ const Home: FC = () => {
               )}
             </div>
           </div>
-        </div>
+        </Header>
         <div className={styles.body}>
           <div className={styles.timeline}>
             {availableTournaments.isLoading ? (

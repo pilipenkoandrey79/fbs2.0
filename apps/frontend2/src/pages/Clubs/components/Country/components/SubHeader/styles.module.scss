@@ -1,0 +1,18 @@
+@import "../../../../../../style/colors.module.scss";
+@import "../../../../../../style/mixins.scss";
+
+.root {
+  @include flex(row, space-between, stretch);
+  margin-bottom: 20px;
+  padding: 8px 20px;
+  background-color: $contentBg;
+  border-top: 1px solid $primaryBase;
+
+  .title {
+    @include flex(row);
+
+    h3 {
+      margin: 0 0 0 10px;
+    }
+  }
+}

@@ -21,6 +21,7 @@ import {
   ApiNoContentResponse,
   ApiOkResponse,
   ApiParam,
+  ApiQuery,
   ApiTags,
 } from "@nestjs/swagger";
 
@@ -40,6 +41,7 @@ export class TournamentController {
   private readonly service: TournamentService;
 
   @Get("seasons")
+  @ApiQuery({ name: "simplified", type: Boolean })
   public getSeasons(@Query("simplified") simplified: boolean) {
     return this.service.getAvailableTournaments(simplified);
   }

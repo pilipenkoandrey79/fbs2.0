@@ -1,0 +1,6 @@
+@import "../../../../../../style/mixins.scss";
+
+.cv {
+  @include flex(row, flex-start);
+  width: 100%;
+}

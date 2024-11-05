@@ -1,0 +1,10 @@
+@import "../../style/mixins.scss";
+@import "../../style/colors.module.scss";
+
+.header {
+  @include flex(column, flex-start, stretch);
+  margin-bottom: 20px;
+  padding: 8px 20px;
+  background-color: $contentBg;
+  white-space: nowrap;
+}

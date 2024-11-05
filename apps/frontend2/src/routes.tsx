@@ -10,6 +10,7 @@ export enum Paths {
   TOURNAMENT = "/tournaments/:season/:tournament",
   COEFFICIENT = "/coefficient/:season",
   CLUBS = "/clubs",
+  COUNTRY_CLUBS = ":code",
   AUTH_REDIRECT = `${AUTH_REDIRECT_PATH}/:accessToken/:refreshToken`,
 }
 
@@ -54,6 +55,28 @@ export const routes: RouteObject[] = [
 
           return { Component: Clubs };
         },
+        children: [
+          {
+            index: true,
+            async lazy() {
+              const { CountriesList } = await import(
+                "./pages/Clubs/components/CountriesList"
+              );
+
+              return { Component: CountriesList };
+            },
+          },
+          {
+            path: Paths.COUNTRY_CLUBS,
+            async lazy() {
+              const { Country } = await import(
+                "./pages/Clubs/components/Country"
+              );
+
+              return { Component: Country };
+            },
+          },
+        ],
       },
     ],
   },

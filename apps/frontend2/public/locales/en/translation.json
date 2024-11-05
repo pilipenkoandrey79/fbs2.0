@@ -232,5 +232,9 @@
         "copy": "Copy from previous season"
       }
     }
+  },
+  "clubs": {
+    "title": "Clubs, cities, statistics",
+    "add_city": "Add city"
   }
 }

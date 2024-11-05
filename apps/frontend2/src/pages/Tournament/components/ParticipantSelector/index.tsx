@@ -36,7 +36,11 @@ const ParticipantSelector: FC<Props> = ({
 }) => {
   const { i18n, t } = useTranslation();
   const { season, tournament } = useParams();
-  const { data: clubs } = useGetClubs(getYearSelector(season?.split("-")?.[0]));
+
+  const { data: clubs } = useGetClubs(
+    undefined,
+    getYearSelector(season?.split("-")?.[0])
+  );
 
   const { data: usedClubIds } = useGetParticipants<number[]>(
     season,

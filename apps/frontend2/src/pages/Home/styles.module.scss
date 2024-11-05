@@ -8,10 +8,7 @@
   padding: 10px;
 
   .header {
-    @include flex(column, flex-start, stretch);
-    margin-bottom: 20px;
-    padding: 8px 20px 4px;
-    background-color: $contentBg;
+    padding-bottom: 4px;
 
     .buttons {
       @include flex(row, flex-start, center);

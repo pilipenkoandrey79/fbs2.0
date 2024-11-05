@@ -23,10 +23,11 @@ import styles from "./style.module.scss";
 
 interface Props {
   open: boolean;
+  finished: boolean;
   onClose: () => void;
 }
 
-const Participants: FC<Props> = ({ open, onClose }) => {
+const Participants: FC<Props> = ({ open, finished, onClose }) => {
   const { season, tournament } = useParams();
   const { t } = useTranslation();
   const { user } = useContext(UserContext);
@@ -77,7 +78,7 @@ const Participants: FC<Props> = ({ open, onClose }) => {
           <Fallback />
         ) : (
           <div className={styles.list}>
-            {user?.isEditor && (
+            {user?.isEditor && !finished && (
               <div className={styles["add-form"]}>
                 <div className={styles.buttons}>
                   <Button
@@ -124,6 +125,7 @@ const Participants: FC<Props> = ({ open, onClose }) => {
                   <AddForm
                     close={() => setIsAddFormOpen(false)}
                     selectedCountryId={selectedCountryId}
+                    year={season?.split("-")[0]}
                   />
                 )}
               </div>
@@ -132,6 +134,7 @@ const Participants: FC<Props> = ({ open, onClose }) => {
               participants={participants.data}
               loading={participants.isLoading}
               adding={isAddFormOpen}
+              finished={finished}
               setSelectedCountryId={setSelectedCountryId}
             />
           </div>

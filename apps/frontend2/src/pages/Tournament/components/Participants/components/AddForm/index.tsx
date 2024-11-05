@@ -15,9 +15,10 @@ import styles from "./styles.module.scss";
 interface Props {
   close: () => void;
   selectedCountryId: number | undefined;
+  year: string | undefined;
 }
 
-const AddForm: FC<Props> = ({ close, selectedCountryId }) => {
+const AddForm: FC<Props> = ({ close, selectedCountryId, year }) => {
   const { t } = useTranslation();
   const [form] = Form.useForm<ParticipantDto>();
   const createParticipant = useCreateParticipant();
@@ -55,7 +56,7 @@ const AddForm: FC<Props> = ({ close, selectedCountryId }) => {
               value={countryId}
               formItem={false}
               onChange={(value) => setCountryId(value)}
-              oldCountriesConfig={{ disable: true }}
+              year={year}
               className={styles.country}
             />
             <ParticipantSelector used={false} byCountryId={countryId} />
