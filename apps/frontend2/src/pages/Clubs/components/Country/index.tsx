@@ -1,17 +1,19 @@
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router";
-import { Button, Divider, Drawer, Table, TableProps } from "antd";
-import { useMediaQuery } from "react-responsive";
+import { Button, Divider, Table, TableProps } from "antd";
 import {
-  CloseOutlined,
+  EditOutlined,
   PlusSquareFilled,
   TrophyOutlined,
 } from "@ant-design/icons";
+import { City } from "@fbs2.0/types";
 
 import { SubHeader } from "./components/SubHeader";
 import { ClubsCell } from "./components/ClubsCell";
 import { CV, CVInput } from "./components/CV";
+import { ResponsivePanel } from "../../../../components/ResponsivePanel";
+import { CityDialog } from "./components/CityDialog";
 import { useGetCountries } from "../../../../react-query-hooks/country/useGetCountries";
 import {
   ClubsByCity,
@@ -22,7 +24,6 @@ import { Paths } from "../../../../routes";
 import { Language } from "../../../../i18n/locales";
 
 import styles from "./styles.module.scss";
-import variables from "../../../../style/variables.module.scss";
 
 const Country: FC = () => {
   const { i18n, t } = useTranslation();
@@ -34,26 +35,35 @@ const Country: FC = () => {
   const clubs = useGetClubs<ClubsByCity[]>(
     country?.id,
     getByCitySelector(i18n.resolvedLanguage as Language),
-    countries.isSuccess
+    countries.isSuccess && !country?.till
   );
 
-  const isMdScreen = useMediaQuery({
-    query: `(min-width: ${variables.screenMd})`,
-  });
-
   const [cvInput, setCvInput] = useState<CVInput | null>(null);
+  const [cityIdToEdit, setCityIdToEdit] = useState<number | null>(null);
 
   const columns: TableProps<ClubsByCity>["columns"] = [
     {
       key: "city",
       dataIndex: "city",
       width: 100,
-      render: ({ name, name_ua }) =>
-        (i18n.resolvedLanguage === Language.en ? name : name_ua) || name,
+      className: styles.cell,
+      render: ({ name, name_ua, id }: City) => (
+        <>
+          {(i18n.resolvedLanguage === Language.en ? name : name_ua) || name}
+          <Button
+            type="link"
+            size="small"
+            icon={<EditOutlined />}
+            className={styles["edit-city-button"]}
+            onClick={() => setCityIdToEdit(id)}
+          />
+        </>
+      ),
     },
     {
       key: "clubs",
       dataIndex: "clubs",
+      className: styles.cell,
       render: (clubs) => (
         <ClubsCell clubs={clubs} cvInput={cvInput} setCvInput={setCvInput} />
       ),
@@ -75,7 +85,11 @@ const Country: FC = () => {
           disabled={cvInput !== null}
         />
         <Divider type="vertical" />
-        <Button icon={<PlusSquareFilled />} type="primary">
+        <Button
+          icon={<PlusSquareFilled />}
+          type="primary"
+          onClick={() => setCityIdToEdit(-1)}
+        >
           {t("clubs.add_city")}
         </Button>
       </SubHeader>
@@ -89,31 +103,22 @@ const Country: FC = () => {
             pagination={false}
             showHeader={false}
             bordered
+            locale={{
+              emptyText: !!country?.till && t("clubs.old_country_description"),
+            }}
+            loading={clubs.isLoading}
           />
         </div>
-        {isMdScreen ? (
-          cvInput !== null ? (
-            <div className={styles.cv}>
-              <Button
-                icon={<CloseOutlined />}
-                type="text"
-                className={styles["close-button"]}
-                onClick={() => setCvInput(null)}
-              />
-              <CV input={cvInput} />
-            </div>
-          ) : null
-        ) : (
-          <Drawer
-            open={cvInput !== null}
-            onClose={() => setCvInput(null)}
-            maskClosable={false}
-            title="CV"
-          >
-            <CV input={cvInput} />
-          </Drawer>
-        )}
+        <ResponsivePanel
+          isOpen={cvInput !== null}
+          close={() => setCvInput(null)}
+        >
+          <CV input={cvInput} />
+        </ResponsivePanel>
       </div>
+      {cityIdToEdit !== null && (
+        <CityDialog id={cityIdToEdit} onClose={() => setCityIdToEdit(null)} />
+      )}
     </>
   );
 };

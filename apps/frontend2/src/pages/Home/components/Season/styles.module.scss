@@ -52,17 +52,6 @@
             @include flex(row, flex-start, center);
             margin: 6px 0;
 
-            @media (min-width: $screen-lg) {
-              min-width: 350px;
-
-              .final {
-                &,
-                & > a {
-                  max-width: 334px;
-                }
-              }
-            }
-
             .tools {
               white-space: nowrap;
             }
@@ -74,8 +63,8 @@
               & > a {
                 max-width: 115px;
 
-                @media (min-width: $screen-lg) {
-                  max-width: 334px;
+                @media (min-width: 472px) {
+                  max-width: unset;
                 }
               }
 
@@ -89,6 +78,19 @@
                 padding-left: 10px;
                 font-size: 80%;
                 color: rgba($color: #000000, $alpha: 0.5);
+              }
+
+              &.narrow {
+                &,
+                & > a {
+                  @media (min-width: $screen-md) {
+                    max-width: 115px;
+                  }
+
+                  @media (min-width: 830px) {
+                    max-width: unset;
+                  }
+                }
               }
             }
           }

@@ -27,36 +27,21 @@
     .timeline {
       @include flex(column, flex-start, stretch);
       flex: 1;
-      max-width: 400px;
-      min-height: 400px;
-      padding: 8px 4px;
+      padding: 16px 4px 8px;
       background-color: $contentBg;
+      width: 100%;
 
       .spin {
         line-height: 300px;
         width: 100%;
       }
 
+      @media (min-width: $screen-md) {
+        width: calc(50% - #{$panelGap}/ 2);
+      }
+
       @media (min-width: $screen-lg) {
         max-width: 600px;
-      }
-    }
-
-    .winners {
-      @include flex(row, flex-end, flex-start);
-      padding: 8px 4px;
-      background-color: $contentBg;
-      min-width: 328px;
-      position: relative;
-
-      .close-button {
-        position: absolute;
-        top: 4px;
-        right: 4px;
-      }
-
-      @media (min-width: $screen-lg) {
-        padding: 8px 4px;
       }
     }
   }

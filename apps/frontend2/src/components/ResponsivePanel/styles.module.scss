@@ -1,0 +1,20 @@
+@import "../../style/mixins.scss";
+@import "../../style/variables.module.scss";
+
+.panel {
+  @include flex(row, flex-end, flex-start);
+  padding: 8px 4px;
+  background-color: $contentBg;
+  width: calc(50% - #{$panelGap}/ 2);
+  position: relative;
+
+  .close-button {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+  }
+
+  @media (min-width: $screen-lg) {
+    padding: 8px 4px;
+  }
+}

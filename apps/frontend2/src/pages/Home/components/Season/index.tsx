@@ -13,6 +13,7 @@ import {
   OrderedListOutlined,
 } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
+import classNames from "classnames";
 
 import { TournamentBadge } from "../../../../components/TournamentBadge";
 import { Paths } from "../../../../routes";
@@ -25,11 +26,12 @@ import styles from "./styles.module.scss";
 
 interface Props {
   season: string;
+  narrow: boolean;
   tournaments: AvailableTournament[] | undefined;
   onEdit: (tournamentSeason: TournamentSeason) => void;
 }
 
-const Season: FC<Props> = ({ season, tournaments, onEdit }) => {
+const Season: FC<Props> = ({ season, tournaments, narrow, onEdit }) => {
   const { t } = useTranslation();
   const { user } = useContext(UserContext);
   const [start, end] = season.split("-").map(Number);
@@ -96,7 +98,11 @@ const Season: FC<Props> = ({ season, tournaments, onEdit }) => {
                       <Skeleton.Input size="small" active />
                     )}
                     {tournamentSummary?.winner && (
-                      <div className={styles.final}>
+                      <div
+                        className={classNames(styles.final, {
+                          [styles.narrow]: narrow,
+                        })}
+                      >
                         <Link
                           to={
                             generatePath(Paths.TOURNAMENT, {

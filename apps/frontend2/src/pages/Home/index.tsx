@@ -7,8 +7,8 @@ import {
   useTransition,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, Drawer, Skeleton, Slider, Spin, Timeline } from "antd";
-import { CloseOutlined, PlusOutlined, TrophyOutlined } from "@ant-design/icons";
+import { Button, Skeleton, Slider, Spin, Timeline } from "antd";
+import { PlusOutlined, TrophyOutlined } from "@ant-design/icons";
 import { useMediaQuery } from "react-responsive";
 import {
   createSearchParams,
@@ -24,6 +24,7 @@ import {
 import { Page } from "../../components/Page";
 import { Header } from "../../components/Header";
 import { Season } from "./components/Season";
+import { ResponsivePanel } from "../../components/ResponsivePanel";
 import { CreateTournament } from "./components/CreateTournament";
 import { Winners } from "./components/Winners";
 import { EditTournament } from "./components/EditTournament";
@@ -153,6 +154,7 @@ const Home: FC = () => {
               title={t("home.winners")}
               icon={<TrophyOutlined />}
               onClick={() => setIsWinnersOpen(true)}
+              disabled={isWinnersOpen}
             />
           </div>
           <div className={styles["slider-holder"]}>
@@ -192,10 +194,10 @@ const Home: FC = () => {
                       season={season}
                       tournaments={availableTournaments.data?.[season]}
                       onEdit={setTournamentToEdit}
+                      narrow={isWinnersOpen}
                     />
                   ),
                 }))}
-                className={styles.timeline}
               />
             )}
             {isCreateDialogOpen && (
@@ -208,29 +210,15 @@ const Home: FC = () => {
               />
             )}
           </div>
-          {availableTournaments.isSuccess &&
-            (isMdScreen ? (
-              isWinnersOpen ? (
-                <div className={styles.winners}>
-                  <Button
-                    icon={<CloseOutlined />}
-                    type="text"
-                    className={styles["close-button"]}
-                    onClick={() => setIsWinnersOpen(false)}
-                  />
-                  <Winners />
-                </div>
-              ) : null
-            ) : (
-              <Drawer
-                open={isWinnersOpen}
-                onClose={() => setIsWinnersOpen(false)}
-                maskClosable={false}
-                title={t("home.winners")}
-              >
-                <Winners />
-              </Drawer>
-            ))}
+          {availableTournaments.isSuccess && (
+            <ResponsivePanel
+              isOpen={isWinnersOpen}
+              maxWidth={328}
+              close={() => setIsWinnersOpen(false)}
+            >
+              <Winners />
+            </ResponsivePanel>
+          )}
         </div>
       </div>
     </Page>
