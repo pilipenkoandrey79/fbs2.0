@@ -35,7 +35,7 @@ export class City implements CityInterface {
   @ApiProperty()
   country: Country;
 
-  @OneToMany(() => OldCityName, (oldName) => oldName.city)
+  @OneToMany(() => OldCityName, (oldName) => oldName.city, { cascade: true })
   @ApiPropertyOptional({ type: () => [OldCityName] })
   oldNames?: OldCityName[];
 

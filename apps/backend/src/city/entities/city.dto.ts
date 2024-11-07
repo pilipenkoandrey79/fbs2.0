@@ -1,16 +1,33 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { _CityDto } from "@fbs2.0/types";
-import { IsNotEmpty, IsNumber, IsString, MaxLength } from "class-validator";
+import { CityDto, NAME_FIELD_LENGTH, OldCityNameDto } from "@fbs2.0/types";
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from "class-validator";
 
-export class _CreateCityDto implements _CityDto {
+export class CreateCityDto implements CityDto {
   @IsString()
   @IsNotEmpty()
-  @MaxLength(120)
+  @MaxLength(NAME_FIELD_LENGTH)
   @ApiProperty({ type: "string" })
   public name: string;
+
+  @IsString()
+  @MaxLength(NAME_FIELD_LENGTH)
+  @ApiProperty({ type: "string" })
+  public name_ua: string;
 
   @IsNumber()
   @IsNotEmpty()
   @ApiProperty({ type: "number" })
   public countryId: number;
+
+  @IsArray()
+  @IsOptional()
+  @ApiProperty({ type: "array" })
+  public oldNames?: OldCityNameDto[];
 }

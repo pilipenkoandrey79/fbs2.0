@@ -1,22 +1,12 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { OldCityNameDto } from "@fbs2.0/types";
+import { _OldCityNameDto } from "@fbs2.0/types";
 import { IsString, IsOptional, IsNumber } from "class-validator";
 
-export class CreateOldCityNameDTO implements OldCityNameDto {
-  @IsNumber()
-  @IsOptional()
-  @ApiPropertyOptional({ type: "number" })
-  public id: number;
-
+export class _CreateOldCityNameDTO implements _OldCityNameDto {
   @IsString()
   @IsOptional()
   @ApiPropertyOptional({ type: "string" })
   public name: string;
-
-  @IsString()
-  @IsOptional()
-  @ApiPropertyOptional({ type: "string" })
-  public name_ua: string;
 
   @IsString()
   @ApiProperty({ type: "string" })
@@ -26,4 +16,9 @@ export class CreateOldCityNameDTO implements OldCityNameDto {
   @IsOptional()
   @ApiPropertyOptional({ type: "number" })
   public countryId: number;
+
+  @IsNumber()
+  @IsOptional()
+  @ApiPropertyOptional({ type: "number" })
+  public cityId: number;
 }

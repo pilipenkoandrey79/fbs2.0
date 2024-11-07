@@ -7,7 +7,7 @@ import ApiClient from "../../api/api.client";
 import { BCP47Locales, Language } from "../../i18n/locales";
 
 const fetchCities = async () =>
-  await ApiClient.getInstance().get<City[]>(`${ApiEntities.City}`);
+  await ApiClient.getInstance().get<City[]>(`${ApiEntities.City}/v2`);
 
 export const getCitiesByCountry =
   (countryId: number, resolvedLanguage: string | undefined) =>

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ApiEntities, City, _CityDto } from "@fbs2.0/types";
+import { ApiEntities, City, CityDto } from "@fbs2.0/types";
 import { AxiosError } from "axios";
 import { useTranslation } from "react-i18next";
 
@@ -11,15 +11,20 @@ export const useCreateCity = () => {
   const queryClient = useQueryClient();
   const { t } = useTranslation();
 
-  return useMutation<City, AxiosError, _CityDto, MutationContext>({
+  return useMutation<City, AxiosError, CityDto, MutationContext>({
     mutationFn: (cityDto) =>
-      ApiClient.getInstance().post<City, _CityDto>(
-        `${ApiEntities.City}`,
+      ApiClient.getInstance().post<City, CityDto>(
+        `${ApiEntities.City}/v2`,
         cityDto
       ),
-    onSettled: () => {
+    onSettled: (city) => {
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEY.cities],
+        queryKey: [QUERY_KEY.clubs, city?.country.id],
+        refetchType: "all",
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY.clubless_cities],
         refetchType: "all",
       });
     },

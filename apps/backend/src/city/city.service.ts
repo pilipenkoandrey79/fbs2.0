@@ -6,7 +6,8 @@ import { _OldCityNameDto } from "@fbs2.0/types";
 import { Country } from "../country/entities/country.entity";
 import { City } from "./entities/city.entity";
 import { OldCityName } from "./entities/old-city-name.entity";
-import { _CreateCityDto } from "./entities/city.dto";
+import { _CreateCityDto } from "./entities/_city.dto";
+import { CreateCityDto } from "./entities/city.dto";
 
 @Injectable()
 export class CityService {
@@ -21,7 +22,11 @@ export class CityService {
 
   public async getCities(withoutClubs: boolean): Promise<City[]> {
     const cities = await this.cityRepository.find({
-      relations: { country: true, oldNames: true, clubs: !!withoutClubs },
+      relations: {
+        country: true,
+        oldNames: { country: true },
+        clubs: !!withoutClubs,
+      },
       order: { name: "ASC" },
     });
 
@@ -83,6 +88,73 @@ export class CityService {
 
     city.name = body.name;
     city.country = country;
+
+    return this.cityRepository.save(city);
+  }
+
+  public async createCity(body: CreateCityDto): Promise<City> {
+    const city = new City();
+
+    city.name = body.name;
+    city.name_ua = body.name_ua;
+
+    const country = await this.countryRepository.findOne({
+      where: { id: body.countryId },
+    });
+
+    city.country = country;
+
+    city.oldNames = await Promise.all(
+      body.oldNames.map(async ({ name, name_ua, till, countryId }) => {
+        const oldCityName = new OldCityName();
+
+        oldCityName.name = name;
+        oldCityName.name_ua = name_ua;
+        oldCityName.till = till;
+
+        const country = await this.countryRepository.findOne({
+          where: { id: countryId },
+        });
+
+        oldCityName.country = country;
+
+        return oldCityName;
+      })
+    );
+
+    return this.cityRepository.save(city);
+  }
+
+  public async updateCity(cityId: number, body: CreateCityDto): Promise<City> {
+    const city = await this.cityRepository.findOne({ where: { id: cityId } });
+
+    const country = await this.countryRepository.findOne({
+      where: { id: body.countryId },
+    });
+
+    city.name = body.name;
+    city.name_ua = body.name_ua;
+    city.country = country;
+
+    city.oldNames = await Promise.all(
+      body.oldNames.map(async ({ id, name, name_ua, till, countryId }) => {
+        const oldCityName =
+          (await this.cityOldNameRepository.findOne({ where: { id } })) ??
+          new OldCityName();
+
+        oldCityName.name = name;
+        oldCityName.name_ua = name_ua;
+        oldCityName.till = till;
+
+        const country = await this.countryRepository.findOne({
+          where: { id: countryId },
+        });
+
+        oldCityName.country = country;
+
+        return oldCityName;
+      })
+    );
 
     return this.cityRepository.save(city);
   }

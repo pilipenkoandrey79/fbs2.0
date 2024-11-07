@@ -17,6 +17,8 @@ import { NameField } from "../../../NameField";
 import { SubmitButton } from "../../../../../../components/SubmitButton";
 import { CountrySelector } from "../../../../../../components/selectors/CountrySelector";
 import { useGetCity } from "../../../../../../react-query-hooks/city/useGetCity";
+import { useCreateCity } from "../../../../../../react-query-hooks/city/useCreateCity";
+import { useUpdateCity } from "../../../../../../react-query-hooks/city/useUpdateCity";
 
 import styles from "./styles.module.scss";
 
@@ -32,10 +34,15 @@ const CityDialog: FC<Props> = ({ onClose, id, countryId, isEmpty }) => {
   const [form] = Form.useForm<CityDto>();
 
   const city = useGetCity(countryId, id);
+  const createCity = useCreateCity();
+  const updateCity = useUpdateCity(countryId);
 
   const submit = async (values: CityDto) => {
-    console.log(values);
+    id === -1
+      ? await createCity.mutateAsync(values)
+      : await updateCity.mutateAsync({ ...values, id });
 
+    form.resetFields();
     onClose();
   };
 
@@ -61,6 +68,7 @@ const CityDialog: FC<Props> = ({ onClose, id, countryId, isEmpty }) => {
           <Form<CityDto>
             form={form}
             initialValues={{
+              countryId,
               ...city.data,
               oldNames: city.data.oldNames?.map(({ country, ...oldName }) => ({
                 ...oldName,
@@ -70,7 +78,7 @@ const CityDialog: FC<Props> = ({ onClose, id, countryId, isEmpty }) => {
             onFinish={submit}
           >
             <NameField className={styles.name} />
-
+            <Form.Item noStyle name="countryId" />
             <Form.List name="oldNames">
               {(fields, { add, remove }) => (
                 <div key="oldNames">

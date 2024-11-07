@@ -7,7 +7,7 @@ import ApiClient from "../../api/api.client";
 
 export const fetchClublessCities = async () =>
   await ApiClient.getInstance().get<City[]>(
-    `${ApiEntities.City}?withoutClubs=true`
+    `${ApiEntities.City}/v2?withoutClubs=true`
   );
 
 export const useGetClublessCities = () =>

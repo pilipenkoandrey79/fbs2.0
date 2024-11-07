@@ -24,12 +24,13 @@ import {
 
 import { AccessTokenGuard } from "../auth/guards/access-token.guard";
 import { City } from "./entities/city.entity";
-import { CreateCityDto } from "./entities/city.dto";
+import { _CreateCityDto } from "./entities/_city.dto";
+import { _CreateOldCityNameDTO } from "./entities/_old-city-name.dto";
 import { CityService } from "./city.service";
 
-@ApiTags(`${ApiEntities.City}/v2`)
-@Controller(`${ApiEntities.City}/v2`)
-export class CityController {
+@ApiTags(ApiEntities.City)
+@Controller(ApiEntities.City)
+export class _CityController {
   @Inject(CityService)
   private readonly service: CityService;
 
@@ -45,8 +46,8 @@ export class CityController {
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
   @ApiCreatedResponse({ type: City })
-  public createCity(@Body() body: CreateCityDto): Promise<City> {
-    return this.service.createCity(body);
+  public createCity(@Body() body: _CreateCityDto): Promise<City> {
+    return this.service._createCity(body);
   }
 
   @Put("/:id")
@@ -56,9 +57,9 @@ export class CityController {
   @ApiOkResponse({ type: City })
   public updateCity(
     @Param("id", ParseIntPipe) cityId: number,
-    @Body() body: CreateCityDto
+    @Body() body: City
   ): Promise<City> {
-    return this.service.updateCity(cityId, body);
+    return this.service._updateCity(cityId, body);
   }
 
   @Delete("/:id")
@@ -69,5 +70,26 @@ export class CityController {
   @ApiNotFoundResponse()
   public deleteCity(@Param("id", ParseIntPipe) cityId: number) {
     return this.service.removeCity(cityId);
+  }
+
+  @Post("/:id/old-name")
+  @UseGuards(AccessTokenGuard)
+  @ApiBearerAuth()
+  @ApiParam({ name: "id", type: "number" })
+  @ApiCreatedResponse({ type: _CreateOldCityNameDTO })
+  public createCityOldName(
+    @Param("id", ParseIntPipe) cityId: number,
+    @Body() body: _CreateOldCityNameDTO
+  ) {
+    return this.service.createCityOldName(cityId, body);
+  }
+
+  @Delete("/old-name/:id")
+  @UseGuards(AccessTokenGuard)
+  @ApiBearerAuth()
+  @ApiParam({ name: "id", type: "number" })
+  @ApiNoContentResponse()
+  public deleteCityOldName(@Param("id", ParseIntPipe) cityOldNameId: number) {
+    return this.service.removeCityOldName(cityOldNameId);
   }
 }
