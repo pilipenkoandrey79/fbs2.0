@@ -1,8 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { OldCityNameDto } from "@fbs2.0/types";
+import { _OldCityNameDto } from "@fbs2.0/types";
 import { IsString, IsOptional, IsNumber } from "class-validator";
 
-export class CreateOldCityNameDTO implements OldCityNameDto {
+export class _CreateOldCityNameDTO implements _OldCityNameDto {
   @IsString()
   @IsOptional()
   @ApiPropertyOptional({ type: "string" })

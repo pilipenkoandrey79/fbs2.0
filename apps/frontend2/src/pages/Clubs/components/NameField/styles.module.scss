@@ -1,0 +1,19 @@
+.field {
+  :global {
+    .ant-form-item-label {
+      @media (max-width: 575px) {
+        flex: 0 0 12.5% !important;
+      }
+    }
+
+    .ant-form-item-control {
+      @media (max-width: 575px) {
+        flex: 1 1 0 !important;
+      }
+    }
+  }
+
+  .field-item {
+    margin: 8px 0;
+  }
+}

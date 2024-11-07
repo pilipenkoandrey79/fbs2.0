@@ -1,6 +1,6 @@
 import { FC, useCallback, useState } from "react";
 import { Button, Classes, Intent, Label } from "@blueprintjs/core";
-import { City, Country, OldCityNameDto } from "@fbs2.0/types";
+import { City, Country, _OldCityNameDto } from "@fbs2.0/types";
 import classNames from "classnames";
 import { isNotEmpty } from "@fbs2.0/utils";
 
@@ -14,7 +14,7 @@ interface Props {
   countries: Country[];
   showForm: boolean;
   setShowForm: (is: boolean) => void;
-  createOldCityName: (data: OldCityNameDto) => void;
+  createOldCityName: (data: _OldCityNameDto) => void;
   deleteOldCityName: (id: number) => void;
 }
 

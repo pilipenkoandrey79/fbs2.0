@@ -5,7 +5,7 @@ import {
   ManyToOne,
   OneToMany,
 } from "typeorm";
-import { Club as ClubInterface } from "@fbs2.0/types";
+import { Club as ClubInterface, NAME_FIELD_LENGTH } from "@fbs2.0/types";
 
 import { City } from "../../city/entities/city.entity";
 import { OldClubName } from "./old-club-name.entity";
@@ -17,11 +17,11 @@ export class Club implements ClubInterface {
   @ApiProperty({ type: "number" })
   public id!: number;
 
-  @Column({ type: "varchar", length: 120 })
+  @Column({ type: "varchar", length: NAME_FIELD_LENGTH })
   @ApiProperty({ type: "string" })
   public name: string;
 
-  @Column({ type: "varchar", length: 120, nullable: true })
+  @Column({ type: "varchar", length: NAME_FIELD_LENGTH, nullable: true })
   @ApiProperty({ type: "string" })
   public name_ua?: string;
 

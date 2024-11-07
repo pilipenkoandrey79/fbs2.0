@@ -23,8 +23,8 @@ import {
 
 import { AccessTokenGuard } from "../auth/guards/access-token.guard";
 import { City } from "./entities/city.entity";
-import { CreateCityDto } from "./entities/city.dto";
-import { CreateOldCityNameDTO } from "./entities/old-city-name.dto";
+import { _CreateCityDto } from "./entities/city.dto";
+import { _CreateOldCityNameDTO } from "./entities/old-city-name.dto";
 import { CityService } from "./city.service";
 
 @ApiTags(ApiEntities.City)
@@ -45,8 +45,8 @@ export class CityController {
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
   @ApiCreatedResponse({ type: City })
-  public createCity(@Body() body: CreateCityDto): Promise<City> {
-    return this.service.createCity(body);
+  public _createCity(@Body() body: _CreateCityDto): Promise<City> {
+    return this.service._createCity(body);
   }
 
   @Put("/:id")
@@ -54,11 +54,11 @@ export class CityController {
   @ApiBearerAuth()
   @ApiParam({ name: "id", type: "number" })
   @ApiOkResponse({ type: City })
-  public updateCity(
+  public _updateCity(
     @Param("id", ParseIntPipe) cityId: number,
     @Body() body: City
   ): Promise<City> {
-    return this.service.updateCity(cityId, body);
+    return this.service._updateCity(cityId, body);
   }
 
   @Delete("/:id")
@@ -74,10 +74,10 @@ export class CityController {
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
   @ApiParam({ name: "id", type: "number" })
-  @ApiCreatedResponse({ type: CreateOldCityNameDTO })
+  @ApiCreatedResponse({ type: _CreateOldCityNameDTO })
   public createCityOldName(
     @Param("id", ParseIntPipe) cityId: number,
-    @Body() body: CreateOldCityNameDTO
+    @Body() body: _CreateOldCityNameDTO
   ) {
     return this.service.createCityOldName(cityId, body);
   }

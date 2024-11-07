@@ -3,6 +3,7 @@
     "club": "Club",
     "country": "Country",
     "year": "Year",
+    "name": "Name",
     "clubs": "Clubs",
     "total": "{{from, number}} - {{to, number}} of {{total, number}} items",
     "remove": "Remove",
@@ -241,13 +242,25 @@
       "title": {
         "edit": "Edit city",
         "create": "Create city"
-      }
+      },
+      "fields": {
+        "old_names": "Old names",
+        "country": "Country",
+        "till": "Till"
+      },
+      "updated": "City is updated",
+      "created": "City is created",
+      "deleted": "City is deleted",
+      "delete_confirm": "Are you shure to delete the city?"
     },
     "club": {
       "title": {
         "edit": "Edit club",
         "create": "Create club"
-      }
+      },
+      "updated": "Club is updated",
+      "created": "Club is created",
+      "deleted": "Club is deleted"
     }
   }
 }

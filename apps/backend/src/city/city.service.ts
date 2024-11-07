@@ -1,12 +1,12 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { OldCityNameDto } from "@fbs2.0/types";
+import { _OldCityNameDto } from "@fbs2.0/types";
 
 import { Country } from "../country/entities/country.entity";
 import { City } from "./entities/city.entity";
 import { OldCityName } from "./entities/old-city-name.entity";
-import { CreateCityDto } from "./entities/city.dto";
+import { _CreateCityDto } from "./entities/city.dto";
 
 @Injectable()
 export class CityService {
@@ -34,7 +34,7 @@ export class CityService {
 
   public async createCityOldName(
     cityId: number,
-    body: OldCityNameDto
+    body: _OldCityNameDto
   ): Promise<OldCityName> {
     const city = await this.cityRepository.findOne({ where: { id: cityId } });
 
@@ -60,7 +60,7 @@ export class CityService {
     return this.cityOldNameRepository.remove(cityOldName);
   }
 
-  public async createCity(body: CreateCityDto): Promise<City> {
+  public async _createCity(body: _CreateCityDto): Promise<City> {
     const city: City = new City();
 
     city.name = body.name;
@@ -74,7 +74,7 @@ export class CityService {
     return this.cityRepository.save(city);
   }
 
-  public async updateCity(cityId: number, body: City): Promise<City> {
+  public async _updateCity(cityId: number, body: City): Promise<City> {
     const city = await this.cityRepository.findOne({ where: { id: cityId } });
 
     const country = await this.countryRepository.findOne({

@@ -26,14 +26,29 @@ export interface OldCityName {
   country?: Country;
 }
 
-export interface OldCityNameDto {
+export interface _OldCityNameDto {
   name?: string;
   till: string;
   countryId?: number;
   cityId?: number;
 }
 
+export interface OldCityNameDto {
+  id?: number;
+  name?: string;
+  name_ua?: string;
+  till: string;
+  countryId?: number;
+}
+
 export interface CityDto {
+  name: string;
+  name_ua?: string;
+  countryId: number;
+  oldNames?: OldCityNameDto[];
+}
+
+export interface _CityDto {
   name: string;
   countryId: number;
 }

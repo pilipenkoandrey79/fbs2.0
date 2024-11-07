@@ -5,7 +5,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { City as CityInterface } from "@fbs2.0/types";
+import { City as CityInterface, NAME_FIELD_LENGTH } from "@fbs2.0/types";
 import {
   ApiExtraModels,
   ApiProperty,
@@ -23,11 +23,11 @@ export class City implements CityInterface {
   @ApiProperty({ type: "number" })
   id: number;
 
-  @Column({ type: "varchar", length: 120 })
+  @Column({ type: "varchar", length: NAME_FIELD_LENGTH })
   @ApiProperty({ type: "string" })
   name: string;
 
-  @Column({ type: "varchar", length: 120, nullable: true })
+  @Column({ type: "varchar", length: NAME_FIELD_LENGTH, nullable: true })
   @ApiProperty({ type: "string" })
   name_ua?: string;
 

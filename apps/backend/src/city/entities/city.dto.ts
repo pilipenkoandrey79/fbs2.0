@@ -1,8 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { CityDto } from "@fbs2.0/types";
+import { _CityDto } from "@fbs2.0/types";
 import { IsNotEmpty, IsNumber, IsString, MaxLength } from "class-validator";
 
-export class CreateCityDto implements CityDto {
+export class _CreateCityDto implements _CityDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(120)

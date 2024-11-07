@@ -19,27 +19,35 @@ export const getYearSelector = (year?: string) => (clubs: Club[]) =>
 
 export type ClubsByCity = { city: City; clubs: Club[]; id: number };
 
-export const getByCitySelector = (lang: Language) => (clubs: Club[]) =>
-  clubs
-    .reduce<ClubsByCity[]>((acc, club) => {
-      const existedCityIdx = acc.findIndex(({ id }) => id === club.city.id);
+export const getByCitySelector =
+  (lang: Language, clublessCities?: City[]) => (clubs: Club[]) =>
+    clubs
+      .reduce<ClubsByCity[]>((acc, club) => {
+        const existedCityIdx = acc.findIndex(({ id }) => id === club.city.id);
 
-      if (existedCityIdx >= 0) {
-        acc[existedCityIdx].clubs.push(club);
-      } else {
-        acc.push({ id: club.city.id, city: club.city, clubs: [club] });
-      }
+        if (existedCityIdx >= 0) {
+          acc[existedCityIdx].clubs.push(club);
+        } else {
+          acc.push({ id: club.city.id, city: club.city, clubs: [club] });
+        }
 
-      return acc;
-    }, [])
-    .sort((a, b) => {
-      const collator = new Intl.Collator(lang);
+        return acc;
+      }, [])
+      .concat(
+        clublessCities?.map<ClubsByCity>((city) => ({
+          id: city.id,
+          city,
+          clubs: [],
+        })) || []
+      )
+      .sort((a, b) => {
+        const collator = new Intl.Collator(lang);
 
-      return collator.compare(
-        (lang === Language.en ? a.city.name : a.city.name_ua) || a.city.name,
-        (lang === Language.en ? b.city.name : b.city.name_ua) || b.city.name
-      );
-    });
+        return collator.compare(
+          (lang === Language.en ? a.city.name : a.city.name_ua) || a.city.name,
+          (lang === Language.en ? b.city.name : b.city.name_ua) || b.city.name
+        );
+      });
 
 export const useGetClubs = <T = Club[]>(
   countryId?: number,

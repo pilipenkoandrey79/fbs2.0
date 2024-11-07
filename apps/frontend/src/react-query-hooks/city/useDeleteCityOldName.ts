@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ApiEntities, OldCityNameDto } from "@fbs2.0/types";
+import { ApiEntities, _OldCityNameDto } from "@fbs2.0/types";
 import { AxiosError } from "axios";
 
 import ApiClient from "../../api/api.client";
@@ -9,9 +9,9 @@ import { onError, onSuccess, refetchQueries } from "../callbacks";
 export const useDeleteCityOldName = (additionalKeysToInvalidate?: string[]) => {
   const queryClient = useQueryClient();
 
-  return useMutation<OldCityNameDto, AxiosError, number>({
+  return useMutation<_OldCityNameDto, AxiosError, number>({
     mutationFn: (id) =>
-      ApiClient.getInstance().delete<OldCityNameDto>(
+      ApiClient.getInstance().delete<_OldCityNameDto>(
         `${ApiEntities.City}/old-name/${id}`
       ),
     onSuccess: () => onSuccess("Видалено історичну інформацію про місто"),

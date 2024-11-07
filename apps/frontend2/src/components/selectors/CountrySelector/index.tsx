@@ -2,6 +2,7 @@ import { FC } from "react";
 import { Form, SelectProps } from "antd";
 import { Country } from "@fbs2.0/types";
 import { useTranslation } from "react-i18next";
+import { NamePath } from "antd/es/form/interface";
 
 import { useGetCountries } from "../../../react-query-hooks/country/useGetCountries";
 import { Flag } from "../../Flag";
@@ -10,9 +11,11 @@ import { Language } from "../../../i18n/locales";
 
 interface Props extends SelectProps {
   formItem?: boolean;
-  name?: string;
+  name?: NamePath;
   className?: string;
   year: string | undefined;
+  required?: boolean;
+  label?: string;
 }
 
 const CountrySelector: FC<Props> = ({
@@ -22,6 +25,8 @@ const CountrySelector: FC<Props> = ({
   value,
   year,
   onChange,
+  required = true,
+  label,
 }) => {
   const { i18n, t } = useTranslation();
   const { data } = useGetCountries(year);
@@ -37,14 +42,19 @@ const CountrySelector: FC<Props> = ({
             : option.name_ua) || option.name}
         </span>
       )}
-      className={className}
+      className={formItem ? undefined : className}
       placeholder={t("common.placeholder.country")}
       {...(formItem ? {} : { value, onChange })}
     />
   );
 
   return formItem ? (
-    <Form.Item name={name} rules={[{ required: true }]}>
+    <Form.Item
+      name={name}
+      rules={[{ required }]}
+      className={formItem ? className : undefined}
+      label={label}
+    >
       {node}
     </Form.Item>
   ) : (

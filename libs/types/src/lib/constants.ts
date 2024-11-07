@@ -13,6 +13,7 @@ export const UKRAINE = "Ukraine";
 export const USSR = "USSR";
 export const DEFAULT_GROUPS_QUANTITY = 8;
 export const DEFAULT_SWISS_LENGTH = 36;
+export const NAME_FIELD_LENGTH = 120;
 
 export const ONE_MATCH_STAGES = [
   StageSchemeType.OLYMPIC_1_MATCH,

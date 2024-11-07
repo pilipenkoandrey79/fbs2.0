@@ -6,6 +6,53 @@
 
   .content {
     min-height: 100px;
+    padding: 20px;
+    padding-bottom: 0;
+
+    .name {
+      max-width: 400px;
+    }
+
+    .label {
+      @include flex(row, space-between);
+    }
+
+    .old-name {
+      width: 100%;
+      position: relative;
+      border-color: $primaryBase;
+      margin: 8px 0;
+
+      .remove {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+      }
+
+      .old-name-container {
+        @include flex(column, flex-start, stretch);
+
+        .old-name-sub-container {
+          @include flex(row, space-between);
+        }
+
+        @media (min-width: $screen-md) {
+          @include flex(row, flex-start, flex-start);
+
+          .old-name-sub-container {
+            gap: 10px;
+          }
+
+          .name {
+            min-width: 300px;
+          }
+        }
+      }
+    }
+
+    .footer {
+      @include flex(row, space-between);
+    }
   }
 
   :global {

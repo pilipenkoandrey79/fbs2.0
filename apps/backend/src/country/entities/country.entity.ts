@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { Country as CounntryInterface } from "@fbs2.0/types";
+import { Country as CounntryInterface, NAME_FIELD_LENGTH } from "@fbs2.0/types";
 import { ApiProperty } from "@nestjs/swagger";
 
 @Entity()
@@ -8,11 +8,11 @@ export class Country implements CounntryInterface {
   @ApiProperty({ type: "number" })
   id: number;
 
-  @Column({ type: "varchar", length: 120 })
+  @Column({ type: "varchar", length: NAME_FIELD_LENGTH })
   @ApiProperty({ type: "string" })
   name: string;
 
-  @Column({ type: "varchar", length: 120, nullable: true })
+  @Column({ type: "varchar", length: NAME_FIELD_LENGTH, nullable: true })
   @ApiProperty({ type: "string" })
   name_ua?: string;
 

@@ -1,5 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
-import { OldCityName as OldCityNameInterface } from "@fbs2.0/types";
+import {
+  NAME_FIELD_LENGTH,
+  OldCityName as OldCityNameInterface,
+} from "@fbs2.0/types";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
 import { City } from "./city.entity";
@@ -15,11 +18,11 @@ export class OldCityName implements OldCityNameInterface {
   @ApiProperty({ type: "string" })
   public till: string;
 
-  @Column({ type: "varchar", length: 120, nullable: true })
+  @Column({ type: "varchar", length: NAME_FIELD_LENGTH, nullable: true })
   @ApiPropertyOptional({ type: "string" })
   public name?: string;
 
-  @Column({ type: "varchar", length: 120, nullable: true })
+  @Column({ type: "varchar", length: NAME_FIELD_LENGTH, nullable: true })
   @ApiPropertyOptional({ type: "string" })
   public name_ua?: string;
 

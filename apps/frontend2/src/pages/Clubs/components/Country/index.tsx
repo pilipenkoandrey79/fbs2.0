@@ -20,6 +20,7 @@ import {
   getByCitySelector,
   useGetClubs,
 } from "../../../../react-query-hooks/club/useGetClubs";
+import { useGetClublessCities } from "../../../../react-query-hooks/city/useGetClublessCities";
 import { Paths } from "../../../../routes";
 import { Language } from "../../../../i18n/locales";
 
@@ -30,12 +31,13 @@ const Country: FC = () => {
   const { code } = useParams();
   const navigate = useNavigate();
   const countries = useGetCountries();
+  const clublessCities = useGetClublessCities();
   const country = countries.data?.find((country) => country.code === code);
 
-  const clubs = useGetClubs<ClubsByCity[]>(
+  const clubsByCities = useGetClubs<ClubsByCity[]>(
     country?.id,
-    getByCitySelector(i18n.resolvedLanguage as Language),
-    countries.isSuccess && !country?.till
+    getByCitySelector(i18n.resolvedLanguage as Language, clublessCities.data),
+    clublessCities.isSuccess && countries.isSuccess && !country?.till
   );
 
   const [cvInput, setCvInput] = useState<CVInput | null>(null);
@@ -97,7 +99,7 @@ const Country: FC = () => {
         <div className={styles.table}>
           <Table<ClubsByCity>
             columns={columns}
-            dataSource={clubs.data}
+            dataSource={clubsByCities.data}
             rowKey="id"
             size="small"
             pagination={false}
@@ -106,7 +108,7 @@ const Country: FC = () => {
             locale={{
               emptyText: !!country?.till && t("clubs.old_country_description"),
             }}
-            loading={clubs.isLoading}
+            loading={clubsByCities.isLoading}
           />
         </div>
         <ResponsivePanel
@@ -117,7 +119,16 @@ const Country: FC = () => {
         </ResponsivePanel>
       </div>
       {cityIdToEdit !== null && (
-        <CityDialog id={cityIdToEdit} onClose={() => setCityIdToEdit(null)} />
+        <CityDialog
+          id={cityIdToEdit}
+          countryId={country?.id}
+          isEmpty={
+            cityIdToEdit >= 0 &&
+            clubsByCities.data?.find(({ id }) => id === cityIdToEdit)?.clubs
+              .length === 0
+          }
+          onClose={() => setCityIdToEdit(null)}
+        />
       )}
     </>
   );

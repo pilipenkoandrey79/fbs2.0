@@ -1,4 +1,4 @@
-import { City, CityDto, Country, OldCityNameDto } from "@fbs2.0/types";
+import { City, _CityDto, Country, _OldCityNameDto } from "@fbs2.0/types";
 import { isNotEmpty } from "@fbs2.0/utils";
 import { FC, useCallback, useState } from "react";
 import {
@@ -20,9 +20,9 @@ import styles from "../../../EditForm.module.scss";
 
 interface Props {
   city: City;
-  create?: (city: CityDto) => void;
+  create?: (city: _CityDto) => void;
   update?: (city: City) => void;
-  createOldCityName?: (data: OldCityNameDto) => void;
+  createOldCityName?: (data: _OldCityNameDto) => void;
   deleteOldCityName?: (id: number) => void;
 }
 
