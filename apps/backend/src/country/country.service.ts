@@ -15,11 +15,15 @@ import { Country } from "./entities/country.entity";
 import { OldCityName } from "../city/entities/old-city-name.entity";
 import { Match } from "../match/entities/match.entity";
 import { UpdateCountryDto } from "./entities/country.dto";
+import { City } from "../city/entities/city.entity";
 
 @Injectable()
 export class CountryService {
   @InjectRepository(Country)
   private readonly countryRepository: Repository<Country>;
+
+  @InjectRepository(City)
+  private readonly cityRepository: Repository<City>;
 
   @InjectRepository(OldCityName)
   private readonly cityOldNameRepository: Repository<OldCityName>;
@@ -49,6 +53,13 @@ export class CountryService {
     }
 
     return this.countryRepository.save(country);
+  }
+
+  public async getCountryCities(countryId: number) {
+    return await this.cityRepository.find({
+      where: { country: { id: countryId } },
+      relations: { clubs: true },
+    });
   }
 
   private async getFinalMatchesForCountry(country: Country | undefined) {

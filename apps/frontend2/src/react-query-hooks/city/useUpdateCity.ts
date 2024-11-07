@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
 
-export const useUpdateCity = (countryId: number | undefined) => {
+export const useUpdateCity = () => {
   const queryClient = useQueryClient();
   const { t } = useTranslation();
 
@@ -18,17 +18,12 @@ export const useUpdateCity = (countryId: number | undefined) => {
       ),
     onSettled: (city) => {
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEY.clubs, countryId],
-        refetchType: "all",
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: [QUERY_KEY.clubless_cities],
-        refetchType: "all",
-      });
-
-      queryClient.invalidateQueries({
         queryKey: [QUERY_KEY.city, city?.id],
+        refetchType: "all",
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY.cities, city?.country.id],
         refetchType: "all",
       });
     },

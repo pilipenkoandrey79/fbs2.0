@@ -8,7 +8,6 @@ import {
   Body,
   Delete,
   Put,
-  Query,
   UseGuards,
 } from "@nestjs/common";
 import { ApiEntities } from "@fbs2.0/types";
@@ -33,12 +32,11 @@ export class CityController {
   @Inject(CityService)
   private readonly service: CityService;
 
-  @Get()
-  @ApiOkResponse({ type: [City] })
-  public getCities(
-    @Query("withoutClubs") withoutClubs: boolean
-  ): Promise<City[]> {
-    return this.service.getCities(withoutClubs);
+  @Get("/:id")
+  @ApiParam({ name: "id", type: "number" })
+  @ApiOkResponse({ type: City })
+  public getCity(@Param("id", ParseIntPipe) cityId: number): Promise<City> {
+    return this.service.getCity(cityId);
   }
 
   @Post()

@@ -15,12 +15,7 @@ import { CV, CVInput } from "./components/CV";
 import { ResponsivePanel } from "../../../../components/ResponsivePanel";
 import { CityDialog } from "./components/CityDialog";
 import { useGetCountries } from "../../../../react-query-hooks/country/useGetCountries";
-import {
-  ClubsByCity,
-  getByCitySelector,
-  useGetClubs,
-} from "../../../../react-query-hooks/club/useGetClubs";
-import { useGetClublessCities } from "../../../../react-query-hooks/city/useGetClublessCities";
+import { useGetCitiesByCountry } from "../../../../react-query-hooks/city/useGetCitiesByCountry";
 import { Paths } from "../../../../routes";
 import { Language } from "../../../../i18n/locales";
 
@@ -31,25 +26,18 @@ const Country: FC = () => {
   const { code } = useParams();
   const navigate = useNavigate();
   const countries = useGetCountries();
-  const clublessCities = useGetClublessCities();
   const country = countries.data?.find((country) => country.code === code);
-
-  const clubsByCities = useGetClubs<ClubsByCity[]>(
-    country?.id,
-    getByCitySelector(i18n.resolvedLanguage as Language, clublessCities.data),
-    clublessCities.isSuccess && countries.isSuccess && !country?.till
-  );
+  const cities = useGetCitiesByCountry(country?.id);
 
   const [cvInput, setCvInput] = useState<CVInput | null>(null);
   const [cityIdToEdit, setCityIdToEdit] = useState<number | null>(null);
 
-  const columns: TableProps<ClubsByCity>["columns"] = [
+  const columns: TableProps<City>["columns"] = [
     {
       key: "city",
-      dataIndex: "city",
       width: 100,
       className: styles.cell,
-      render: ({ name, name_ua, id }: City) => (
+      render: (_, { name, name_ua, id }: City) => (
         <>
           {(i18n.resolvedLanguage === Language.en ? name : name_ua) || name}
           <Button
@@ -97,9 +85,9 @@ const Country: FC = () => {
       </SubHeader>
       <div className={styles.container}>
         <div className={styles.table}>
-          <Table<ClubsByCity>
+          <Table<City>
             columns={columns}
-            dataSource={clubsByCities.data}
+            dataSource={cities.data}
             rowKey="id"
             size="small"
             pagination={false}
@@ -108,7 +96,7 @@ const Country: FC = () => {
             locale={{
               emptyText: !!country?.till && t("clubs.old_country_description"),
             }}
-            loading={clubsByCities.isLoading}
+            loading={cities.isLoading}
           />
         </div>
         <ResponsivePanel
@@ -124,8 +112,8 @@ const Country: FC = () => {
           countryId={country?.id}
           isEmpty={
             cityIdToEdit >= 0 &&
-            clubsByCities.data?.find(({ id }) => id === cityIdToEdit)?.clubs
-              .length === 0
+            (cities.data?.find(({ id }) => id === cityIdToEdit)?.clubs
+              ?.length || 0) === 0
           }
           onClose={() => setCityIdToEdit(null)}
         />

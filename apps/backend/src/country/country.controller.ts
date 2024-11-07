@@ -21,6 +21,7 @@ import { AccessTokenGuard } from "../auth/guards/access-token.guard";
 import { Country } from "../country/entities/country.entity";
 import { CountryCV } from "../country/entities/country-cv";
 import { CountryService } from "./country.service";
+import { City } from "../city/entities/city.entity";
 
 @ApiTags(ApiEntities.Country)
 @Controller(ApiEntities.Country)
@@ -32,6 +33,15 @@ export class CountryController {
   @ApiOkResponse({ type: [Country] })
   public getCountries(): Promise<Country[]> {
     return this.service.getCountries();
+  }
+
+  @Get("/:id/cities")
+  @ApiParam({ name: "id", type: "number" })
+  @ApiOkResponse({ type: [City] })
+  public getCountryCities(
+    @Param("id", ParseIntPipe) id: number
+  ): Promise<City[]> {
+    return this.service.getCountryCities(id);
   }
 
   @Get("/:id/cv")

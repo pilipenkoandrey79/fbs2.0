@@ -10,7 +10,6 @@ export const QUERY_KEY = {
   club: "club",
   cities: "cities",
   city: "city",
-  clubless_cities: "clubless-cities",
 };
 
 export const MUTATION_KEY = {

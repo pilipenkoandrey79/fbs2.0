@@ -1,36 +1,14 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { City, Club } from "@fbs2.0/types";
+import { useQuery } from "@tanstack/react-query";
+import { ApiEntities, City } from "@fbs2.0/types";
 
 import { QUERY_KEY } from "../query-key";
+import ApiClient from "../../api/api.client";
 
-export const useGetCity = (countryId: number | undefined, cityId: number) => {
-  const queryClient = useQueryClient();
+const fetchCity = async (cityId: number | undefined) =>
+  await ApiClient.getInstance().get<City>(`${ApiEntities.City}/v2/${cityId}`);
 
-  return useQuery<City, Error>({
+export const useGetCity = (cityId: number) =>
+  useQuery<City, Error>({
     queryKey: [QUERY_KEY.city, cityId],
-    queryFn: () =>
-      new Promise((resolve, rejest) => {
-        if (cityId === -1) {
-          resolve({} as City);
-        }
-
-        const city = queryClient
-          .getQueryData<Club[]>([QUERY_KEY.clubs, countryId])
-          ?.find(({ city }) => city.id === cityId)?.city;
-
-        if (city) {
-          resolve(city);
-        } else {
-          const clublessCity = queryClient
-            .getQueryData<City[]>([QUERY_KEY.clubless_cities])
-            ?.find(({ id }) => id === cityId);
-
-          if (clublessCity) {
-            resolve(clublessCity);
-          }
-
-          rejest(new Error("Not found"));
-        }
-      }),
+    queryFn: () => fetchCity(cityId),
   });
-};

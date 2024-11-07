@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { ApiEntities, Country } from "@fbs2.0/types";
 import { isNotEmpty } from "@fbs2.0/utils";
 import { AxiosError } from "axios";
@@ -7,20 +7,13 @@ import { useTranslation } from "react-i18next";
 import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
 import { BCP47Locales, Language } from "../../i18n/locales";
-import { fetchClublessCities } from "../city/useGetClublessCities";
 
 const useGetCountries = (year?: string) => {
   const { i18n } = useTranslation();
-  const queryClient = useQueryClient();
 
   return useQuery<Country[], AxiosError>({
     queryKey: [QUERY_KEY.countries],
     queryFn: async () => {
-      queryClient.prefetchQuery({
-        queryKey: [QUERY_KEY.clubless_cities],
-        queryFn: fetchClublessCities,
-      });
-
       return await ApiClient.getInstance().get<Country[]>(
         `${ApiEntities.Country}`
       );

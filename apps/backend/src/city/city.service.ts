@@ -37,6 +37,13 @@ export class CityService {
     return cities.filter(({ clubs }) => clubs.length < 1);
   }
 
+  public async getCity(cityId: number) {
+    return this.cityRepository.findOne({
+      where: { id: cityId },
+      relations: { oldNames: { country: true } },
+    });
+  }
+
   public async createCityOldName(
     cityId: number,
     body: _OldCityNameDto
@@ -126,37 +133,66 @@ export class CityService {
   }
 
   public async updateCity(cityId: number, body: CreateCityDto): Promise<City> {
-    const city = await this.cityRepository.findOne({ where: { id: cityId } });
-
-    const country = await this.countryRepository.findOne({
-      where: { id: body.countryId },
+    const city = await this.cityRepository.findOne({
+      where: { id: cityId },
+      relations: { oldNames: { country: true } },
     });
 
     city.name = body.name;
     city.name_ua = body.name_ua;
-    city.country = country;
 
-    city.oldNames = await Promise.all(
-      body.oldNames.map(async ({ id, name, name_ua, till, countryId }) => {
-        const oldCityName =
-          (await this.cityOldNameRepository.findOne({ where: { id } })) ??
-          new OldCityName();
+    const updatedCity = await this.cityRepository.save(city);
 
-        oldCityName.name = name;
-        oldCityName.name_ua = name_ua;
-        oldCityName.till = till;
+    await Promise.all(
+      city.oldNames.map(async (item) => {
+        const dto = body.oldNames.find(({ id }) => item.id === id);
 
-        const country = await this.countryRepository.findOne({
-          where: { id: countryId },
-        });
+        if (dto) {
+          const oldName = new OldCityName();
 
-        oldCityName.country = country;
+          oldName.id = dto.id;
+          oldName.name = dto.name;
+          oldName.name_ua = dto.name_ua;
+          oldName.till = dto.till;
 
-        return oldCityName;
+          const country = await this.countryRepository.findOne({
+            where: { id: dto.countryId },
+          });
+
+          oldName.country = country;
+
+          await this.cityOldNameRepository.save(oldName);
+        } else {
+          await this.cityOldNameRepository.delete(item);
+        }
       })
     );
 
-    return this.cityRepository.save(city);
+    await Promise.all(
+      body.oldNames
+        .filter(({ id }) => !id)
+        .map(async (item) => {
+          const oldName = new OldCityName();
+
+          oldName.name = item.name;
+          oldName.name_ua = item.name_ua;
+          oldName.till = item.till;
+          oldName.city = updatedCity;
+
+          const country = await this.countryRepository.findOne({
+            where: { id: item.countryId },
+          });
+
+          oldName.country = country;
+
+          await this.cityOldNameRepository.save(oldName);
+        })
+    );
+
+    return await this.cityRepository.findOne({
+      where: { id: cityId },
+      relations: { country: true },
+    });
   }
 
   public async removeCity(cityId: number) {

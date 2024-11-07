@@ -19,6 +19,7 @@ import { CountrySelector } from "../../../../../../components/selectors/CountryS
 import { useGetCity } from "../../../../../../react-query-hooks/city/useGetCity";
 import { useCreateCity } from "../../../../../../react-query-hooks/city/useCreateCity";
 import { useUpdateCity } from "../../../../../../react-query-hooks/city/useUpdateCity";
+import { useDeleteCity } from "../../../../../../react-query-hooks/city/useDeleteCity";
 
 import styles from "./styles.module.scss";
 
@@ -33,9 +34,10 @@ const CityDialog: FC<Props> = ({ onClose, id, countryId, isEmpty }) => {
   const { t } = useTranslation();
   const [form] = Form.useForm<CityDto>();
 
-  const city = useGetCity(countryId, id);
+  const city = useGetCity(id);
   const createCity = useCreateCity();
-  const updateCity = useUpdateCity(countryId);
+  const updateCity = useUpdateCity();
+  const deleteCity = useDeleteCity(countryId);
 
   const submit = async (values: CityDto) => {
     id === -1
@@ -46,9 +48,10 @@ const CityDialog: FC<Props> = ({ onClose, id, countryId, isEmpty }) => {
     onClose();
   };
 
-  const onDelete = () => {
-    console.log(id);
+  const onDelete = async () => {
+    await deleteCity.mutateAsync(id);
 
+    form.resetFields();
     onClose();
   };
 
@@ -141,7 +144,7 @@ const CityDialog: FC<Props> = ({ onClose, id, countryId, isEmpty }) => {
               {isEmpty && (
                 <Popconfirm
                   onConfirm={onDelete}
-                  title={t("common.delete_confirm")}
+                  title={t("clubs.city.delete_confirm")}
                 >
                   <Button
                     danger

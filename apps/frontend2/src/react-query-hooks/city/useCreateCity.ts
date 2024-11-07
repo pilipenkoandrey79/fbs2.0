@@ -19,12 +19,7 @@ export const useCreateCity = () => {
       ),
     onSettled: (city) => {
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEY.clubs, city?.country.id],
-        refetchType: "all",
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: [QUERY_KEY.clubless_cities],
+        queryKey: [QUERY_KEY.cities, city?.country.id],
         refetchType: "all",
       });
     },

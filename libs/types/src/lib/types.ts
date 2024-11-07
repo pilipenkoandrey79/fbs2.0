@@ -15,6 +15,7 @@ export interface City {
   name_ua?: string;
   country: Country;
   oldNames?: OldCityName[];
+  clubs?: Club[];
 }
 
 export interface OldCityName {
