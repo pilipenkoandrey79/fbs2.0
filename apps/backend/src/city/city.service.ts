@@ -196,10 +196,19 @@ export class CityService {
   }
 
   public async removeCity(cityId: number) {
-    const city = await this.cityRepository.findOne({ where: { id: cityId } });
+    const city = await this.cityRepository.findOne({
+      where: { id: cityId },
+      relations: { oldNames: true },
+    });
 
     if (!city) {
       throw new NotFoundException();
+    }
+
+    if (city.oldNames.length > 0) {
+      city.oldNames.forEach(
+        async (item) => await this.cityOldNameRepository.remove(item)
+      );
     }
 
     return await this.cityRepository.remove(city);

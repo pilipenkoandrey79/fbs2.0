@@ -11,6 +11,10 @@
   .title {
     @include flex(row);
 
+    .flag {
+      margin-right: 6px;
+    }
+
     h3 {
       margin: 0 0 0 10px;
     }

@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 
 import { Paths } from "../../../../../../routes";
 import { Language } from "../../../../../../i18n/locales";
+import { Flag } from "../../../../../../components/Flag";
 
 import styles from "./styles.module.scss";
 
@@ -28,6 +29,7 @@ const SubHeader: FC<Props> = ({ country, children }) => {
           onClick={() => navigate(Paths.CLUBS)}
         />
         <Typography.Title level={3}>
+          <Flag country={country} className={styles.flag} />
           {(i18n.resolvedLanguage === Language.en
             ? country?.name
             : country?.name_ua) || country?.name}

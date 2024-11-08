@@ -8,7 +8,7 @@ import {
   Popconfirm,
   Typography,
 } from "antd";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { CityDto, Years } from "@fbs2.0/types";
 import { CloseOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
@@ -33,6 +33,7 @@ interface Props {
 const CityDialog: FC<Props> = ({ onClose, id, countryId, isEmpty }) => {
   const { t } = useTranslation();
   const [form] = Form.useForm<CityDto>();
+  const [pristine, setPristine] = useState(true);
 
   const city = useGetCity(id);
   const createCity = useCreateCity();
@@ -79,6 +80,7 @@ const CityDialog: FC<Props> = ({ onClose, id, countryId, isEmpty }) => {
               })),
             }}
             onFinish={submit}
+            onValuesChange={() => setPristine(false)}
           >
             <NameField className={styles.name} />
             <Form.Item noStyle name="countryId" />
@@ -140,7 +142,12 @@ const CityDialog: FC<Props> = ({ onClose, id, countryId, isEmpty }) => {
             </Form.List>
             <Divider type="horizontal" />
             <div className={styles.footer}>
-              <SubmitButton form={form} size="small" label={t("common.save")} />
+              <SubmitButton
+                form={form}
+                size="small"
+                label={t("common.save")}
+                forceDisabled={pristine}
+              />
               {isEmpty && (
                 <Popconfirm
                   onConfirm={onDelete}

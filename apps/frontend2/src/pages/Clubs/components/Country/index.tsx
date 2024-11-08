@@ -87,7 +87,7 @@ const Country: FC = () => {
         <div className={styles.table}>
           <Table<City>
             columns={columns}
-            dataSource={cities.data}
+            dataSource={cities.data ?? []}
             rowKey="id"
             size="small"
             pagination={false}

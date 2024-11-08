@@ -11,4 +11,8 @@ export const useGetCity = (cityId: number) =>
   useQuery<City, Error>({
     queryKey: [QUERY_KEY.city, cityId],
     queryFn: () => fetchCity(cityId),
+    select: (city: City) => ({
+      ...city,
+      oldNames: city.oldNames?.sort((a, b) => Number(a.till) - Number(b.till)),
+    }),
   });
