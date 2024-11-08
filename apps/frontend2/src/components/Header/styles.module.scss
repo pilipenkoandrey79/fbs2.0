@@ -1,5 +1,5 @@
-@import "../../style/mixins.scss";
-@import "../../style/colors.module.scss";
+@use "../../style/mixins.scss" as *;
+@use "../../style/colors.module.scss" as *;
 
 .header {
   @include flex(column, flex-start, stretch);

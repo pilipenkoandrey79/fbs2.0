@@ -1,5 +1,5 @@
-@import "../../style/colors.module.scss";
-@import "../../style/variables.module.scss";
+@use "../../style/colors.module.scss" as *;
+@use "../../style/variables.module.scss" as *;
 
 .badge {
   display: inline-block;

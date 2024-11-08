@@ -1,5 +1,5 @@
-@import "../../../../../../style/mixins.scss";
-@import "../../../../../../style/variables.module.scss";
+@use "../../../../../../style/mixins.scss" as *;
+@use "../../../../../../style/variables.module.scss" as *;
 
 .selectors {
   margin: 4px 0;

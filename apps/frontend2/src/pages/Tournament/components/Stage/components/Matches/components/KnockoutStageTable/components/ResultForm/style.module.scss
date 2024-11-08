@@ -1,5 +1,5 @@
-@import "../../../../../../../../../../style/variables.module.scss";
-@import "../../../../../../../../../../style/mixins.scss";
+@use "../../../../../../../../../../style/variables.module.scss" as *;
+@use "../../../../../../../../../../style/mixins.scss" as *;
 
 .modal {
   .content {

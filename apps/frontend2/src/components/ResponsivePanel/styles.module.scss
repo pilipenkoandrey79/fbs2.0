@@ -1,5 +1,6 @@
-@import "../../style/mixins.scss";
-@import "../../style/variables.module.scss";
+@use "../../style/mixins.scss" as *;
+@use "../../style/variables.module.scss" as *;
+@use "../../style/colors.module.scss" as *;
 
 .panel {
   @include flex(row, flex-end, flex-start);

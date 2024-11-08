@@ -1,4 +1,4 @@
-@import "../../../../../../../../style/variables.module.scss";
+@use "../../../../../../../../style/variables.module.scss" as *;
 
 .country {
   .code {

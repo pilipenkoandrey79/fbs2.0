@@ -1,4 +1,4 @@
-@import "../../../style/colors.module.scss";
+@use "../../../style/colors.module.scss" as *;
 
 .new {
   color: $link;
