@@ -1,5 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { CityDto, NAME_FIELD_LENGTH, OldCityNameDto } from "@fbs2.0/types";
+import {
+  CityDto as CityDtoInterface,
+  NAME_FIELD_LENGTH,
+  OldCityNameDto,
+} from "@fbs2.0/types";
 import {
   IsArray,
   IsNotEmpty,
@@ -9,7 +13,7 @@ import {
   MaxLength,
 } from "class-validator";
 
-export class CreateCityDto implements CityDto {
+export class CityDto implements CityDtoInterface {
   @IsString()
   @IsNotEmpty()
   @MaxLength(NAME_FIELD_LENGTH)

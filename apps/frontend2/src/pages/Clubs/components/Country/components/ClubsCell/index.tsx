@@ -12,11 +12,19 @@ import styles from "./styles.module.scss";
 
 interface Props {
   clubs: ClubInterface[];
+  countryId: number | undefined;
+  cityId: number | undefined;
   cvInput: CVInput | null;
   setCvInput: (input: CVInput) => void;
 }
 
-const ClubsCell: FC<Props> = ({ clubs, cvInput, setCvInput }) => {
+const ClubsCell: FC<Props> = ({
+  clubs,
+  countryId,
+  cityId,
+  cvInput,
+  setCvInput,
+}) => {
   const [clubIdToEdit, setClubIdToEdit] = useState<number | null>(null);
 
   return (
@@ -53,7 +61,12 @@ const ClubsCell: FC<Props> = ({ clubs, cvInput, setCvInput }) => {
         onClick={() => setClubIdToEdit(-1)}
       />
       {clubIdToEdit !== null && (
-        <ClubDialog id={clubIdToEdit} onClose={() => setClubIdToEdit(null)} />
+        <ClubDialog
+          id={clubIdToEdit}
+          countryId={countryId}
+          cityId={cityId}
+          onClose={() => setClubIdToEdit(null)}
+        />
       )}
     </>
   );

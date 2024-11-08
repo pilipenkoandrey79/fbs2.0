@@ -5,18 +5,19 @@ import {
   KnockoutStageTableRowResult,
   Balance,
   ClubCV,
-  OldClubNameDto,
+  _OldClubNameDto,
   StageType,
 } from "@fbs2.0/types";
 import { getWinner, isNotEmpty } from "@fbs2.0/utils";
 
 import { Club } from "./entities/club.entity";
-import { CreateClubDto } from "./entities/club.dto";
+import { _CreateClubDto } from "./entities/_club.dto";
 import { City } from "../city/entities/city.entity";
 import { OldClubName } from "./entities/old-club-name.entity";
 import { Participant } from "../participant/entities/participant.entity";
 import { Match } from "../match/entities/match.entity";
 import { Country } from "../country/entities/country.entity";
+import { ClubDto } from "./entities/club.dto";
 
 @Injectable()
 export class ClubService {
@@ -40,7 +41,7 @@ export class ClubService {
 
   public async createClubOldName(
     clubId: number,
-    body: OldClubNameDto
+    body: _OldClubNameDto
   ): Promise<OldClubName> {
     const club = await this.clubRepository.findOne({ where: { id: clubId } });
     const clubOldName = new OldClubName();
@@ -84,10 +85,13 @@ export class ClubService {
   }
 
   public getClub(id: number): Promise<Club> {
-    return this.clubRepository.findOne({ where: { id } });
+    return this.clubRepository.findOne({
+      where: { id },
+      relations: { oldNames: true },
+    });
   }
 
-  public async createClub(body: CreateClubDto): Promise<Club> {
+  public async _createClub(body: _CreateClubDto): Promise<Club> {
     const club: Club = new Club();
 
     club.name = body.name;
@@ -101,7 +105,7 @@ export class ClubService {
     return this.clubRepository.save(club);
   }
 
-  public async updateClub(body: Club) {
+  public async _updateClub(body: Club) {
     const club = await this.clubRepository.findOne({ where: { id: body.id } });
 
     if (isNotEmpty(body.name)) {
@@ -118,9 +122,101 @@ export class ClubService {
   }
 
   public async removeClub(clubId: number) {
-    const club = await this.clubRepository.findOne({ where: { id: clubId } });
+    const club = await this.clubRepository.findOne({
+      where: { id: clubId },
+      relations: { oldNames: true },
+    });
+
+    if (!club) {
+      throw new NotFoundException();
+    }
+
+    if (club.oldNames.length > 0) {
+      club.oldNames.forEach(
+        async (item) => await this.clubOldNameRepository.remove(item)
+      );
+    }
 
     return await this.clubRepository.remove(club);
+  }
+
+  public async createClub(body: ClubDto): Promise<Club> {
+    const club = new Club();
+
+    club.name = body.name;
+    club.name_ua = body.name_ua;
+
+    const city = await this.cityRepository.findOne({
+      where: { id: body.cityId },
+      relations: { country: true },
+    });
+
+    club.city = city;
+
+    club.oldNames = await Promise.all(
+      body.oldNames.map(async ({ name, name_ua, till }) => {
+        const oldClubName = new OldClubName();
+
+        oldClubName.name = name;
+        oldClubName.name_ua = name_ua;
+        oldClubName.till = till;
+
+        return oldClubName;
+      })
+    );
+
+    return this.clubRepository.save(club);
+  }
+
+  public async updateClub(clubId: number, body: ClubDto): Promise<Club> {
+    const club = await this.clubRepository.findOne({
+      where: { id: clubId },
+      relations: { oldNames: true },
+    });
+
+    club.name = body.name;
+    club.name_ua = body.name_ua;
+
+    const updatedClub = await this.clubRepository.save(club);
+
+    await Promise.all(
+      club.oldNames.map(async (item) => {
+        const dto = body.oldNames.find(({ id }) => item.id === id);
+
+        if (dto) {
+          const oldName = new OldClubName();
+
+          oldName.id = dto.id;
+          oldName.name = dto.name;
+          oldName.name_ua = dto.name_ua;
+          oldName.till = dto.till;
+
+          await this.clubOldNameRepository.save(oldName);
+        } else {
+          await this.clubOldNameRepository.delete(item);
+        }
+      })
+    );
+
+    await Promise.all(
+      body.oldNames
+        .filter(({ id }) => !id)
+        .map(async (item) => {
+          const oldName = new OldClubName();
+
+          oldName.name = item.name;
+          oldName.name_ua = item.name_ua;
+          oldName.till = item.till;
+          oldName.club = updatedClub;
+
+          await this.clubOldNameRepository.save(oldName);
+        })
+    );
+
+    return await this.clubRepository.findOne({
+      where: { id: clubId },
+      relations: { city: { country: true } },
+    });
   }
 
   public async getClubCV(clubId: number) {

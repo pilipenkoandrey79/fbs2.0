@@ -7,7 +7,7 @@ import { Country } from "../country/entities/country.entity";
 import { City } from "./entities/city.entity";
 import { OldCityName } from "./entities/old-city-name.entity";
 import { _CreateCityDto } from "./entities/_city.dto";
-import { CreateCityDto } from "./entities/city.dto";
+import { CityDto } from "./entities/city.dto";
 
 @Injectable()
 export class CityService {
@@ -99,7 +99,7 @@ export class CityService {
     return this.cityRepository.save(city);
   }
 
-  public async createCity(body: CreateCityDto): Promise<City> {
+  public async createCity(body: CityDto): Promise<City> {
     const city = new City();
 
     city.name = body.name;
@@ -132,7 +132,7 @@ export class CityService {
     return this.cityRepository.save(city);
   }
 
-  public async updateCity(cityId: number, body: CreateCityDto): Promise<City> {
+  public async updateCity(cityId: number, body: CityDto): Promise<City> {
     const city = await this.cityRepository.findOne({
       where: { id: cityId },
       relations: { oldNames: { country: true } },

@@ -25,13 +25,15 @@ import {
 
 import { ClubService } from "./club.service";
 import { Club } from "./entities/club.entity";
-import { ClubDto } from "./entities/club.dto";
+import { _CreateClubDto } from "./entities/_club.dto";
 import { AccessTokenGuard } from "../auth/guards/access-token.guard";
 import { ClubCV } from "./entities/club-cv";
+import { _OldClubNameDto } from "./entities/_old-club-name.dto";
+import { OldClubName } from "./entities/old-club-name.entity";
 
-@ApiTags(`${ApiEntities.Club}/v2`)
-@Controller(`${ApiEntities.Club}/v2`)
-export class ClubController {
+@ApiTags(ApiEntities.Club)
+@Controller(ApiEntities.Club)
+export class _ClubController {
   @Inject(ClubService)
   private readonly service: ClubService;
 
@@ -62,11 +64,8 @@ export class ClubController {
   @ApiBearerAuth()
   @ApiParam({ name: "id", type: "number" })
   @ApiOkResponse({ type: Club })
-  public updateClub(
-    @Param("id", ParseIntPipe) clubId: number,
-    @Body() body: ClubDto
-  ): Promise<Club> {
-    return this.service.updateClub(clubId, body);
+  public updateClub(@Body() body: Club): Promise<Club> {
+    return this.service._updateClub(body);
   }
 
   @Delete("/:id")
@@ -82,7 +81,28 @@ export class ClubController {
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
   @ApiCreatedResponse({ type: Club })
-  public createClub(@Body() body: ClubDto): Promise<Club> {
-    return this.service.createClub(body);
+  public createClub(@Body() body: _CreateClubDto): Promise<Club> {
+    return this.service._createClub(body);
+  }
+
+  @Post("/:id/old-name")
+  @UseGuards(AccessTokenGuard)
+  @ApiBearerAuth()
+  @ApiParam({ name: "id", type: "number" })
+  @ApiCreatedResponse({ type: OldClubName })
+  public createClubOldName(
+    @Param("id", ParseIntPipe) clubId: number,
+    @Body() body: _OldClubNameDto
+  ) {
+    return this.service.createClubOldName(clubId, body);
+  }
+
+  @Delete("/old-name/:id")
+  @UseGuards(AccessTokenGuard)
+  @ApiBearerAuth()
+  @ApiParam({ name: "id", type: "number" })
+  @ApiNoContentResponse()
+  public deleteClubOldName(@Param("id", ParseIntPipe) clubOldNameId: number) {
+    return this.service.removeClubOldName(clubOldNameId);
   }
 }

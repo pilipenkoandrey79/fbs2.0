@@ -8,7 +8,7 @@ import { QUERY_KEY } from "../query-key";
 
 const fetchClubs = async (countryId?: number) =>
   await ApiClient.getInstance().get<Club[]>(
-    `${ApiEntities.Club}${countryId ? `?countryId=${countryId}` : ""}`
+    `${ApiEntities.Club}/v2/${countryId ? `?countryId=${countryId}` : ""}`
   );
 
 export const getYearSelector = (year?: string) => (clubs: Club[]) =>

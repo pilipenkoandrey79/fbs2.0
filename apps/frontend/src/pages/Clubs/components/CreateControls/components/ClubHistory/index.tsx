@@ -1,6 +1,6 @@
 import { FC, useCallback, useState } from "react";
 import { Button, Classes, Intent, Label } from "@blueprintjs/core";
-import { Club, OldClubNameDto } from "@fbs2.0/types";
+import { Club, _OldClubNameDto } from "@fbs2.0/types";
 import classNames from "classnames";
 import { isNotEmpty } from "@fbs2.0/utils";
 
@@ -12,7 +12,7 @@ interface Props {
   club: Club;
   showForm: boolean;
   setShowForm: (is: boolean) => void;
-  createOldClubName: (data: OldClubNameDto) => void;
+  createOldClubName: (data: _OldClubNameDto) => void;
   deleteOldClubName: (id: number) => void;
 }
 

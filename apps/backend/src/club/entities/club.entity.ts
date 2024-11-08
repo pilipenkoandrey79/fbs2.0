@@ -29,7 +29,7 @@ export class Club implements ClubInterface {
   @ApiProperty({ type: () => City })
   city: City;
 
-  @OneToMany(() => OldClubName, (oldName) => oldName.club)
+  @OneToMany(() => OldClubName, (oldName) => oldName.club, { cascade: true })
   @ApiPropertyOptional({ type: () => [OldClubName] })
   oldNames?: OldClubName[];
 }

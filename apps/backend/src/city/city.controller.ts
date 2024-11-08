@@ -23,7 +23,7 @@ import {
 
 import { AccessTokenGuard } from "../auth/guards/access-token.guard";
 import { City } from "./entities/city.entity";
-import { CreateCityDto } from "./entities/city.dto";
+import { CityDto } from "./entities/city.dto";
 import { CityService } from "./city.service";
 
 @ApiTags(`${ApiEntities.City}/v2`)
@@ -43,7 +43,7 @@ export class CityController {
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
   @ApiCreatedResponse({ type: City })
-  public createCity(@Body() body: CreateCityDto): Promise<City> {
+  public createCity(@Body() body: CityDto): Promise<City> {
     return this.service.createCity(body);
   }
 
@@ -54,7 +54,7 @@ export class CityController {
   @ApiOkResponse({ type: City })
   public updateCity(
     @Param("id", ParseIntPipe) cityId: number,
-    @Body() body: CreateCityDto
+    @Body() body: CityDto
   ): Promise<City> {
     return this.service.updateCity(cityId, body);
   }

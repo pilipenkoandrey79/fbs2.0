@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ApiEntities, Club, ClubDto } from "@fbs2.0/types";
+import { ApiEntities, Club, _ClubDto } from "@fbs2.0/types";
 import { AxiosError } from "axios";
 
 import ApiClient from "../../api/api.client";
@@ -12,9 +12,9 @@ export const useCreateClub = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation<Club, AxiosError, ClubDto>({
+  return useMutation<Club, AxiosError, _ClubDto>({
     mutationFn: (clubDto) =>
-      ApiClient.getInstance().post<Club, ClubDto>(ApiEntities.Club, clubDto),
+      ApiClient.getInstance().post<Club, _ClubDto>(ApiEntities.Club, clubDto),
     onSuccess: (club) => {
       onSuccess(`Додано клуб ${club.name}`);
       !!successCallback && successCallback(club);

@@ -258,6 +258,11 @@
         "edit": "Edit club",
         "create": "Create club"
       },
+      "fields": {
+        "old_names": "Old names",
+        "till": "Till"
+      },
+      "delete_confirm": "Are you shure to delete the club?",
       "updated": "Club is updated",
       "created": "Club is created",
       "deleted": "Club is deleted"

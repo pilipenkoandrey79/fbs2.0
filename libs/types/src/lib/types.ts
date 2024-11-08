@@ -71,12 +71,27 @@ export interface OldClubName {
 }
 
 export interface OldClubNameDto {
+  id?: number;
+  name: string;
+  name_ua?: string;
+  till: string;
+  clubId: number;
+}
+
+export interface _OldClubNameDto {
   name: string;
   till: string;
   clubId: number;
 }
 
 export interface ClubDto {
+  name: string;
+  name_ua?: string;
+  cityId: number;
+  oldNames?: OldClubNameDto[];
+}
+
+export interface _ClubDto {
   name: string;
   cityId: number;
 }

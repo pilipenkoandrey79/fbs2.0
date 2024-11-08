@@ -1,4 +1,4 @@
-import { City, Club, ClubDto, OldClubNameDto } from "@fbs2.0/types";
+import { City, Club, _ClubDto, _OldClubNameDto } from "@fbs2.0/types";
 import { FC, useCallback, useState } from "react";
 import { isNotEmpty } from "@fbs2.0/utils";
 import {
@@ -22,9 +22,9 @@ import styles from "../../../EditForm.module.scss";
 
 interface Props {
   club: Club;
-  create?: (city: ClubDto) => void;
+  create?: (city: _ClubDto) => void;
   update?: (city: Club) => void;
-  createOldClubName?: (data: OldClubNameDto) => void;
+  createOldClubName?: (data: _OldClubNameDto) => void;
   deleteOldClubName?: (id: number) => void;
 }
 

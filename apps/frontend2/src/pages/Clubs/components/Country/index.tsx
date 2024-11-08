@@ -54,8 +54,14 @@ const Country: FC = () => {
       key: "clubs",
       dataIndex: "clubs",
       className: styles.cell,
-      render: (clubs) => (
-        <ClubsCell clubs={clubs} cvInput={cvInput} setCvInput={setCvInput} />
+      render: (clubs, { id: cityId }) => (
+        <ClubsCell
+          clubs={clubs}
+          cvInput={cvInput}
+          setCvInput={setCvInput}
+          countryId={country?.id}
+          cityId={cityId}
+        />
       ),
     },
   ];

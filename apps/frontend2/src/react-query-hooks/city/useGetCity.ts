@@ -10,7 +10,7 @@ const fetchCity = async (cityId: number | undefined) =>
 export const useGetCity = (cityId: number) =>
   useQuery<City, Error>({
     queryKey: [QUERY_KEY.city, cityId],
-    queryFn: () => fetchCity(cityId),
+    queryFn: async () => (cityId >= 0 ? await fetchCity(cityId) : ({} as City)),
     select: (city: City) => ({
       ...city,
       oldNames: city.oldNames?.sort((a, b) => Number(a.till) - Number(b.till)),
