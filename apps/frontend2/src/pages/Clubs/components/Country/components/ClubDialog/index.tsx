@@ -76,6 +76,7 @@ const ClubDialog: FC<Props> = ({ onClose, id, countryId, cityId }) => {
             }}
             onFinish={submit}
             onValuesChange={() => setPristine(false)}
+            disabled={createClub.isPending || updateClub.isPending}
           >
             <NameField className={styles.name} />
             <Form.Item noStyle name="cityId" />
@@ -135,6 +136,7 @@ const ClubDialog: FC<Props> = ({ onClose, id, countryId, cityId }) => {
                 size="small"
                 label={t("common.save")}
                 forceDisabled={pristine}
+                loading={createClub.isPending || updateClub.isPending}
               />
               {id >= 0 && (
                 <Popconfirm

@@ -163,7 +163,7 @@ export class CityService {
 
           await this.cityOldNameRepository.save(oldName);
         } else {
-          await this.cityOldNameRepository.delete(item);
+          await this.cityOldNameRepository.remove(item);
         }
       })
     );

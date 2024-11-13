@@ -81,6 +81,7 @@ const CityDialog: FC<Props> = ({ onClose, id, countryId, isEmpty }) => {
             }}
             onFinish={submit}
             onValuesChange={() => setPristine(false)}
+            disabled={createCity.isPending || updateCity.isPending}
           >
             <NameField className={styles.name} />
             <Form.Item noStyle name="countryId" />
@@ -94,7 +95,7 @@ const CityDialog: FC<Props> = ({ onClose, id, countryId, isEmpty }) => {
                       type="dashed"
                       icon={<PlusOutlined />}
                       onClick={() => add()}
-                    />{" "}
+                    />
                   </Typography.Paragraph>
                   {fields.map((field) => (
                     <Card
@@ -147,6 +148,7 @@ const CityDialog: FC<Props> = ({ onClose, id, countryId, isEmpty }) => {
                 size="small"
                 label={t("common.save")}
                 forceDisabled={pristine}
+                loading={createCity.isPending || updateCity.isPending}
               />
               {isEmpty && (
                 <Popconfirm

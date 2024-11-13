@@ -193,7 +193,7 @@ export class ClubService {
 
           await this.clubOldNameRepository.save(oldName);
         } else {
-          await this.clubOldNameRepository.delete(item);
+          await this.clubOldNameRepository.remove(item);
         }
       })
     );
