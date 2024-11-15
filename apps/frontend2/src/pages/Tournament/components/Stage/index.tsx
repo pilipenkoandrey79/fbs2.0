@@ -99,7 +99,7 @@ const Stage: FC<Props> = ({ stage, previousStages }) => {
     currentStageMatches,
     previousStageMatches,
     prePreviousStageMatches,
-  ].some(({ isFetching }) => isFetching) ? (
+  ].some(({ isPending }) => isPending) ? (
     <Skeleton active />
   ) : (
     currentStageMatches.data && (
@@ -180,7 +180,6 @@ const Stage: FC<Props> = ({ stage, previousStages }) => {
                       : segment === Segments.tables
                   }
                   tournamentPart={{ matches: currentStageMatches.data, stage }}
-                  loading={currentStageMatches.isLoading}
                 />
               )}
               <Matches
@@ -191,7 +190,6 @@ const Stage: FC<Props> = ({ stage, previousStages }) => {
                 }
                 tournamentPart={{ matches: currentStageMatches.data, stage }}
                 participants={participants}
-                loading={currentStageMatches.isLoading}
               />
             </div>
           </div>

@@ -31,7 +31,7 @@ const ClubsCell: FC<Props> = ({
     <>
       <ul className={styles.clubs}>
         {clubs.map((club) => (
-          <li key={club.id}>
+          <li key={club.id} className={styles["clubs-item"]}>
             <span
               className={classNames(styles.club, {
                 [styles.active]:

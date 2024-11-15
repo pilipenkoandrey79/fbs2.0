@@ -27,7 +27,7 @@ const NameField: FC<Props> = ({ namePrefix, required = true, className }) => {
         rules={[{ required }, { max: NAME_FIELD_LENGTH }]}
         className={styles["field-item"]}
       >
-        <Input showCount maxLength={NAME_FIELD_LENGTH} />
+        <Input showCount maxLength={NAME_FIELD_LENGTH} autoFocus />
       </Form.Item>
       <Form.Item
         name={namePrefix !== undefined ? [namePrefix, "name_ua"] : "name_ua"}

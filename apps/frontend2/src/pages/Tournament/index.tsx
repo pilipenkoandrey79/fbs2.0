@@ -1,4 +1,4 @@
-import { FC, useState, useTransition } from "react";
+import { FC, useMemo, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
 import {
@@ -12,8 +12,9 @@ import {
   StageType,
   Tournament as TournamentType,
 } from "@fbs2.0/types";
-import { Collapse, CollapseProps } from "antd";
+import { Collapse, CollapseProps, Spin } from "antd";
 import { CaretRightOutlined, LoadingOutlined } from "@ant-design/icons";
+import { useIsFetching, useIsMutating } from "@tanstack/react-query";
 
 import { HighlightContext } from "../../context/highlightContext";
 import { useHighlightContext } from "../../context/useHighlightContext";
@@ -32,6 +33,8 @@ const Tournament: FC = () => {
   const { t } = useTranslation();
   const { season, tournament } = useParams();
   const [isPending, startTransition] = useTransition();
+  const fetchings = useIsFetching();
+  const mutatings = useIsMutating();
 
   const [participantsDialogOpened, setParticipantsDialogOpened] =
     useState(false);
@@ -68,21 +71,23 @@ const Tournament: FC = () => {
       : undefined
   );
 
-  const items: CollapseProps["items"] = stages.data?.map(
-    (stage, index, stages) => ({
-      key: stage.id,
-      classNames: { header: styles["collapse-header"] },
-      label: t(getStageTransKey(stage.stageType)),
-      children: (
-        <Stage
-          stage={stage as StageInternal}
-          previousStages={[
-            (stages[index - 1] as StageInternal) || null,
-            (stages[index - 2] as StageInternal) || null,
-          ]}
-        />
-      ),
-    })
+  const items: CollapseProps["items"] = useMemo(
+    () =>
+      stages.data?.map((stage, index, stages) => ({
+        key: stage.id,
+        classNames: { header: styles["collapse-header"] },
+        label: t(getStageTransKey(stage.stageType)),
+        children: (
+          <Stage
+            stage={stage as StageInternal}
+            previousStages={[
+              (stages[index - 1] as StageInternal) || null,
+              (stages[index - 2] as StageInternal) || null,
+            ]}
+          />
+        ),
+      })),
+    [stages.data, t]
   );
 
   return (
@@ -92,6 +97,7 @@ const Tournament: FC = () => {
         menu={<TournamentMenu />}
         className={styles[`tournament-${tournament}`]}
       >
+        <Spin fullscreen spinning={fetchings > 0 || mutatings > 0} />
         <Header
           title={title}
           season={season}

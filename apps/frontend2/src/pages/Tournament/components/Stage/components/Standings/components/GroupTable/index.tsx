@@ -28,15 +28,9 @@ interface Props {
   tournamentPart: TournamentPart;
   group: Group | undefined;
   groupKey: string;
-  loading?: boolean;
 }
 
-const GroupTable: FC<Props> = ({
-  tournamentPart,
-  group,
-  loading,
-  groupKey,
-}) => {
+const GroupTable: FC<Props> = ({ tournamentPart, group, groupKey }) => {
   const { t } = useTranslation();
   const { highlightId } = useContext(HighlightContext);
 
@@ -215,7 +209,6 @@ const GroupTable: FC<Props> = ({
       bordered
       rowHoverable={false}
       rowClassName={getRowClassName}
-      loading={loading}
       className={
         styles[
           `group-${tournamentPart.stage.tournamentSeason.tournament.toLowerCase()}-${groupKey}`

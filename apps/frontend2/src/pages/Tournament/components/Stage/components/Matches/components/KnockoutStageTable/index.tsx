@@ -15,7 +15,7 @@ import { FC, useContext, useEffect, useMemo, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import classNames from "classnames";
 import { isNotEmpty } from "@fbs2.0/utils";
-import { useMutationState } from "@tanstack/react-query";
+import { useIsFetching, useIsMutating } from "@tanstack/react-query";
 
 import { EditableCell, EditableCellProps } from "./components/EditableCell";
 import { ResultsCell } from "./components/ResultsCell";
@@ -25,7 +25,6 @@ import { UserContext } from "../../../../../../../../context/userContext";
 import { HighlightContext } from "../../../../../../../../context/highlightContext";
 import { Club } from "../../../../../../../../components/Club";
 import { useCreateMatch } from "../../../../../../../../react-query-hooks/match/useCreateMatch";
-import { MUTATION_KEY } from "../../../../../../../../react-query-hooks/query-key";
 import { useGetTournamentPartMatches } from "../../../../../../../../react-query-hooks/match/useGetTournamentPartMatches";
 import { getFilteredParticipants } from "../../../../utils";
 
@@ -47,7 +46,6 @@ interface Props {
   };
   matches: TournamentStage;
   stage: StageInternal;
-  loading: boolean;
   tour: number | undefined;
   group: Group | undefined;
 }
@@ -56,7 +54,6 @@ const KnockoutStageTable: FC<Props> = ({
   matches,
   stage,
   participants,
-  loading,
   tour,
   group,
 }) => {
@@ -64,11 +61,6 @@ const KnockoutStageTable: FC<Props> = ({
   const { user } = useContext(UserContext);
   const { highlightId } = useContext(HighlightContext);
   const createMatch = useCreateMatch();
-
-  const deleteStatus = useMutationState({
-    filters: { mutationKey: [MUTATION_KEY.deleteMatch] },
-    select: (mutation) => mutation.state.status,
-  });
 
   const [dataSource, setDataSource] = useState<StageTableRow[]>();
   const [adding, setAdding] = useState(false);
@@ -80,6 +72,9 @@ const KnockoutStageTable: FC<Props> = ({
     stage.tournamentSeason.tournament,
     stage.nextStage
   );
+
+  const fetchings = useIsFetching();
+  const mutatings = useIsMutating();
 
   const nextStageHasMatches = Object.keys(nexStageMatches ?? {}).length > 0;
 
@@ -217,6 +212,7 @@ const KnockoutStageTable: FC<Props> = ({
                     setAdding(false);
                   }}
                   style={{ margin: 8 }}
+                  disabled={fetchings > 0 || mutatings > 0}
                 />
               ) : (
                 <DeleteCell
@@ -275,9 +271,6 @@ const KnockoutStageTable: FC<Props> = ({
           pagination={false}
           showHeader={false}
           bordered
-          loading={
-            loading || createMatch.isPending || deleteStatus.includes("pending")
-          }
         />
       </Form>
       {user?.isEditor && availableParticipants.length > 1 && !adding && (
@@ -286,7 +279,7 @@ const KnockoutStageTable: FC<Props> = ({
           type={"primary"}
           size="small"
           onClick={() => setAdding(true)}
-          disabled={createMatch.isPending || deleteStatus.includes("pending")}
+          disabled={fetchings > 0 || mutatings > 0}
         />
       )}
       {!!resultEditing && (

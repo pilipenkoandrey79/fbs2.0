@@ -9,10 +9,9 @@ import styles from "./styles.module.scss";
 interface Props {
   visible: boolean;
   tournamentPart: TournamentPart;
-  loading: boolean;
 }
 
-const Standings: FC<Props> = ({ visible, tournamentPart, loading }) => {
+const Standings: FC<Props> = ({ visible, tournamentPart }) => {
   const { t } = useTranslation();
 
   const getGroupIndexes = () => {
@@ -47,7 +46,6 @@ const Standings: FC<Props> = ({ visible, tournamentPart, loading }) => {
                   tournamentPart={tournamentPart}
                   group={group}
                   groupKey={key}
-                  loading={loading}
                 />
               </Fragment>
             ))}

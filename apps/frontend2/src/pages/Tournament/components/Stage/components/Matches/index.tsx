@@ -23,15 +23,9 @@ interface Props {
     skippers: Participant[] | undefined;
   };
   tournamentPart: TournamentPart;
-  loading: boolean;
 }
 
-const Matches: FC<Props> = ({
-  visible,
-  tournamentPart,
-  participants,
-  loading,
-}) => {
+const Matches: FC<Props> = ({ visible, tournamentPart, participants }) => {
   const { t } = useTranslation();
 
   const groupIndexes = Object.values(Group).slice(
@@ -72,7 +66,6 @@ const Matches: FC<Props> = ({
                   participants={participants}
                   matches={tournamentPart.matches}
                   stage={tournamentPart.stage as StageInternal}
-                  loading={loading}
                   tour={
                     [...GROUP_STAGES, StageSchemeType.LEAGUE].includes(
                       tournamentPart.stage.stageScheme.type

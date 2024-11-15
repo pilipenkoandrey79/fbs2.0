@@ -94,7 +94,9 @@ const ResultForm: FC<Props> = ({
   const isOneMatchStage = ONE_MATCH_STAGES.includes(stage.stageScheme.type);
 
   const formDisabled =
-    updateMatch.isPending || (nextStageHasMatches && !!row.date);
+    updateMatch.isPending ||
+    createMatch.isPending ||
+    (nextStageHasMatches && !!row.date);
 
   const submit = async (values: ResultFormValues) => {
     const { hostDeduction, guestDeduction, ...payload } = values;

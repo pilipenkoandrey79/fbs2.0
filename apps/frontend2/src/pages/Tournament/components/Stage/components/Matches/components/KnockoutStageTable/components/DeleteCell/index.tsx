@@ -8,6 +8,7 @@ import { Button, Dropdown, Popconfirm } from "antd";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useMediaQuery } from "react-responsive";
+import { useIsFetching, useIsMutating } from "@tanstack/react-query";
 
 import { useDeleteMatch } from "../../../../../../../../../../react-query-hooks/match/useDeleteMatch";
 import variables from "../../../../../../../../../../style/variables.module.scss";
@@ -21,6 +22,8 @@ interface Props {
 const DeleteCell: FC<Props> = ({ record, stageType }) => {
   const { t } = useTranslation();
   const deleteMatch = useDeleteMatch(stageType);
+  const fetchings = useIsFetching();
+  const mutatings = useIsMutating();
 
   const isLgScreen = useMediaQuery({
     query: `(min-width: ${variables.screenLg})`,
@@ -39,13 +42,16 @@ const DeleteCell: FC<Props> = ({ record, stageType }) => {
       title: t("common.delete"),
       icon: <DeleteOutlined />,
       key: "delete",
-      disabled: false,
+      disabled: fetchings > 0 || mutatings > 0,
     },
     {
       title: t("tournament.stages.matches.match.clear"),
       icon: <ClearOutlined />,
       key: "clear",
-      disabled: record.results.every(({ date }) => !date),
+      disabled:
+        record.results.every(({ date }) => !date) ||
+        fetchings > 0 ||
+        mutatings > 0,
     },
   ];
 

@@ -11,6 +11,7 @@ import { Button, Tooltip, Typography } from "antd";
 import { dateRenderer, isNotEmpty } from "@fbs2.0/utils";
 import { useTranslation } from "react-i18next";
 import { EditFilled, PlusOutlined } from "@ant-design/icons";
+import { useIsFetching, useIsMutating } from "@tanstack/react-query";
 
 import { UserContext } from "../../../../../../../../../../context/userContext";
 
@@ -38,6 +39,9 @@ const ResultsCell: FC<Props> = ({
 }) => {
   const { user } = useContext(UserContext);
   const { t } = useTranslation();
+
+  const fetchings = useIsFetching();
+  const mutatings = useIsMutating();
 
   const canAddResult =
     !isNotEmpty(forceWinnerId) &&
@@ -114,17 +118,21 @@ const ResultsCell: FC<Props> = ({
               {!adding && user?.isEditor && (
                 <>
                   <Button
-                    type="link"
+                    type="text"
+                    size="small"
                     icon={<EditFilled />}
                     className={styles["edit-button"]}
                     onClick={() => onEdit(date)}
+                    disabled={fetchings > 0 || mutatings > 0}
                   />
                   {canAddResult && (
                     <Button
-                      type="link"
+                      type="text"
+                      size="small"
                       icon={<PlusOutlined />}
                       className={styles["add-button"]}
                       onClick={() => onEdit("")}
+                      disabled={fetchings > 0 || mutatings > 0}
                     />
                   )}
                 </>
@@ -136,10 +144,12 @@ const ResultsCell: FC<Props> = ({
         <div className={styles.match}>
           {!adding && user?.isEditor && canAddResult && (
             <Button
-              type="link"
+              type="text"
+              size="small"
               icon={<PlusOutlined />}
               className={styles["add-button"]}
               onClick={() => onEdit("")}
+              disabled={fetchings > 0 || mutatings > 0}
             />
           )}
         </div>
