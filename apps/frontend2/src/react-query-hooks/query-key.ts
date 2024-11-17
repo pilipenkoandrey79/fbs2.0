@@ -8,6 +8,7 @@ export const QUERY_KEY = {
   countries: "countries",
   clubs: "clubs",
   club: "club",
+  clubCV: "club-cv",
   cities: "cities",
   city: "city",
 };

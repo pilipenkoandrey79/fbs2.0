@@ -21,6 +21,12 @@
       "stage_scheme": "Select stage scheme",
       "starting_stage": "Select starting stage",
       "enter_name": "Enter name"
+    },
+    "balance": {
+      "win": "Number of wins",
+      "draw": "Number of draws",
+      "loss": "Number of defeats",
+      "undefined": "Number of unplayed matches"
     }
   },
   "error_page": {
@@ -265,7 +271,13 @@
       "delete_confirm": "Are you shure to delete the club?",
       "updated": "Club is updated",
       "created": "Club is created",
-      "deleted": "Club is deleted"
+      "deleted": "Club is deleted",
+      "club_cv": {
+        "title": "Seasons of",
+        "balance": "Balance",
+        "matches": "Matches",
+        "titles": "Titles"
+      }
     }
   }
 }

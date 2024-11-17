@@ -1,0 +1,28 @@
+@use "../../style/colors.module.scss";
+
+.balance {
+  font-size: 20px;
+  font-weight: 600;
+  display: inline-block;
+
+  .value {
+    margin: 0 2px;
+    cursor: pointer;
+  }
+
+  .win {
+    color: colors.$win;
+  }
+
+  .drw {
+    color: colors.$draw;
+  }
+
+  .los {
+    color: colors.$loss;
+  }
+
+  .und {
+    color: colors.$undefined;
+  }
+}

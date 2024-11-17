@@ -11,7 +11,8 @@ import { City } from "@fbs2.0/types";
 
 import { SubHeader } from "./components/SubHeader";
 import { ClubsCell } from "./components/ClubsCell";
-import { CV, CVInput } from "./components/CV";
+import { ClubCV } from "./components/ClubCV";
+import { CountryCV } from "./components/CountryCV";
 import { ResponsivePanel } from "../../../../components/ResponsivePanel";
 import { CityDialog } from "./components/CityDialog";
 import { useGetCountries } from "../../../../react-query-hooks/country/useGetCountries";
@@ -20,6 +21,8 @@ import { Paths } from "../../../../routes";
 import { Language } from "../../../../i18n/locales";
 
 import styles from "./styles.module.scss";
+
+export type CVInput = { type: "club" | "country"; id: number | undefined };
 
 const Country: FC = () => {
   const { i18n, t } = useTranslation();
@@ -109,7 +112,10 @@ const Country: FC = () => {
           isOpen={cvInput !== null}
           close={() => setCvInput(null)}
         >
-          <CV input={cvInput} />
+          <>
+            {cvInput?.type === "club" && <ClubCV id={cvInput.id} />}
+            {cvInput?.type === "country" && <CountryCV id={cvInput.id} />}
+          </>
         </ResponsivePanel>
       </div>
       {cityIdToEdit !== null && (

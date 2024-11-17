@@ -5,8 +5,8 @@ import { Button } from "antd";
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 
 import { Club } from "../../../../../../components/Club";
-import { CVInput } from "../CV";
 import { ClubDialog } from "../ClubDialog";
+import { CVInput } from "../..";
 
 import styles from "./styles.module.scss";
 
