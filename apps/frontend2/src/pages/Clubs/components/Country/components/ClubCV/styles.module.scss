@@ -1,5 +1,6 @@
 @use "../../../../../../style/mixins.scss";
 @use "../../../../../../style/colors.module.scss";
+@use "../../../../../../style/variables.module.scss";
 
 $timeline-position: 75%;
 $timeline-space: 12px;
@@ -8,26 +9,58 @@ $timeline-space: 12px;
   padding: 0 10px 10px;
   width: 100%;
 
+  @media (min-width: variables.$screen-sm) {
+    padding-top: 30px;
+  }
+
+  h3 {
+    margin-top: 0;
+  }
+
   .club {
     font-size: inherit;
     line-height: inherit;
   }
 
-  .balance {
-    margin: 12px 0;
+  .titles {
+    font-size: 36px;
+  }
+
+  .graph {
+    width: 100px;
+    height: 100px;
+    border: 1px dashed colors.$primaryBase;
+    padding: 20px;
+    flex: 1 0 auto;
+
+    @media (min-width: variables.$screen-sm) {
+      width: 160px;
+      height: 160px;
+    }
   }
 
   .timeline {
-    .label {
+    .label-wrapper {
       transform: translate(0, -6px);
+      border: 1px solid colors.$headerColor;
 
-      .start {
-        font-size: 12px;
-        color: rgba($color: #000000, $alpha: 0.5);
+      .label {
+        .start {
+          font-size: 12px;
+          color: rgba($color: #000000, $alpha: 0.5);
+        }
+
+        .finish {
+          font-size: 16px;
+        }
       }
+    }
 
-      .finish {
-        font-size: 16px;
+    .placeholder {
+      height: 10px;
+
+      &.special {
+        height: 30px;
       }
     }
 
@@ -40,6 +73,7 @@ $timeline-space: 12px;
 
         .ant-timeline-item-label {
           inset-inline-start: calc(#{$timeline-position} + #{$timeline-space});
+          width: calc(100% - #{$timeline-position} - #{$timeline-space});
         }
 
         .ant-timeline-item-content {

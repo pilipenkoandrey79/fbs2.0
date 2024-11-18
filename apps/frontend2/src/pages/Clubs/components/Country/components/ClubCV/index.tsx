@@ -1,16 +1,19 @@
 import { FC } from "react";
 import { Divider, Flex, Skeleton, Timeline, Typography } from "antd";
-import { Years } from "@fbs2.0/types";
+import { FIRST_ICFC_SEASONS, Years } from "@fbs2.0/types";
 import { useTranslation } from "react-i18next";
-import { getCVBalance } from "@fbs2.0/utils";
+// import { getCVBalance } from "@fbs2.0/utils";
+import { TrophyTwoTone } from "@ant-design/icons";
+import classNames from "classnames";
 
 import { Club } from "../../../../../../components/Club";
 import { CVItem } from "./components/CVItem";
 import { useGetClubCV } from "../../../../../../react-query-hooks/club/useGetClubCV";
 import { useGetClub } from "../../../../../../react-query-hooks/club/useGetClub";
-import { Balance } from "../../../../../../components/Balance";
+// import { Balance } from "../../../../../../components/Balance";
 
 import styles from "./styles.module.scss";
+import colors from "../../../../../../style/colors.module.scss";
 
 interface Props {
   id: number | undefined;
@@ -20,41 +23,36 @@ const ClubCV: FC<Props> = ({ id }) => {
   const { t } = useTranslation();
   const club = useGetClub(id);
   const cv = useGetClubCV(id);
-  const { balance, matches } = getCVBalance(cv.data);
+  // const { balance, matches } = getCVBalance(cv.data);
 
   return cv.isLoading || club.isLoading ? (
     <Skeleton active />
   ) : (
     <div className={styles.cv}>
-      <Typography.Title level={3}>
-        {t("clubs.club.club_cv.title")}{" "}
-        {club.data && (
-          <Club
-            club={club.data}
-            showCity={false}
-            showCountry={false}
-            className={styles.club}
-          />
-        )}
-      </Typography.Title>
-      <Flex vertical gap={12}>
-        <Flex gap={6} align="center">
-          <Typography.Text>{t("clubs.club.club_cv.matches")}:</Typography.Text>
-          <Typography.Text>{matches}</Typography.Text>
-        </Flex>
-        <Flex gap={6} align="center">
-          <Typography.Text>{t("clubs.club.club_cv.titles")}:</Typography.Text>
-          <Typography.Text>
-            {cv.data?.reduce<number>(
-              (acc, { isWinner }) => acc + (isWinner ? 1 : 0),
-              0
+      <Flex>
+        <div>
+          <Typography.Title level={3}>
+            {t("clubs.club.club_cv.title")}{" "}
+            {club.data && (
+              <Club
+                club={club.data}
+                showCity={false}
+                showCountry={false}
+                className={styles.club}
+              />
             )}
-          </Typography.Text>
-        </Flex>
-        <Flex gap={6} align="center">
-          <Typography.Text>{t("clubs.club.club_cv.balance")}:</Typography.Text>
-          <Balance balance={balance} />
-        </Flex>
+          </Typography.Title>
+          <Flex gap={8} className={styles.titles}>
+            <TrophyTwoTone twoToneColor={colors.golden} />
+            <span>
+              {cv.data?.reduce<number>(
+                (acc, { isWinner }) => acc + (isWinner ? 1 : 0),
+                0
+              )}
+            </span>
+          </Flex>
+        </div>
+        <div className={styles.graph}></div>
       </Flex>
       <Divider />
       <Timeline
@@ -66,24 +64,49 @@ const ClubCV: FC<Props> = ({ id }) => {
             const start = Years.GLOBAL_START + index;
             const finish = Years.GLOBAL_START + index + 1;
 
+            const additionalLabel = FIRST_ICFC_SEASONS.find(
+              (item) => `${finish}` === item.split("-")[1]
+            );
+
+            const labels = additionalLabel
+              ? [additionalLabel.split("-"), [start, finish]]
+              : [[start, finish]];
+
             const tournamentSeasons =
-              cv.data?.filter(
-                ({ tournamentSeason }) =>
-                  tournamentSeason.season === [start, finish].join("-")
-              ) || [];
+              cv.data?.filter(({ tournamentSeason }) => {
+                const season = tournamentSeason.season.split("-");
+
+                return `${finish}` === season[1];
+              }) || [];
 
             return {
               key: index,
               label: (
-                <Flex gap={2} className={styles.label} align="center">
-                  <span className={styles.start}>{start}</span>
-                  <span>-</span>
-                  <span className={styles.finish}>{finish}</span>
-                </Flex>
+                <div className={styles["label-wrapper"]}>
+                  {labels.map((label) => (
+                    <Flex
+                      gap={2}
+                      className={styles.label}
+                      align="center"
+                      key={label[0]}
+                    >
+                      <span className={styles.start}>{label[0]}</span>
+                      <span>-</span>
+                      <span className={styles.finish}>{label[1]}</span>
+                    </Flex>
+                  ))}
+                </div>
               ),
-              children: tournamentSeasons?.length > 0 && (
-                <CVItem entries={tournamentSeasons} />
-              ),
+              children:
+                tournamentSeasons?.length > 0 ? (
+                  <CVItem entries={tournamentSeasons} />
+                ) : (
+                  <div
+                    className={classNames(styles.placeholder, {
+                      [styles.special]: additionalLabel,
+                    })}
+                  ></div>
+                ),
             };
           })}
       />

@@ -2,12 +2,16 @@
 @use "../../../../../../../../style/colors.module.scss";
 
 .card {
-  .winner {
-    background-color: colors.$golden;
-  }
+  .row {
+    padding: 2px 0;
 
-  .finalist {
-    background-color: colors.$silver;
+    &.winner {
+      background-color: colors.$golden;
+    }
+
+    &.finalist {
+      background-color: colors.$silver;
+    }
   }
 
   .badge {

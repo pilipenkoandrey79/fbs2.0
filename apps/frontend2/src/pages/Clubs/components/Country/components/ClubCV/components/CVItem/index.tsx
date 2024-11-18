@@ -31,43 +31,49 @@ const CVItem: FC<Props> = ({ entries }) => {
               tournamentSequence[a.tournamentSeason.tournament] -
               tournamentSequence[b.tournamentSeason.tournament]
           )
-          .map(({ tournamentSeason, start, finish, isWinner }) => (
-            <Flex
-              align="center"
-              key={tournamentSeason.id}
-              className={classNames({
-                [styles.winner]: isWinner,
-                [styles.finalist]:
-                  finish === StageType.FINAL && isWinner === false,
-              })}
-            >
-              <div className={styles.badge}>
-                <TournamentBadge tournamentSeason={tournamentSeason} />
-              </div>
-              <div className={styles.value}>
-                <Typography.Text ellipsis>
-                  {t(
-                    `tournament.stage.${start}${
-                      start === StageType.GROUP || start === StageType.GROUP_2
-                        ? ".short"
-                        : ""
-                    }`
-                  )}
-                </Typography.Text>
-              </div>
-              <div className={styles.value}>
-                <Typography.Text ellipsis>
-                  {t(
-                    `tournament.stage.${finish}${
-                      finish === StageType.GROUP || finish === StageType.GROUP_2
-                        ? ".short"
-                        : ""
-                    }`
-                  )}
-                </Typography.Text>
-              </div>
-            </Flex>
-          ))}
+          .map(({ tournamentSeason, start, finish, isWinner }) => {
+            const startLabel = t(
+              `tournament.stage.${start}${
+                start === StageType.GROUP || start === StageType.GROUP_2
+                  ? ".short"
+                  : ""
+              }`
+            );
+
+            const finishlabel = t(
+              `tournament.stage.${finish}${
+                finish === StageType.GROUP || finish === StageType.GROUP_2
+                  ? ".short"
+                  : ""
+              }`
+            );
+
+            return (
+              <Flex
+                align="center"
+                key={tournamentSeason.id}
+                className={classNames(styles.row, {
+                  [styles.winner]: isWinner,
+                  [styles.finalist]:
+                    finish === StageType.FINAL && isWinner === false,
+                })}
+              >
+                <div className={styles.badge}>
+                  <TournamentBadge tournamentSeason={tournamentSeason} />
+                </div>
+                <div className={styles.value}>
+                  <Typography.Text ellipsis={{ tooltip: startLabel }}>
+                    {startLabel}
+                  </Typography.Text>
+                </div>
+                <div className={styles.value}>
+                  <Typography.Text ellipsis={{ tooltip: finishlabel }}>
+                    {finishlabel}
+                  </Typography.Text>
+                </div>
+              </Flex>
+            );
+          })}
       </Flex>
     </Card>
   );

@@ -8,6 +8,7 @@
   background-color: $contentBg;
   width: calc(50% - #{$panelGap}/ 2);
   position: relative;
+  margin-bottom: 40px;
 
   .close-button {
     position: absolute;
