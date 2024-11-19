@@ -54,9 +54,9 @@ $from-another-tournament: #016fc9;
 
 $golden: #f7e47b;
 $silver: #e0dede;
-$win: #034403;
-$draw: #cc4b0a;
-$loss: #941e1e;
+$win: #189718;
+$draw: #e4ac33;
+$loss: #ff1f1f;
 $undefined: #7f18c4;
 
 :export {
@@ -68,4 +68,9 @@ $undefined: #7f18c4;
   contentBg: $contentBg;
   border: $border;
   golden: $golden;
+  silver: $silver;
+  win: $win;
+  draw: $draw;
+  loss: $loss;
+  undefined: $undefined;
 }

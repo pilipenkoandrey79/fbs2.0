@@ -2,15 +2,15 @@ import { FC } from "react";
 import { Divider, Flex, Skeleton, Timeline, Typography } from "antd";
 import { FIRST_ICFC_SEASONS, Years } from "@fbs2.0/types";
 import { useTranslation } from "react-i18next";
-// import { getCVBalance } from "@fbs2.0/utils";
-import { TrophyTwoTone } from "@ant-design/icons";
+import { getCVBalance } from "@fbs2.0/utils";
+import { CarryOutOutlined, TrophyTwoTone } from "@ant-design/icons";
 import classNames from "classnames";
 
 import { Club } from "../../../../../../components/Club";
 import { CVItem } from "./components/CVItem";
+import { Balance } from "../../../../../../components/Balance";
 import { useGetClubCV } from "../../../../../../react-query-hooks/club/useGetClubCV";
 import { useGetClub } from "../../../../../../react-query-hooks/club/useGetClub";
-// import { Balance } from "../../../../../../components/Balance";
 
 import styles from "./styles.module.scss";
 import colors from "../../../../../../style/colors.module.scss";
@@ -23,13 +23,13 @@ const ClubCV: FC<Props> = ({ id }) => {
   const { t } = useTranslation();
   const club = useGetClub(id);
   const cv = useGetClubCV(id);
-  // const { balance, matches } = getCVBalance(cv.data);
+  const { balance, matches } = getCVBalance(cv.data);
 
   return cv.isLoading || club.isLoading ? (
     <Skeleton active />
   ) : (
     <div className={styles.cv}>
-      <Flex>
+      <Flex justify="space-between">
         <div>
           <Typography.Title level={3}>
             {t("clubs.club.club_cv.title")}{" "}
@@ -51,8 +51,12 @@ const ClubCV: FC<Props> = ({ id }) => {
               )}
             </span>
           </Flex>
+          <Flex gap={8} className={styles.matches}>
+            <CarryOutOutlined />
+            <span>{matches}</span>
+          </Flex>
         </div>
-        <div className={styles.graph}></div>
+        <Balance balance={balance} />
       </Flex>
       <Divider />
       <Timeline
