@@ -13,7 +13,7 @@ export const useUpdateClub = () => {
   return useMutation<Club, AxiosError, ClubDto & { id: number }>({
     mutationFn: (club) =>
       ApiClient.getInstance().put<Club, ClubDto>(
-        `${ApiEntities.Club}/v2/${club.id}`,
+        `v2/${ApiEntities.Club}/${club.id}`,
         club
       ),
     onSettled: (club) => {

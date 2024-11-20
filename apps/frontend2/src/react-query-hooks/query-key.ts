@@ -6,6 +6,7 @@ export const QUERY_KEY = {
   summary: "summary",
   integrated_summary: "integrated-summary",
   countries: "countries",
+  countryCV: "country-cv",
   clubs: "clubs",
   club: "club",
   clubCV: "club-cv",

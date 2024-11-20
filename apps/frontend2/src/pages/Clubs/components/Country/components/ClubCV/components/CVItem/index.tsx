@@ -1,18 +1,27 @@
-import { ClubCV, StageType, Tournament } from "@fbs2.0/types";
+import {
+  ClubCV,
+  HIGHLIGHTED_CLUB_ID_SEARCH_PARAM,
+  StageType,
+  Tournament,
+} from "@fbs2.0/types";
 import { Card, Flex, Typography } from "antd";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
+import { generatePath } from "react-router";
+import { createSearchParams } from "react-router-dom";
 
 import { TournamentBadge } from "../../../../../../../../components/TournamentBadge";
+import { Paths } from "../../../../../../../../routes";
 
 import styles from "./styles.module.scss";
 
 interface Props {
   entries: ClubCV[];
+  clubId: number | undefined;
 }
 
-const CVItem: FC<Props> = ({ entries }) => {
+const CVItem: FC<Props> = ({ entries, clubId }) => {
   const { t } = useTranslation();
 
   const tournamentSequence = Object.values(Tournament).reduce<
@@ -59,7 +68,18 @@ const CVItem: FC<Props> = ({ entries }) => {
                 })}
               >
                 <div className={styles.badge}>
-                  <TournamentBadge tournamentSeason={tournamentSeason} />
+                  <TournamentBadge
+                    tournamentSeason={tournamentSeason}
+                    linkTo={
+                      generatePath(Paths.TOURNAMENT, {
+                        season: tournamentSeason.season,
+                        tournament: tournamentSeason.tournament,
+                      }) +
+                      `?${createSearchParams([
+                        [HIGHLIGHTED_CLUB_ID_SEARCH_PARAM, `${clubId}`],
+                      ])}`
+                    }
+                  />
                 </div>
                 <div className={styles.value}>
                   <Typography.Text ellipsis={{ tooltip: startLabel }}>

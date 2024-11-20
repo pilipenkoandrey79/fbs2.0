@@ -5,16 +5,18 @@ import { AxiosError } from "axios";
 
 import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
+import { Language } from "../../i18n/locales";
 
 const fetchClubs = async (countryId?: number) =>
   await ApiClient.getInstance().get<Club[]>(
-    `${ApiEntities.Club}/v2/${countryId ? `?countryId=${countryId}` : ""}`
+    `${ApiEntities.Club}/${countryId ? `?countryId=${countryId}` : ""}`
   );
 
-export const getYearSelector = (year?: string) => (clubs: Club[]) =>
-  isNotEmpty(year)
-    ? clubs.map((club) => prepareClub(club, year as string))
-    : clubs;
+export const getYearSelector =
+  (lang: Language, year?: string) => (clubs: Club[]) =>
+    isNotEmpty(year)
+      ? clubs.map((club) => prepareClub(club, year as string))
+      : clubs;
 
 export const useGetClubs = <T = Club[]>(
   countryId?: number,

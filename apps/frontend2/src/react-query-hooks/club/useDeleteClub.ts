@@ -12,7 +12,7 @@ export const useDeleteClub = (countryId: number | undefined) => {
 
   return useMutation<unknown, AxiosError, number>({
     mutationFn: (clubId: number) =>
-      ApiClient.getInstance().delete(`${ApiEntities.Club}/v2/${clubId}`),
+      ApiClient.getInstance().delete(`${ApiEntities.Club}/${clubId}`),
     onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEY.cities, countryId],

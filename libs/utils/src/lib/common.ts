@@ -297,28 +297,30 @@ export const prepareClub = (club: Club, year: string) => {
 
   const givenYear = Number(year);
 
-  const name =
-    [...(club.oldNames || [])]
+  const { name = club.name, name_ua = club.name_ua } = {
+    ...[...(club.oldNames || [])]
       .sort((a, b) => Number(a.till) - Number(b.till))
-      .find(({ till }) => Number(till) > givenYear)?.name || club.name;
+      .find(({ till }) => Number(till) > givenYear),
+  };
 
   let city = club.city;
 
-  if ((club.city?.oldNames?.length || 0) > 0) {
+  if ((club.city?.oldNames || []).length > 0) {
     const oldCityName = [...(club.city?.oldNames || [])]
       .sort((a, b) => Number(a.till) - Number(b.till))
       .find(({ till }) => Number(till) > givenYear);
 
-    const { name, country } = { ...oldCityName };
+    const { name, country, name_ua } = { ...oldCityName };
 
     city = {
       ...club.city,
       name: name || club.city?.name || "",
+      name_ua: name_ua || club.city?.name_ua || "",
       country: country || club.city?.country,
     } as City;
   }
 
-  return { ...club, name, city };
+  return { ...club, name, name_ua, city };
 };
 
 export const prepareMatchesList = (matches: Match[]) => {

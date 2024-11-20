@@ -278,6 +278,10 @@
         "matches": "Matches",
         "titles": "Titles"
       }
+    },
+    "country_cv": {
+      "finals": "Finals",
+      "titles": "Titles"
     }
   }
 }

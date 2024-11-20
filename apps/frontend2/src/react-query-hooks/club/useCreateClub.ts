@@ -7,14 +7,14 @@ import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
 import { MutationContext } from "../client";
 
-export const useCreateClub = (countryId: number | undefined) => {
+export const useCreateClub = (countryId?: number) => {
   const queryClient = useQueryClient();
   const { t } = useTranslation();
 
   return useMutation<Club, AxiosError, ClubDto, MutationContext>({
     mutationFn: (clubDto) =>
       ApiClient.getInstance().post<Club, ClubDto>(
-        `${ApiEntities.Club}/v2`,
+        `v2/${ApiEntities.Club}`,
         clubDto
       ),
     onSettled: (club) => {

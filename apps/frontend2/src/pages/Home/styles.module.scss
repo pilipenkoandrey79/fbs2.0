@@ -21,7 +21,7 @@
   }
 
   .body {
-    @include flex(row, space-between, flex-start);
+    @include flex(row, center, flex-start);
     gap: 20px;
 
     .timeline {

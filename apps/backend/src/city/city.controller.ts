@@ -6,7 +6,6 @@ import {
   Param,
   ParseIntPipe,
   Body,
-  Delete,
   Put,
   UseGuards,
 } from "@nestjs/common";
@@ -14,8 +13,6 @@ import { ApiEntities } from "@fbs2.0/types";
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
-  ApiNoContentResponse,
-  ApiNotFoundResponse,
   ApiOkResponse,
   ApiParam,
   ApiTags,
@@ -26,8 +23,8 @@ import { City } from "./entities/city.entity";
 import { CityDto } from "./entities/city.dto";
 import { CityService } from "./city.service";
 
-@ApiTags(`${ApiEntities.City}/v2`)
-@Controller(`${ApiEntities.City}/v2`)
+@ApiTags(`v2/${ApiEntities.City}`)
+@Controller(`v2/${ApiEntities.City}`)
 export class CityController {
   @Inject(CityService)
   private readonly service: CityService;
@@ -57,15 +54,5 @@ export class CityController {
     @Body() body: CityDto
   ): Promise<City> {
     return this.service.updateCity(cityId, body);
-  }
-
-  @Delete("/:id")
-  @UseGuards(AccessTokenGuard)
-  @ApiBearerAuth()
-  @ApiParam({ name: "id", type: "number" })
-  @ApiNoContentResponse()
-  @ApiNotFoundResponse()
-  public deleteCity(@Param("id", ParseIntPipe) cityId: number) {
-    return this.service.removeCity(cityId);
   }
 }

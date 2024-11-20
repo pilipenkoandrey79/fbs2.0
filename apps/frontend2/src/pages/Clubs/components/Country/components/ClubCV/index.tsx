@@ -103,7 +103,7 @@ const ClubCV: FC<Props> = ({ id }) => {
               ),
               children:
                 tournamentSeasons?.length > 0 ? (
-                  <CVItem entries={tournamentSeasons} />
+                  <CVItem entries={tournamentSeasons} clubId={club.data?.id} />
                 ) : (
                   <div
                     className={classNames(styles.placeholder, {

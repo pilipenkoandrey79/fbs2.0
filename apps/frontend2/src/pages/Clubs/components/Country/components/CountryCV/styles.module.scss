@@ -1,6 +1,15 @@
 @use "../../../../../../style/mixins.scss";
+@use "../../../../../../style/variables.module.scss";
 
 .cv {
-  @include mixins.flex(row, flex-start);
+  padding: 0 10px 10px;
   width: 100%;
+
+  @media (min-width: variables.$screen-sm) {
+    padding-top: 30px;
+  }
+
+  .titles {
+    font-size: 36px;
+  }
 }

@@ -13,7 +13,7 @@ export const useUpdateCity = () => {
   return useMutation<City, AxiosError, CityDto & { id: number }>({
     mutationFn: (city) =>
       ApiClient.getInstance().put<City, CityDto>(
-        `${ApiEntities.City}/v2/${city.id}`,
+        `v2/${ApiEntities.City}/${city.id}`,
         city
       ),
     onSettled: (city) => {

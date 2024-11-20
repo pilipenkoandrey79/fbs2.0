@@ -12,7 +12,7 @@ export const useDeleteCity = (countryId: number | undefined) => {
 
   return useMutation<unknown, AxiosError, number>({
     mutationFn: (cityId: number) =>
-      ApiClient.getInstance().delete(`${ApiEntities.City}/v2/${cityId}`),
+      ApiClient.getInstance().delete(`${ApiEntities.City}/${cityId}`),
     onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEY.cities, countryId],

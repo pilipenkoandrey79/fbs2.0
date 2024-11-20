@@ -5,7 +5,7 @@ import { QUERY_KEY } from "../query-key";
 import ApiClient from "../../api/api.client";
 
 const fetchCity = async (cityId: number | undefined) =>
-  await ApiClient.getInstance().get<City>(`${ApiEntities.City}/v2/${cityId}`);
+  await ApiClient.getInstance().get<City>(`v2/${ApiEntities.City}/${cityId}`);
 
 export const useGetCity = (cityId: number) =>
   useQuery<City, Error>({

@@ -14,7 +14,7 @@ export const useCreateCity = () => {
   return useMutation<City, AxiosError, CityDto, MutationContext>({
     mutationFn: (cityDto) =>
       ApiClient.getInstance().post<City, CityDto>(
-        `${ApiEntities.City}/v2`,
+        `v2/${ApiEntities.City}`,
         cityDto
       ),
     onSettled: (city) => {

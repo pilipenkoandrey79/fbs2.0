@@ -39,7 +39,7 @@ const ParticipantSelector: FC<Props> = ({
 
   const { data: clubs } = useGetClubs(
     undefined,
-    getYearSelector(season?.split("-")?.[0])
+    getYearSelector(i18n.resolvedLanguage as Language, season?.split("-")?.[0])
   );
 
   const { data: usedClubIds } = useGetParticipants<number[]>(
