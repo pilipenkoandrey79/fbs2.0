@@ -84,13 +84,15 @@ const Country: FC = () => {
           disabled={cvInput !== null}
         />
         <Divider type="vertical" />
-        <Button
-          icon={<PlusSquareFilled />}
-          type="primary"
-          onClick={() => setCityIdToEdit(-1)}
-        >
-          {t("clubs.add_city")}
-        </Button>
+        {!country?.till && (
+          <Button
+            icon={<PlusSquareFilled />}
+            type="primary"
+            onClick={() => setCityIdToEdit(-1)}
+          >
+            {t("clubs.add_city")}
+          </Button>
+        )}
       </SubHeader>
       <div className={styles.container}>
         <div className={styles.table}>

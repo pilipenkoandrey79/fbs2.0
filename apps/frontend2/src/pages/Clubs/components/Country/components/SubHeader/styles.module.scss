@@ -4,7 +4,7 @@
 .root {
   @include flex(row, space-between, stretch);
   margin-bottom: 20px;
-  padding: 8px 20px;
+  padding: 8px 20px 8px 2px;
   background-color: $contentBg;
   border-top: 1px solid $primaryBase;
 

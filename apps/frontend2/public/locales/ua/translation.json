@@ -12,6 +12,7 @@
     "add_more": "Додати ще",
     "save": "Зберегти",
     "delete": "Видалити",
+    "restore": "Скинути",
     "placeholder": {
       "country": "Оберіть країну",
       "club": "Оберіть клуб",
@@ -289,7 +290,8 @@
         "club": "Клуб"
       },
       "winner": "Переможець",
-      "runner-up": "Фіналіст"
+      "runner-up": "Фіналіст",
+      "graph_tooltip": "{{place}} місце з {{places}}"
     }
   }
 }

@@ -12,6 +12,7 @@ export const QUERY_KEY = {
   clubCV: "club-cv",
   cities: "cities",
   city: "city",
+  coefficientGraph: "coefficient-graph",
 };
 
 export const MUTATION_KEY = {

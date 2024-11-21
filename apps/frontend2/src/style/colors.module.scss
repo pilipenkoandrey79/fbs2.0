@@ -59,6 +59,9 @@ $draw: #e4ac33;
 $loss: #ff1f1f;
 $undefined: #7f18c4;
 
+$coefficient-bar: #aed402;
+$coefficient-line: #862c10;
+
 :export {
   primaryBase: $primaryBase;
   headerColor: $headerColor;
@@ -73,4 +76,6 @@ $undefined: #7f18c4;
   draw: $draw;
   loss: $loss;
   undefined: $undefined;
+  coefficientBar: $coefficient-bar;
+  coefficientLine: $coefficient-line;
 }

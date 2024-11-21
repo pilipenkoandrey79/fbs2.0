@@ -1,0 +1,17 @@
+@use "../../../../../../../../style/variables.module.scss";
+
+.skeleton {
+  height: 160px;
+}
+
+.graph {
+  width: 330px;
+
+  @media (min-width: variables.$screen-lg) {
+    width: 440px;
+  }
+
+  @media (min-width: variables.$screen-xl) {
+    width: 550px;
+  }
+}

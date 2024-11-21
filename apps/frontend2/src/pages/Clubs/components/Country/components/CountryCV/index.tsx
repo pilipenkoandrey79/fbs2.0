@@ -23,6 +23,7 @@ import { useMediaQuery } from "react-responsive";
 import { Club } from "../../../../../../components/Club";
 import { TournamentBadge } from "../../../../../../components/TournamentBadge";
 import { useGetCountryCV } from "../../../../../../react-query-hooks/country/useGetCountryCV";
+import { CoefficientGraph } from "./components/CoefficientGraph";
 import { Paths } from "../../../../../../routes";
 
 import styles from "./styles.module.scss";
@@ -125,6 +126,7 @@ const CountryCV: FC<Props> = ({ id }) => {
                     [HIGHLIGHTED_CLUB_ID_SEARCH_PARAM, `${club.id}`],
                   ])}`
                 }
+                key={club.id}
               >
                 <Club
                   club={club}
@@ -167,6 +169,7 @@ const CountryCV: FC<Props> = ({ id }) => {
           )}
         </span>
       </Flex>
+      {id !== undefined && <CoefficientGraph countryId={id} />}
       <Divider />
       <div className={styles.table}>
         <Table<CountryCVInterface>

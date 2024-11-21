@@ -12,6 +12,7 @@
     "add_more": "Add more",
     "save": "Save",
     "delete": "Delete",
+    "restore": "Restore",
     "placeholder": {
       "country": "Select country",
       "club": "Select club",
@@ -289,7 +290,8 @@
         "club": "Club"
       },
       "winner": "Winner",
-      "runner-up": "Runner-up"
+      "runner-up": "Runner-up",
+      "graph_tooltip": "{{place}} place of {{places}}"
     }
   }
 }

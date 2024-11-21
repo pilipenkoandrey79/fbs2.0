@@ -33,6 +33,9 @@ const Balance: FC<Props> = ({ balance, showGraph = true }) => {
               trigger: "item",
             },
             grid: { top: 0, left: 0, right: 0, bottom: 0 },
+            textStyle: {
+              fontFamily: "-apple-system, 'Oswald', sans-serif",
+            },
             series: [
               {
                 name: t("clubs.club.club_cv.balance"),
