@@ -1,5 +1,6 @@
 @use "../../../../../../style/mixins.scss";
 @use "../../../../../../style/variables.module.scss";
+@use "../../../../../../style/colors.module.scss";
 
 .cv {
   padding: 0 10px 10px;
@@ -11,5 +12,36 @@
 
   .titles {
     font-size: 36px;
+  }
+
+  .winner {
+    background-color: colors.$golden;
+    padding-inline: 4px;
+  }
+
+  .runner-up {
+    background-color: colors.$silver;
+    padding-inline: 4px;
+  }
+
+  .table {
+    :global {
+      .ant-table-cell {
+        padding: 4px 2px !important;
+      }
+    }
+
+    .season {
+      font-size: 12px;
+      white-space: nowrap;
+
+      @media (min-width: variables.$screen-md) {
+        font-size: unset;
+      }
+    }
+
+    .tournament {
+      text-align: center;
+    }
   }
 }

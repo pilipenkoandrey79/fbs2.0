@@ -19,7 +19,7 @@ const Clubs: FC = () => {
     <Page title={title}>
       <div className={styles.container}>
         <Header loading={countries.isLoading} className={styles.header}>
-          <Typography.Title>{title}</Typography.Title>
+          <Typography.Title ellipsis>{title}</Typography.Title>
         </Header>
         <Outlet />
       </div>

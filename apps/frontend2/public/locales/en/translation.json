@@ -281,7 +281,15 @@
     },
     "country_cv": {
       "finals": "Finals",
-      "titles": "Titles"
+      "titles": "Titles",
+      "columns": {
+        "season": "Season",
+        "tournament": "Tournament",
+        "status": "Status",
+        "club": "Club"
+      },
+      "winner": "Winner",
+      "runner-up": "Runner-up"
     }
   }
 }

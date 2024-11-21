@@ -281,7 +281,15 @@
     },
     "country_cv": {
       "finals": "Фіналів",
-      "titles": "Титулів"
+      "titles": "Титулів",
+      "columns": {
+        "season": "Сезон",
+        "tournament": "Турнір",
+        "status": "Статус",
+        "club": "Клуб"
+      },
+      "winner": "Переможець",
+      "runner-up": "Фіналіст"
     }
   }
 }
