@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router";
 import { Button, Divider, Table, TableProps } from "antd";
@@ -31,6 +31,7 @@ const Country: FC = () => {
   const countries = useGetCountries();
   const country = countries.data?.find((country) => country.code === code);
   const cities = useGetCitiesByCountry(country?.id);
+  const [isPending, startTransition] = useTransition();
 
   const [cvInput, setCvInput] = useState<CVInput | null>(null);
   const [cityIdToEdit, setCityIdToEdit] = useState<number | null>(null);
@@ -61,7 +62,11 @@ const Country: FC = () => {
         <ClubsCell
           clubs={clubs}
           cvInput={cvInput}
-          setCvInput={setCvInput}
+          setCvInput={(input) =>
+            startTransition(() => {
+              setCvInput(input);
+            })
+          }
           countryId={country?.id}
           cityId={cityId}
         />
@@ -80,8 +85,13 @@ const Country: FC = () => {
       <SubHeader country={country}>
         <Button
           icon={<TrophyOutlined />}
-          onClick={() => setCvInput({ type: "country", id: country?.id })}
-          disabled={cvInput !== null}
+          onClick={() =>
+            startTransition(() => {
+              setCvInput({ type: "country", id: country?.id });
+            })
+          }
+          disabled={isPending || cvInput?.type === "country"}
+          loading={isPending}
         />
         <Divider type="vertical" />
         {!country?.till && (

@@ -127,6 +127,7 @@ const CountryCV: FC<Props> = ({ id }) => {
                   ])}`
                 }
                 key={club.id}
+                className={styles.club}
               >
                 <Club
                   club={club}
