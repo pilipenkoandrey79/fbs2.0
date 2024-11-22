@@ -14,15 +14,6 @@
     font-size: 36px;
   }
 
-  a.club {
-    &:hover,
-    &:active {
-      span {
-        text-decoration: underline;
-      }
-    }
-  }
-
   .winner {
     background-color: colors.$golden;
     padding-inline: 4px;

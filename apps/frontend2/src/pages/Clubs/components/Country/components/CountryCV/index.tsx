@@ -17,7 +17,7 @@ import {
 } from "@fbs2.0/types";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import { createSearchParams, generatePath, Link } from "react-router-dom";
+import { createSearchParams, generatePath } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 
 import { Club } from "../../../../../../components/Club";
@@ -119,30 +119,27 @@ const CountryCV: FC<Props> = ({ id }) => {
         return (
           <Flex vertical>
             {clubs.map((club, index) => (
-              <Link
+              <Club
+                club={club}
+                key={club.id}
+                showCountry={false}
                 to={
                   generatePath(Paths.TOURNAMENT, tournamentSeason) +
                   `?${createSearchParams([
                     [HIGHLIGHTED_CLUB_ID_SEARCH_PARAM, `${club.id}`],
                   ])}`
                 }
-                key={club.id}
-                className={styles.club}
-              >
-                <Club
-                  club={club}
-                  showCountry={false}
-                  className={classNames(
-                    clubs.length > 1
-                      ? index
-                        ? styles["runner-up"]
-                        : styles.winner
-                      : status === CountryCVStatus.Winner
-                      ? styles.winner
-                      : styles["runner-up"]
-                  )}
-                />
-              </Link>
+                className={classNames(
+                  styles.club,
+                  clubs.length > 1
+                    ? index
+                      ? styles["runner-up"]
+                      : styles.winner
+                    : status === CountryCVStatus.Winner
+                    ? styles.winner
+                    : styles["runner-up"]
+                )}
+              />
             ))}
           </Flex>
         );
