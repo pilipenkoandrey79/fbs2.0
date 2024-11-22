@@ -6,6 +6,7 @@ export const AUTH_REDIRECT_PATH = "auth-redirect";
 export const HIGHLIGHTED_CLUB_ID_SEARCH_PARAM = "highlight-club";
 export const SEASON_FROM_SEARCH_PARAM = "from";
 export const SEASON_TO_SEARCH_PARAM = "to";
+export const CV_SEARCH_PARAMETER = "cv";
 
 export const SEASON_REGEXP = /^\d{4}-\d{4}$/;
 export const TABLE_ROW_HEIGHT = 26;

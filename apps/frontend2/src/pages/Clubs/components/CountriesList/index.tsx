@@ -1,8 +1,8 @@
 import { FC, Fragment } from "react";
 import { Divider, Skeleton, Typography } from "antd";
-import { generatePath, Link } from "react-router-dom";
+import { createSearchParams, generatePath, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Country } from "@fbs2.0/types";
+import { Country, CV_SEARCH_PARAMETER } from "@fbs2.0/types";
 import { isNotEmpty } from "@fbs2.0/utils";
 import classNames from "classnames";
 
@@ -45,7 +45,10 @@ const CountriesList: FC = () => {
           {items.map(({ id, name, name_ua, code }) => (
             <Link
               key={id}
-              to={generatePath(Paths.COUNTRY_CLUBS, { code })}
+              to={
+                generatePath(Paths.COUNTRY_CLUBS, { code }) +
+                `?${createSearchParams([[CV_SEARCH_PARAMETER, "country"]])}`
+              }
               className={classNames(styles.country, styles[key])}
             >
               <img

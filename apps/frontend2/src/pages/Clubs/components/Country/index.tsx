@@ -7,7 +7,8 @@ import {
   PlusSquareFilled,
   TrophyOutlined,
 } from "@ant-design/icons";
-import { City } from "@fbs2.0/types";
+import { City, CV_SEARCH_PARAMETER } from "@fbs2.0/types";
+import { createSearchParams, useSearchParams } from "react-router-dom";
 
 import { SubHeader } from "./components/SubHeader";
 import { ClubsCell } from "./components/ClubsCell";
@@ -27,6 +28,7 @@ export type CVInput = { type: "club" | "country"; id: number | undefined };
 const Country: FC = () => {
   const { i18n, t } = useTranslation();
   const { code } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const countries = useGetCountries();
   const country = countries.data?.find((country) => country.code === code);
@@ -35,6 +37,8 @@ const Country: FC = () => {
 
   const [cvInput, setCvInput] = useState<CVInput | null>(null);
   const [cityIdToEdit, setCityIdToEdit] = useState<number | null>(null);
+
+  const cvSearchParameter = searchParams.get(CV_SEARCH_PARAMETER);
 
   const columns: TableProps<City>["columns"] = [
     {
@@ -80,6 +84,45 @@ const Country: FC = () => {
     }
   }, [countries.isSuccess, country, navigate]);
 
+  useEffect(() => {
+    if (!country?.id) {
+      return;
+    }
+
+    if (
+      cvInput === null &&
+      cvSearchParameter?.match(/(country|club)(-(\d+))?/)
+    ) {
+      const cvSearchParameterParts = cvSearchParameter.split("-");
+      const type = cvSearchParameterParts[0] as CVInput["type"];
+
+      const id =
+        type === "country" ? country?.id : Number(cvSearchParameterParts[1]);
+
+      setCvInput({ type, id });
+    }
+  }, [country?.id, cvInput, cvSearchParameter]);
+
+  useEffect(() => {
+    if (!country?.id) {
+      return;
+    }
+
+    const newCvSearchParameter = cvInput
+      ? `${cvInput.type}${cvInput.type === "club" ? `-${cvInput.id}` : ""}`
+      : null;
+
+    if (cvSearchParameter !== newCvSearchParameter) {
+      setSearchParams(
+        createSearchParams(
+          newCvSearchParameter
+            ? [[CV_SEARCH_PARAMETER, newCvSearchParameter]]
+            : []
+        )
+      );
+    }
+  }, [country?.id, cvInput, cvSearchParameter, setSearchParams]);
+
   return (
     <>
       <SubHeader country={country}>
@@ -122,7 +165,10 @@ const Country: FC = () => {
         </div>
         <ResponsivePanel
           isOpen={cvInput !== null}
-          close={() => setCvInput(null)}
+          close={() => {
+            setCvInput(null);
+            setSearchParams(createSearchParams([]));
+          }}
         >
           <>
             {cvInput?.type === "club" && <ClubCV id={cvInput.id} />}
