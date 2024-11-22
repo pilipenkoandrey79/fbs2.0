@@ -103,7 +103,9 @@ const Season: FC<Props> = ({ season, tournaments, narrow, onEdit }) => {
                           [styles.narrow]: narrow,
                         })}
                       >
-                        <Link
+                        <Club
+                          club={tournamentSummary?.winner?.club}
+                          className={styles.winner}
                           to={
                             generatePath(Paths.TOURNAMENT, {
                               season,
@@ -116,12 +118,7 @@ const Season: FC<Props> = ({ season, tournaments, narrow, onEdit }) => {
                               ],
                             ])}`
                           }
-                        >
-                          <Club
-                            club={tournamentSummary?.winner?.club}
-                            className={styles.winner}
-                          />
-                        </Link>
+                        />
                         {tournamentSummary?.finalist && (
                           <Club
                             club={tournamentSummary?.finalist?.club}
