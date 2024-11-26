@@ -1,14 +1,14 @@
-@use "../../../../style/mixins.scss" as *;
-@use "../../../../style/variables.module.scss" as *;
+@use "../../../../../../style/mixins.scss";
+@use "../../../../../../style/variables.module.scss";
 
 .container {
-  @include flex(row, space-between, flex-start);
+  @include mixins.flex(row, space-between, flex-start);
 
   .table {
     width: 100%;
 
-    @media (min-width: $screen-md) {
-      width: calc(50% - #{$panelGap}/ 2);
+    @media (min-width: variables.$screen-md) {
+      width: calc(50% - #{variables.$panelGap}/ 2);
     }
 
     .cell {

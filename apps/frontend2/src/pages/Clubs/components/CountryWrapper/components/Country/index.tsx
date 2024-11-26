@@ -1,4 +1,4 @@
-import { FC, useEffect, useState, useTransition } from "react";
+import { FC, useContext, useEffect, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router";
 import { Button, Divider, Table, TableProps } from "antd";
@@ -10,22 +10,24 @@ import {
 import { City, CV_SEARCH_PARAMETER } from "@fbs2.0/types";
 import { createSearchParams, useSearchParams } from "react-router-dom";
 
-import { SubHeader } from "./components/SubHeader";
-import { ClubsCell } from "./components/ClubsCell";
-import { ClubCV } from "./components/ClubCV";
-import { CountryCV } from "./components/CountryCV";
-import { ResponsivePanel } from "../../../../components/ResponsivePanel";
-import { CityDialog } from "./components/CityDialog";
-import { useGetCountries } from "../../../../react-query-hooks/country/useGetCountries";
-import { useGetCitiesByCountry } from "../../../../react-query-hooks/city/useGetCitiesByCountry";
-import { Paths } from "../../../../routes";
-import { Language } from "../../../../i18n/locales";
+import { ClubsCell } from "../ClubsCell";
+import { SubHeader } from "../SubHeader";
+import { ClubCV } from "../ClubCV";
+import { CountryCV } from "../CountryCV";
+import { CityDialog } from "../CityDialog";
+import { CvContext } from "../../../../../../context/cvContext";
+import { ResponsivePanel } from "../../../../../../components/ResponsivePanel";
+import { useGetCountries } from "../../../../../../react-query-hooks/country/useGetCountries";
+import { useGetCitiesByCountry } from "../../../../../../react-query-hooks/city/useGetCitiesByCountry";
+import { Language } from "../../../../../../i18n/locales";
+import { Paths } from "../../../../../../routes";
 
 import styles from "./styles.module.scss";
 
 export type CVInput = { type: "club" | "country"; id: number | undefined };
 
 const Country: FC = () => {
+  const { cvValue, setCvValue } = useContext(CvContext);
   const { i18n, t } = useTranslation();
   const { code } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
