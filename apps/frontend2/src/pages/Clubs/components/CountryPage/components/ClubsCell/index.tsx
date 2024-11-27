@@ -6,6 +6,7 @@ import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 
 import { Club } from "../../../../../../components/Club";
 import { CvContext } from "../../../../../../context/cvContext";
+import { UserContext } from "../../../../../../context/userContext";
 import { ClubDialog } from "../ClubDialog";
 
 import styles from "./styles.module.scss";
@@ -17,6 +18,7 @@ interface Props {
 }
 
 const ClubsCell: FC<Props> = ({ clubs, countryId, cityId }) => {
+  const { user } = useContext(UserContext);
   const { cvInput, setCvInput } = useContext(CvContext);
   const [clubIdToEdit, setClubIdToEdit] = useState<number | null>(null);
 
@@ -36,24 +38,28 @@ const ClubsCell: FC<Props> = ({ clubs, countryId, cityId }) => {
             >
               <Club club={club} showCity={false} showCountry={false} />
             </span>
-            <Button
-              type="link"
-              size="small"
-              icon={<EditOutlined />}
-              className={styles["edit-button"]}
-              onClick={() => setClubIdToEdit(club.id)}
-            />
+            {user?.isEditor && (
+              <Button
+                type="link"
+                size="small"
+                icon={<EditOutlined />}
+                className={styles["edit-button"]}
+                onClick={() => setClubIdToEdit(club.id)}
+              />
+            )}
           </li>
         ))}
       </ul>
-      <Button
-        icon={<PlusOutlined />}
-        size="small"
-        type="primary"
-        className={styles["plus-button"]}
-        onClick={() => setClubIdToEdit(-1)}
-      />
-      {clubIdToEdit !== null && (
+      {user?.isEditor && (
+        <Button
+          icon={<PlusOutlined />}
+          size="small"
+          type="primary"
+          className={styles["plus-button"]}
+          onClick={() => setClubIdToEdit(-1)}
+        />
+      )}
+      {clubIdToEdit !== null && user?.isEditor && (
         <ClubDialog
           id={clubIdToEdit}
           countryId={countryId}

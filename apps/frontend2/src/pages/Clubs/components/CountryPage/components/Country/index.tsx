@@ -14,6 +14,7 @@ import { ClubCV } from "../ClubCV";
 import { CountryCV } from "../CountryCV";
 import { CityDialog } from "../CityDialog";
 import { CvContext } from "../../../../../../context/cvContext";
+import { UserContext } from "../../../../../../context/userContext";
 import { ResponsivePanel } from "../../../../../../components/ResponsivePanel";
 import { useGetCitiesByCountry } from "../../../../../../react-query-hooks/city/useGetCitiesByCountry";
 import { Language } from "../../../../../../i18n/locales";
@@ -25,6 +26,7 @@ interface Props {
 }
 
 const Country: FC<Props> = ({ country }) => {
+  const { user } = useContext(UserContext);
   const { cvInput, isPending, setCvInput } = useContext(CvContext);
   const { i18n, t } = useTranslation();
   const cities = useGetCitiesByCountry(country.id);
@@ -38,13 +40,15 @@ const Country: FC<Props> = ({ country }) => {
       render: (_, { name, name_ua, id }: City) => (
         <>
           {(i18n.resolvedLanguage === Language.en ? name : name_ua) || name}
-          <Button
-            type="link"
-            size="small"
-            icon={<EditOutlined />}
-            className={styles["edit-city-button"]}
-            onClick={() => setCityIdToEdit(id)}
-          />
+          {user?.isEditor && (
+            <Button
+              type="link"
+              size="small"
+              icon={<EditOutlined />}
+              className={styles["edit-city-button"]}
+              onClick={() => setCityIdToEdit(id)}
+            />
+          )}
         </>
       ),
     },
@@ -67,15 +71,18 @@ const Country: FC<Props> = ({ country }) => {
           disabled={isPending || cvInput?.type === "country"}
           loading={isPending}
         />
-        <Divider type="vertical" />
-        {!country?.till && (
-          <Button
-            icon={<PlusSquareFilled />}
-            type="primary"
-            onClick={() => setCityIdToEdit(-1)}
-          >
-            {t("clubs.add_city")}
-          </Button>
+        {!country?.till && user?.isEditor && (
+          <>
+            <Divider type="vertical" />
+
+            <Button
+              icon={<PlusSquareFilled />}
+              type="primary"
+              onClick={() => setCityIdToEdit(-1)}
+            >
+              {t("clubs.add_city")}
+            </Button>
+          </>
         )}
       </SubHeader>
       <div className={styles.container}>
@@ -106,7 +113,7 @@ const Country: FC<Props> = ({ country }) => {
           </>
         </ResponsivePanel>
       </div>
-      {cityIdToEdit !== null && (
+      {cityIdToEdit !== null && user?.isEditor && (
         <CityDialog
           id={cityIdToEdit}
           countryId={country?.id}
