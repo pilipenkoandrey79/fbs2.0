@@ -1,12 +1,12 @@
 import { Club as ClubInterface } from "@fbs2.0/types";
-import { FC, useState } from "react";
+import { FC, useContext, useState } from "react";
 import classNames from "classnames";
 import { Button } from "antd";
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 
 import { Club } from "../../../../../../components/Club";
+import { CvContext } from "../../../../../../context/cvContext";
 import { ClubDialog } from "../ClubDialog";
-import { CVInput } from "../..";
 
 import styles from "./styles.module.scss";
 
@@ -14,17 +14,10 @@ interface Props {
   clubs: ClubInterface[];
   countryId: number | undefined;
   cityId: number | undefined;
-  cvInput: CVInput | null;
-  setCvInput: (input: CVInput) => void;
 }
 
-const ClubsCell: FC<Props> = ({
-  clubs,
-  countryId,
-  cityId,
-  cvInput,
-  setCvInput,
-}) => {
+const ClubsCell: FC<Props> = ({ clubs, countryId, cityId }) => {
+  const { cvInput, setCvInput } = useContext(CvContext);
   const [clubIdToEdit, setClubIdToEdit] = useState<number | null>(null);
 
   return (

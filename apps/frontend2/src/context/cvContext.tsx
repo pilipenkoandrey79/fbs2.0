@@ -1,11 +1,15 @@
 import { createContext } from "react";
 
+export type CVInput = { type: "club" | "country"; id: number | undefined };
+
 export type CvContextValue = {
-  cvValue: string | null;
-  setCvValue: (value: string | null) => void;
+  cvInput: CVInput | null;
+  isPending: boolean;
+  setCvInput: (value: CVInput | null) => void;
 };
 
 export const CvContext = createContext<CvContextValue>({
-  cvValue: null,
-  setCvValue: () => null,
+  cvInput: null,
+  isPending: false,
+  setCvInput: () => null,
 });

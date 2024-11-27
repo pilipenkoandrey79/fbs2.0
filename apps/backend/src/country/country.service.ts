@@ -58,7 +58,7 @@ export class CountryService {
   public async getCountryCities(countryId: number) {
     return await this.cityRepository.find({
       where: { country: { id: countryId } },
-      relations: { clubs: true },
+      relations: { clubs: { city: { country: true } } },
     });
   }
 

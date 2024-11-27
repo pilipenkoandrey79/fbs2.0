@@ -69,11 +69,11 @@ export const routes: RouteObject[] = [
           {
             path: Paths.COUNTRY_CLUBS,
             async lazy() {
-              const { CountryWrapper } = await import(
-                "./pages/Clubs/components/CountryWrapper"
+              const { CountryPage } = await import(
+                "./pages/Clubs/components/CountryPage"
               );
 
-              return { Component: CountryWrapper };
+              return { Component: CountryPage };
             },
           },
         ],

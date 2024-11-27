@@ -1,22 +1,48 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { createSearchParams, useSearchParams } from "react-router-dom";
 import { CV_SEARCH_PARAMETER } from "@fbs2.0/types";
 
-import { CvContextValue } from "./cvContext";
+import { CvContextValue, CVInput } from "./cvContext";
 
-export const useCvContext = (): CvContextValue => {
+export const useCvContext = (countryId: number): CvContextValue => {
+  const [isPending, startTransition] = useTransition();
   const [searchParams, setSearchParams] = useSearchParams();
   const initValue = searchParams.get(CV_SEARCH_PARAMETER);
 
-  const [cv, setCv] = useState<string | null>(initValue);
+  const [cvInput, setCvInputInternal] = useState<CVInput | null>(() => {
+    if (initValue?.match(/(country|club)(-(\d+))?/)) {
+      const cvSearchParameterParts = initValue.split("-");
+      const type = cvSearchParameterParts[0] as CVInput["type"];
+
+      const id =
+        type === "country" ? countryId : Number(cvSearchParameterParts[1]);
+
+      return { type, id };
+    }
+
+    return null;
+  });
 
   useEffect(() => {
-    if (cv !== initValue) {
+    const newCvSearchParameter = cvInput
+      ? `${cvInput.type}${cvInput.type === "club" ? `-${cvInput.id}` : ""}`
+      : null;
+
+    if (newCvSearchParameter !== initValue) {
       setSearchParams(
-        createSearchParams(cv === null ? [] : [[CV_SEARCH_PARAMETER, cv]])
+        createSearchParams(
+          newCvSearchParameter === null
+            ? []
+            : [[CV_SEARCH_PARAMETER, newCvSearchParameter]]
+        )
       );
     }
-  }, [cv, initValue, setSearchParams]);
+  }, [cvInput, initValue, setSearchParams]);
 
-  return { cvValue: cv, setCvValue: setCv };
+  const setCvInput = (value: CVInput | null) =>
+    startTransition(() => {
+      setCvInputInternal(value);
+    });
+
+  return { cvInput, setCvInput, isPending };
 };
