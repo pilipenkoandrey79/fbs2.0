@@ -28,6 +28,10 @@
       "draw": "Number of draws",
       "loss": "Number of defeats",
       "undefined": "Number of unplayed matches"
+    },
+    "nav": {
+      "next": "Next season",
+      "back": "Previous season"
     }
   },
   "error_page": {
@@ -97,10 +101,6 @@
       "1/4F": "1/4 final",
       "1/2F": "1/2 final",
       "F": "Final"
-    },
-    "nav": {
-      "next": "Next season",
-      "back": "Previous season"
     },
     "highlight": "Highlight a participant",
     "participants": {
@@ -293,5 +293,20 @@
       "runner-up": "Runner-up",
       "graph_tooltip": "{{place}} place of {{places}}"
     }
+  },
+  "coefficient": {
+    "title": "Coefficients for season {{season}}",
+    "sort": {
+      "country": "Country",
+      "current": "Current season coefficient",
+      "total": "Total coefficient"
+    },
+    "calculate": "Calculate coefficients",
+    "calculated": "{{number}} coefficients calculated",
+    "columns": {
+      "sum": "Total",
+      "coefficient": "Coefficient"
+    },
+    "winner": "Winner of "
   }
 }

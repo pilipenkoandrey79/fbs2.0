@@ -1,0 +1,49 @@
+@use "../../../../style/mixins.scss";
+@use "../../../../style/variables.module.scss";
+
+.header {
+  @include mixins.flex(column);
+  margin-bottom: 10px;
+
+  h1 {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .panel {
+    @include mixins.flex(column);
+    width: 100%;
+
+    .nav {
+      margin: 6px 0 10px;
+
+      a {
+        margin: 0 4px;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  @media (min-width: variables.$screen-md) {
+    .panel {
+      @include mixins.flex(row, space-between, center);
+
+      .nav {
+        margin: unset;
+      }
+    }
+  }
+
+  @media (min-width: variables.$screen-xl) {
+    @include mixins.flex(row, flex-start, stretch);
+
+    .panel {
+      .nav {
+        a {
+          margin: 0 18px;
+        }
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 import { Club as ClubInterface, CV_SEARCH_PARAMETER } from "@fbs2.0/types";
 import { FC } from "react";
 import classNames from "classnames";
-import { Typography } from "antd";
+import { Tooltip, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import { createSearchParams, generatePath, Link } from "react-router-dom";
 
@@ -20,6 +20,7 @@ interface Props {
   showCity?: boolean;
   expelled?: boolean;
   dimmed?: boolean;
+  tooltip?: string;
 }
 
 const Club: FC<Props> = ({
@@ -30,6 +31,7 @@ const Club: FC<Props> = ({
   showCity = true,
   expelled,
   dimmed,
+  tooltip,
 }) => {
   const { i18n } = useTranslation();
 
@@ -52,19 +54,22 @@ const Club: FC<Props> = ({
       }
       className={styles["club-link"]}
     >
-      <Typography.Text
-        ellipsis={{ tooltip: club.name }}
-        delete={expelled}
-        type={dimmed ? "secondary" : undefined}
-        className={classNames(styles.club, className)}
-      >
-        {showCountry && (
-          <Flag country={club?.city?.country} className={styles.flag} />
-        )}
-        {(i18n.resolvedLanguage === Language.en ? club?.name : club.name_ua) ||
-          club.name}
-        {city && <small className={styles.city}>{`(${city})`}</small>}
-      </Typography.Text>
+      <Tooltip title={tooltip}>
+        <Typography.Text
+          ellipsis={{ tooltip: club.name }}
+          delete={expelled}
+          type={dimmed ? "secondary" : undefined}
+          className={classNames(styles.club, className)}
+        >
+          {showCountry && (
+            <Flag country={club?.city?.country} className={styles.flag} />
+          )}
+          {(i18n.resolvedLanguage === Language.en
+            ? club?.name
+            : club.name_ua) || club.name}
+          {city && <small className={styles.city}>{`(${city})`}</small>}
+        </Typography.Text>
+      </Tooltip>
     </Link>
   );
 };

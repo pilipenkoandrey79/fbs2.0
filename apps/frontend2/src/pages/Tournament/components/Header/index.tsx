@@ -77,7 +77,7 @@ const Header: FC<Props> = ({ title, season, tournament, onParticipants }) => {
             onClick={() => setHighlightId(null)}
           >
             <LeftOutlined />
-            {t("tournament.nav.back")}
+            {t("common.nav.back")}
           </Link>
 
           <Link
@@ -85,7 +85,7 @@ const Header: FC<Props> = ({ title, season, tournament, onParticipants }) => {
             className={classNames({ disabled: !nextLink })}
             onClick={() => setHighlightId(null)}
           >
-            {t("tournament.nav.next")}
+            {t("common.nav.next")}
             <RightOutlined />
           </Link>
         </div>

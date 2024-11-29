@@ -19,4 +19,5 @@ export const QUERY_KEY = {
 
 export const MUTATION_KEY = {
   deleteMatch: "delete-match",
+  calculateCoefficients: "calculate-coefficients",
 };

@@ -1,0 +1,39 @@
+.root {
+  padding: 20px 0;
+
+  .flag {
+    margin-right: 8px;
+  }
+
+  .number {
+    padding: 2px !important;
+  }
+
+  .no-wrap {
+    white-space: nowrap;
+  }
+
+  .total-coefficient {
+    font-size: 18px;
+  }
+
+  .coefficient-0 {
+    font-size: 16px;
+  }
+
+  .coefficient-1 {
+    font-size: 14px;
+  }
+
+  .coefficient-2 {
+    font-size: 12px;
+  }
+
+  .coefficient-3 {
+    font-size: 10px;
+  }
+
+  .coefficient-4 {
+    font-size: 8px;
+  }
+}

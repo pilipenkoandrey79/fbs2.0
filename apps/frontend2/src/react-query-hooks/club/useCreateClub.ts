@@ -17,7 +17,7 @@ export const useCreateClub = (countryId?: number) => {
         `v2/${ApiEntities.Club}`,
         clubDto
       ),
-    onSettled: (club) => {
+    onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEY.clubs],
         refetchType: "all",
