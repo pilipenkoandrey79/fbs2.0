@@ -312,6 +312,7 @@ const ResultForm: FC<Props> = ({
                       .club
                   }
                   className={styles.club}
+                  to={false}
                 />
                 <Form.Item name={`${key}Score`} className={styles.score}>
                   <InputNumber min={0} controls changeOnWheel />

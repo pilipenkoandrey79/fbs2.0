@@ -72,7 +72,7 @@ export class CreateMatchDto implements MatchDto {
   @IsOptional()
   @IsNumber()
   @Min(0)
-  @Max(6)
+  @Max(8)
   @ApiPropertyOptional({ type: "number" })
   tour?: number;
 

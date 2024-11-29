@@ -89,7 +89,7 @@ const EditableCell: FC<PropsWithChildren<EditableCellProps>> = ({
               value={option.id}
               data-label={option.club.name}
             >
-              <Club club={option.club} />
+              <Club club={option.club} to={false} />
             </Select.Option>
           ))}
         </Select>

@@ -14,7 +14,7 @@ import styles from "./styles.module.scss";
 interface Props {
   club: Partial<ClubInterface>;
   className?: string;
-  to?: string;
+  to?: string | false;
 
   showCountry?: boolean;
   showCity?: boolean;
@@ -44,7 +44,27 @@ const Club: FC<Props> = ({
 
   const city = showCity && cityName;
 
-  return (
+  const content = (
+    <Tooltip title={tooltip}>
+      <Typography.Text
+        ellipsis={{ tooltip: club.name }}
+        delete={expelled}
+        type={dimmed ? "secondary" : undefined}
+        className={classNames(styles.club, className)}
+      >
+        {showCountry && (
+          <Flag country={club?.city?.country} className={styles.flag} />
+        )}
+        {(i18n.resolvedLanguage === Language.en ? club?.name : club.name_ua) ||
+          club.name}
+        {city && <small className={styles.city}>{`(${city})`}</small>}
+      </Typography.Text>
+    </Tooltip>
+  );
+
+  return to === false ? (
+    content
+  ) : (
     <Link
       to={
         to ||
@@ -54,22 +74,7 @@ const Club: FC<Props> = ({
       }
       className={styles["club-link"]}
     >
-      <Tooltip title={tooltip}>
-        <Typography.Text
-          ellipsis={{ tooltip: club.name }}
-          delete={expelled}
-          type={dimmed ? "secondary" : undefined}
-          className={classNames(styles.club, className)}
-        >
-          {showCountry && (
-            <Flag country={club?.city?.country} className={styles.flag} />
-          )}
-          {(i18n.resolvedLanguage === Language.en
-            ? club?.name
-            : club.name_ua) || club.name}
-          {city && <small className={styles.city}>{`(${city})`}</small>}
-        </Typography.Text>
-      </Tooltip>
+      {content}
     </Link>
   );
 };
