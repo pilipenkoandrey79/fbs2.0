@@ -1,5 +1,9 @@
+@use "../../../../style/variables.module.scss";
+
 .root {
   padding: 20px 0;
+  margin: auto;
+  max-width: variables.$screen-xl;
 
   .flag {
     margin-right: 8px;
