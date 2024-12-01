@@ -149,6 +149,7 @@ export interface StageUpdateDto {
   awayGoal?: boolean;
   groups?: number;
   swissNum?: number;
+  swissTours?: number;
 }
 
 export interface StageDto extends StageUpdateDto {
@@ -274,6 +275,7 @@ export interface StageScheme {
   groups?: number;
   awayGoal: boolean | null;
   swissNum?: number | null;
+  swissTours?: number | null;
 }
 
 export interface DeductedPoints {

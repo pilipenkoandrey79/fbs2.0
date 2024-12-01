@@ -134,7 +134,7 @@ const couldBeResorted = (groupRows: GroupRow[], stage: Stage) => {
     return false;
   }
 
-  return isGroupFinished(groupRows, stage.stageScheme.type);
+  return isGroupFinished(groupRows, stage.stageScheme);
 };
 
 const getSubsetsByScore = (groupRows: GroupRow[]) =>

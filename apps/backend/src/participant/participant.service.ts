@@ -286,7 +286,7 @@ export class ParticipantService {
       Object.values(
         donorStageData.matches as Record<Group, GroupRow[]>
       ).forEach((tableRows) => {
-        if (isGroupFinished(tableRows, donorStageData.stage.stageScheme.type)) {
+        if (isGroupFinished(tableRows, donorStageData.stage.stageScheme)) {
           clubsToBeAdded.push(tableRows[2].team.club);
         }
       });

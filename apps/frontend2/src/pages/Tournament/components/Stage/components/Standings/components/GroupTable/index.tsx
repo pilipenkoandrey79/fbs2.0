@@ -91,9 +91,7 @@ const GroupTable: FC<Props> = ({ tournamentPart, group, groupKey }) => {
     },
     ...(isLgScreen &&
     tournamentPart.stage.stageScheme.type !== StageSchemeType.LEAGUE
-      ? new Array(
-          getTeamsQuantityInGroup(tournamentPart.stage.stageScheme.type)
-        )
+      ? new Array(getTeamsQuantityInGroup(tournamentPart.stage.stageScheme))
           .fill(1)
           .map((_, index) => ({
             key: `chess-${index}`,

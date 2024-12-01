@@ -232,6 +232,7 @@
         "relegation": "Losers of this stage go to another tournament",
         "group": "Number of groups",
         "swiss": "Number of teams",
+        "swiss_tours": "Number of tours",
         "error": "At least 1 stage",
         "updated": "Stage is updated",
         "remove": "Remove stage?",

@@ -34,4 +34,8 @@ export class StageScheme implements StageSchemeInterface {
   @Column({ type: "integer", nullable: true })
   @ApiPropertyOptional({ type: "number" })
   swissNum?: number;
+
+  @Column({ type: "integer", nullable: true })
+  @ApiPropertyOptional({ type: "number" })
+  swissTours?: number;
 }

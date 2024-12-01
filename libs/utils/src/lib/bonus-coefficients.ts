@@ -173,9 +173,7 @@ export const getBonuses = (matches: Match[], year: number): Bonus[] =>
       Object.values(
         transformedStage.matches as Record<Group, GroupRow[]>
       ).forEach((tableRows) => {
-        if (
-          isGroupFinished(tableRows, transformedStage.stage.stageScheme.type)
-        ) {
+        if (isGroupFinished(tableRows, transformedStage.stage.stageScheme)) {
           clubsIds.push(tableRows[(template.place || 0) - 1].team.club.id);
         }
       });
@@ -183,6 +181,7 @@ export const getBonuses = (matches: Match[], year: number): Bonus[] =>
       return { ...template, clubsIds };
     } else {
       const clubsIds = stageMatches.matches.reduce<number[]>(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (acc: any[], { host, guest }: any) => {
           const existedHost = acc.find((id) => id === host.club.id);
           const existedGuest = acc.find((id) => id === guest.club.id);

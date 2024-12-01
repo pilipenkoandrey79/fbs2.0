@@ -8,6 +8,7 @@ import {
   _TournamentPart,
   TournamentStage,
   TournamentStageGroup,
+  StageScheme,
 } from "@fbs2.0/types";
 import { getTeamsQuantityInGroup, isLeagueStage } from "./common";
 
@@ -32,15 +33,16 @@ export const getPointsToSubtract = (
     return acc;
   }, 0);
 
-const getKnockoutResultsTemplate = (stageSchemeType: StageSchemeType) =>
+const getKnockoutResultsTemplate = (stageSheme: StageScheme) =>
   new Array(
-    GROUP_STAGES.includes(stageSchemeType)
-      ? ((getTeamsQuantityInGroup(stageSchemeType) - 1) *
-          getTeamsQuantityInGroup(stageSchemeType)) /
-        Math.floor(getTeamsQuantityInGroup(stageSchemeType) / 2) /
-        (stageSchemeType === StageSchemeType.GROUP_5_1_MATCH ? 2 : 1)
-      : stageSchemeType === StageSchemeType.LEAGUE
-      ? DEFAULT_SWISS_LENGTH / 4 - 1
+    GROUP_STAGES.includes(stageSheme.type)
+      ? ((getTeamsQuantityInGroup(stageSheme) - 1) *
+          getTeamsQuantityInGroup(stageSheme)) /
+        Math.floor(getTeamsQuantityInGroup(stageSheme) / 2) /
+        (stageSheme.type === StageSchemeType.GROUP_5_1_MATCH ? 2 : 1)
+      : stageSheme.type === StageSchemeType.LEAGUE
+      ? stageSheme.swissTours ||
+        (stageSheme.swissNum || DEFAULT_SWISS_LENGTH) / 4 - 1
       : 1
   )
     .fill(1)
@@ -106,9 +108,9 @@ export const transformTournamentPart = (
                     ...acc,
                     [tour]: getKnockoutStageMatchesData({ matches, stage }),
                   }),
-                  getKnockoutResultsTemplate(stage.stageScheme.type)
+                  getKnockoutResultsTemplate(stage.stageScheme)
                 )
-            : getKnockoutResultsTemplate(stage.stageScheme.type),
+            : getKnockoutResultsTemplate(stage.stageScheme),
       },
     };
   }, {} as TournamentStage);

@@ -237,6 +237,7 @@ export class TournamentService {
         awayGoal: !!stageDto.awayGoal,
         groups: stageDto.groups ?? null,
         swissNum: stageDto.swissNum ?? null,
+        swissTours: stageDto.swissTours ?? null,
       },
     });
 
@@ -246,6 +247,7 @@ export class TournamentService {
         isStarting: stageDto.isStarting,
         groups: stageDto.groups ?? null,
         swissNum: stageDto.swissNum ?? null,
+        swissTours: stageDto.swissTours ?? null,
         pen: !!stageDto.pen,
         awayGoal: !!stageDto.awayGoal,
       } as StageScheme);
@@ -343,6 +345,7 @@ export class TournamentService {
         awayGoal: !!stageUpdateDto.awayGoal,
         groups: stageUpdateDto.groups ?? null,
         swissNum: stageUpdateDto.swissNum ?? null,
+        swissTours: stageUpdateDto.swissTours ?? null,
       },
     });
 
@@ -352,6 +355,7 @@ export class TournamentService {
         isStarting: stageUpdateDto.isStarting,
         groups: stageUpdateDto.groups ?? null,
         swissNum: stageUpdateDto.swissNum ?? null,
+        swissTours: stageUpdateDto.swissTours ?? null,
         pen: !!stageUpdateDto.pen,
         awayGoal: !!stageUpdateDto.awayGoal,
       } as StageScheme);

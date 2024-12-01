@@ -23,6 +23,7 @@ import {
   Years,
   DEFAULT_SWISS_LENGTH,
   DATE_FORMAT,
+  StageScheme,
 } from "@fbs2.0/types";
 import { FormEvent } from "react";
 import dayjs from "dayjs";
@@ -258,8 +259,8 @@ export const getResultLabel = (
         ...options,
       });
 
-export const getTeamsQuantityInGroup = (stageSchemeType: StageSchemeType) => {
-  switch (stageSchemeType) {
+export const getTeamsQuantityInGroup = ({ type, swissNum }: StageScheme) => {
+  switch (type) {
     case StageSchemeType.GROUP_4_2_MATCH:
     case StageSchemeType.GROUP_SEMI_FINAL:
       return 4;
@@ -268,7 +269,7 @@ export const getTeamsQuantityInGroup = (stageSchemeType: StageSchemeType) => {
     case StageSchemeType.GROUP_ICFC:
       return 3;
     case StageSchemeType.LEAGUE:
-      return DEFAULT_SWISS_LENGTH;
+      return swissNum || DEFAULT_SWISS_LENGTH;
     default:
       return 0;
   }
@@ -282,6 +283,7 @@ export const transformStageToDto = (stage: Stage): StageDto => ({
   isStarting: stage.stageScheme.isStarting,
   groups: stage.stageScheme.groups,
   swissNum: stage.stageScheme.swissNum ?? undefined,
+  swissTours: stage.stageScheme.swissTours ?? undefined,
   previousStageType: stage.previousStage?.stageType,
   pen: stage.stageScheme.pen ?? undefined,
   awayGoal: stage.stageScheme.awayGoal ?? undefined,
@@ -373,16 +375,13 @@ export const howMany = (number: number, noun: string) => {
   return `${number} ${noun}ів`;
 };
 
-export const isGroupFinished = (
-  rows: GroupRow[],
-  stageSchemeType: StageSchemeType
-) =>
+export const isGroupFinished = (rows: GroupRow[], stageScheme: StageScheme) =>
   rows.length > 0
     ? rows.every(
         ({ games }) =>
           games >=
-          (getTeamsQuantityInGroup(stageSchemeType) - 1) *
-            (ONE_MATCH_STAGES.includes(stageSchemeType) ? 1 : 2)
+          (getTeamsQuantityInGroup(stageScheme) - 1) *
+            (ONE_MATCH_STAGES.includes(stageScheme.type) ? 1 : 2)
       )
     : false;
 

@@ -144,13 +144,22 @@ const StageForm: FC<Props> = ({ stage, form, remove, addAfter }) => {
           )}
           {form.getFieldValue(["stages", stage.name, "stageSchemeType"]) ===
             StageSchemeType.LEAGUE && (
-            <Form.Item
-              name={[stage.name, "swissNum"]}
-              initialValue={DEFAULT_SWISS_LENGTH}
-              label={t("home.tournament.stage.swiss")}
-            >
-              <InputNumber min={1} controls changeOnWheel />
-            </Form.Item>
+            <>
+              <Form.Item
+                name={[stage.name, "swissNum"]}
+                initialValue={DEFAULT_SWISS_LENGTH}
+                label={t("home.tournament.stage.swiss")}
+              >
+                <InputNumber min={1} controls changeOnWheel />
+              </Form.Item>
+              <Form.Item
+                name={[stage.name, "swissTours"]}
+                initialValue={DEFAULT_SWISS_LENGTH / 4 - 1}
+                label={t("home.tournament.stage.swiss_tours")}
+              >
+                <InputNumber min={1} controls changeOnWheel />
+              </Form.Item>
+            </>
           )}
         </div>
         <Divider type="horizontal" />

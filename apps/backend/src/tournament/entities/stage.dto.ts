@@ -52,6 +52,12 @@ export class StageDto implements StageDtoInterface {
   swissNum?: number;
 
   @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @ApiPropertyOptional({ type: "number" })
+  swissTours?: number;
+
+  @IsOptional()
   @IsEnum(Tournament)
   @ApiPropertyOptional({ enum: Tournament })
   linkedTournament?: Tournament;

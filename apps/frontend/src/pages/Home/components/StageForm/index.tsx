@@ -161,6 +161,12 @@ const StageForm: FC<Props> = ({
               setValue={(value) => changeField("swissNum", value)}
               disabled={readonly}
             />
+            <p>Кількість турів: </p>
+            <NumberInput
+              value={stage.swissTours || DEFAULT_SWISS_LENGTH / 4 - 1}
+              setValue={(value) => changeField("swissTours", value)}
+              disabled={readonly}
+            />
           </div>
         )}
       </div>

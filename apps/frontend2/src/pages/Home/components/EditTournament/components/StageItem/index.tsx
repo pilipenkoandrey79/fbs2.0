@@ -52,6 +52,7 @@ const StageItem: FC<Props> = ({ stage, tournamentSeason, index }) => {
     awayGoal: stage.stageScheme.awayGoal ?? false,
     groups: stage.stageScheme.groups,
     swissNum: stage.stageScheme.swissNum ?? undefined,
+    swissTours: stage.stageScheme.swissTours ?? undefined,
   };
 
   return (
@@ -133,12 +134,20 @@ const StageItem: FC<Props> = ({ stage, tournamentSeason, index }) => {
               </Form.Item>
             )}
             {stage.stageScheme.type === StageSchemeType.LEAGUE && (
-              <Form.Item
-                name="swissNum"
-                label={t("home.tournament.stage.swiss")}
-              >
-                <InputNumber min={1} controls changeOnWheel />
-              </Form.Item>
+              <>
+                <Form.Item
+                  name="swissNum"
+                  label={t("home.tournament.stage.swiss")}
+                >
+                  <InputNumber min={1} controls changeOnWheel />
+                </Form.Item>
+                <Form.Item
+                  name="swissTours"
+                  label={t("home.tournament.stage.swiss_tours")}
+                >
+                  <InputNumber min={1} controls changeOnWheel />
+                </Form.Item>
+              </>
             )}
           </div>
           {stage.linkedTournament && (
