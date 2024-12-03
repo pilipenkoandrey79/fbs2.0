@@ -1,8 +1,7 @@
-@use "../../../../style/variables.module.scss" as *;
-@use "../../../../style/mixins.scss" as *;
+@use "../../../../style/mixins.scss";
 
 .season {
-  @include flex(row, center, center);
+  @include mixins.flex(row, center, center);
   width: 100%;
   margin-bottom: 12px;
   position: relative;
@@ -15,7 +14,7 @@
   }
 
   .input {
-    @include flex(row, center, center);
+    @include mixins.flex(row, center, center);
     margin-inline-end: unset;
 
     & > div {
@@ -34,7 +33,7 @@
   }
 
   .icons {
-    @include flex(column, center, center);
+    @include mixins.flex(column, center, center);
 
     button {
       margin-bottom: 6px;

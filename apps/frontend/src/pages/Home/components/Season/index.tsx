@@ -5,7 +5,7 @@ import {
 } from "@fbs2.0/types";
 import { FC } from "react";
 import classNames from "classnames";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 import { TournamentList } from "../TournamentList";
 

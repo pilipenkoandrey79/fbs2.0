@@ -4,6 +4,7 @@ import { RouteObject } from "react-router";
 import { AuthSuccessRedirect } from "./components/AuthSuccessRedirect";
 import { LanguagePath } from "./components/LanguagePath";
 import { ErrorBoundary } from "./components/ErrorBoundary";
+import { Fallback } from "./components/Fallback";
 
 export enum Paths {
   HOME = "/",
@@ -23,6 +24,7 @@ export const routes: RouteObject[] = [
     path: "/",
     element: <LanguagePath />,
     errorElement: <ErrorBoundary />,
+    HydrateFallback: Fallback,
     children: [
       {
         path: getLocalizedPath(Paths.HOME),

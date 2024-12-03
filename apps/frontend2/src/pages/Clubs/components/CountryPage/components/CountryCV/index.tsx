@@ -17,7 +17,7 @@ import {
 } from "@fbs2.0/types";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import { createSearchParams, generatePath } from "react-router-dom";
+import { createSearchParams, generatePath } from "react-router";
 import { useMediaQuery } from "react-responsive";
 
 import { Club } from "../../../../../../components/Club";

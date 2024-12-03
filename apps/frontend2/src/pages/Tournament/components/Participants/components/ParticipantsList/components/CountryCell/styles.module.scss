@@ -1,4 +1,4 @@
-@use "../../../../../../../../style/variables.module.scss" as *;
+@use "../../../../../../../../style/variables.module.scss";
 
 .country {
   .code {
@@ -9,7 +9,7 @@
     display: none;
   }
 
-  @media (min-width: $screen-md) {
+  @media (min-width: variables.$screen-md) {
     .code {
       display: none;
     }

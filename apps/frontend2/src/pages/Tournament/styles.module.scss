@@ -1,24 +1,24 @@
-@use "../../style/colors.module.scss" as *;
+@use "../../style/colors.module.scss";
 
 .tournament {
   &-UCL main {
-    background-color: $ucl-background;
+    background-color: colors.$ucl-background;
   }
 
   &-UEL main {
-    background-color: $uel-background;
+    background-color: colors.$uel-background;
   }
 
   &-UECL main {
-    background-color: $uecl-background;
+    background-color: colors.$uecl-background;
   }
 
   &-CWC main {
-    background-color: $cwc-background;
+    background-color: colors.$cwc-background;
   }
 
   &-ICFC main {
-    background-color: $icfc-background;
+    background-color: colors.$icfc-background;
   }
 }
 

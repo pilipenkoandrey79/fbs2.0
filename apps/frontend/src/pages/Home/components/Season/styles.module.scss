@@ -1,4 +1,4 @@
-@import "@blueprintjs/core/lib/scss/variables";
+@use "@blueprintjs/core/lib/scss/variables" as *;
 
 $season-width: 320px;
 $season-margin: 6px;

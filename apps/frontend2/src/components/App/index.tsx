@@ -1,7 +1,7 @@
 import { FC, Suspense, useEffect, useState } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ConfigProvider, theme } from "antd";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from "react-router";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -35,7 +35,7 @@ const App: FC = () => {
         <HelmetProvider>
           <ConfigProvider theme={myTheme} locale={antLocales[lang]}>
             <UserContext.Provider value={currentUser}>
-              <RouterProvider router={router} fallbackElement={<Fallback />} />
+              <RouterProvider router={router} />
             </UserContext.Provider>
           </ConfigProvider>
           <ReactQueryDevtools initialIsOpen={false} />

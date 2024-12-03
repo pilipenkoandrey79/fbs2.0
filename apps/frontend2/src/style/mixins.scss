@@ -1,5 +1,4 @@
-@use "./variables.module.scss" as *;
-@use "./colors.module.scss" as *;
+@use "./colors.module.scss";
 
 @mixin flex($direction: row, $justify: flex-start, $align: center) {
   display: flex;
@@ -18,34 +17,34 @@
   }
 
   .mine {
-    background-color: $mine;
+    background-color: colors.$mine;
   }
 
   .from-another-tournament {
-    color: $from-another-tournament;
+    color: colors.$from-another-tournament;
   }
 
   .highlighted {
     &-UCL {
-      background-color: $ucl-primary !important;
+      background-color: colors.$ucl-primary !important;
       color: #ffffff;
     }
 
     &-UEL {
-      background-color: $uel-primary !important;
+      background-color: colors.$uel-primary !important;
     }
 
     &-UECL {
-      background-color: $uecl-primary !important;
+      background-color: colors.$uecl-primary !important;
       color: #ffffff;
     }
 
     &-CWC {
-      background-color: $cwc-primary !important;
+      background-color: colors.$cwc-primary !important;
     }
 
     &-ICFC {
-      background-color: $icfc-primary !important;
+      background-color: colors.$icfc-primary !important;
       color: #ffffff;
     }
   }

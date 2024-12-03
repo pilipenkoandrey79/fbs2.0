@@ -1,4 +1,4 @@
-@use "../../../../../../../../style/mixins.scss" as *;
+@use "../../../../../../../../style/mixins.scss";
 
 :global {
   .ant-table-tbody th.ant-table-cell {
@@ -7,4 +7,4 @@
   }
 }
 
-@include highlighted;
+@include mixins.highlighted;

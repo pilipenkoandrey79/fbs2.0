@@ -1,5 +1,4 @@
-@use "../../../../../../../../../../style/variables.module.scss" as *;
-@use "../../../../../../../../../../style/mixins.scss" as *;
+@use "../../../../../../../../../../style/mixins.scss";
 
 .modal {
   .content {
@@ -18,7 +17,7 @@
     }
 
     .group-tour {
-      @include flex(row, flex-start, center);
+      @include mixins.flex(row, flex-start, center);
       gap: 8px;
       font-size: 20px;
       padding-bottom: 8px;
@@ -41,11 +40,11 @@
     }
 
     .panels {
-      @include flex(row, space-between, flex-start);
+      @include mixins.flex(row, space-between, flex-start);
 
       .panel {
         width: 50%;
-        @include flex(column, flex-start, center);
+        @include mixins.flex(column, flex-start, center);
         flex: 1;
 
         .club {
@@ -71,13 +70,13 @@
 
     .additional {
       .title {
-        @include flex(row, space-between, center);
+        @include mixins.flex(row, space-between, center);
         margin: 8px 0;
       }
     }
 
     .force-winner > div {
-      @include flex(column, flex-start, center);
+      @include mixins.flex(column, flex-start, center);
     }
 
     .deduction {

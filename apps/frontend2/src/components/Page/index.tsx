@@ -1,7 +1,7 @@
 import { FloatButton, Layout } from "antd";
 import { FC, ReactNode } from "react";
 import { DatabaseOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { Helmet } from "react-helmet-async";

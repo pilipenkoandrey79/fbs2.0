@@ -1,5 +1,5 @@
 import { FC, useContext, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 
 import { Paths } from "../../routes";
 import { saveApiToken } from "../../utils/api-token";

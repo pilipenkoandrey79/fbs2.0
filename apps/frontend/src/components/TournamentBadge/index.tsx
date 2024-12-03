@@ -3,7 +3,7 @@ import { FC } from "react";
 import { _getTournamentTitle } from "@fbs2.0/utils";
 import classNames from "classnames";
 import { Classes, Tooltip } from "@blueprintjs/core";
-import { Link, To } from "react-router-dom";
+import { Link, To } from "react-router";
 
 import styles from "./styles.module.scss";
 

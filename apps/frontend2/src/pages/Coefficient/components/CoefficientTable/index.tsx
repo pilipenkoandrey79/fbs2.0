@@ -16,7 +16,7 @@ import {
   TournamentSeason,
 } from "@fbs2.0/types";
 import { useTranslation } from "react-i18next";
-import { createSearchParams } from "react-router-dom";
+import { createSearchParams } from "react-router";
 
 import { useGetCoefficientData } from "../../../../react-query-hooks/coefficient/useGetCoefficientData";
 import { useGetWinners } from "../../../../react-query-hooks/coefficient/useGetWinners";

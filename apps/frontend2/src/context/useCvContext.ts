@@ -1,5 +1,5 @@
 import { useEffect, useState, useTransition } from "react";
-import { createSearchParams, useSearchParams } from "react-router-dom";
+import { createSearchParams, useSearchParams } from "react-router";
 import { CV_SEARCH_PARAMETER } from "@fbs2.0/types";
 
 import { CvContextValue, CVInput } from "./cvContext";

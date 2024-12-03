@@ -1,12 +1,12 @@
-@use "../../style/mixins.scss" as *;
-@use "../../style/variables.module.scss" as *;
-@use "../../style/colors.module.scss" as *;
+@use "../../style/mixins.scss";
+@use "../../style/variables.module.scss";
+@use "../../style/colors.module.scss";
 
 .panel {
-  @include flex(row, flex-end, flex-start);
+  @include mixins.flex(row, flex-end, flex-start);
   padding: 8px 4px;
-  background-color: $contentBg;
-  width: calc(50% - #{$panelGap}/ 2);
+  background-color: colors.$contentBg;
+  width: calc(50% - #{variables.$panelGap}/ 2);
   position: relative;
   margin-bottom: 40px;
 
@@ -16,7 +16,7 @@
     right: 4px;
   }
 
-  @media (min-width: $screen-lg) {
+  @media (min-width: variables.$screen-lg) {
     padding: 8px 4px;
   }
 }

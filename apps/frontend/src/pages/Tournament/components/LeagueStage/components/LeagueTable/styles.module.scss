@@ -1,4 +1,5 @@
-@import "../../../../../../variables.scss";
+@use "@blueprintjs/core/lib/scss/variables" as *;
+@use "../../../../../../variables.scss" as *;
 
 @include highlighted;
 

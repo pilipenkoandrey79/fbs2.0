@@ -1,5 +1,5 @@
-@import "@blueprintjs/core/lib/scss/variables";
-@import "../../variables.scss";
+@use "@blueprintjs/core/lib/scss/variables" as *;
+@use "../../variables.scss" as *;
 
 .page {
   background-color: $sepia5;

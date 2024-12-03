@@ -24,12 +24,14 @@ const LanguagePath: FC = () => {
     const resolvedLanguage =
       i18n.resolvedLanguage || (i18n.options.fallbackLng as string[])?.[0];
 
-    return navigate(
+    navigate(
       "/" + resolvedLanguage + pathname.replace(`${lang}/`, "") + search,
       {
         replace: true,
       }
     );
+
+    return;
   }, [i18n, lang, navigate, pathname, search]);
 
   return <Outlet />;

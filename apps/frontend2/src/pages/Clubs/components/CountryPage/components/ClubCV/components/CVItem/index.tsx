@@ -9,7 +9,7 @@ import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { generatePath } from "react-router";
-import { createSearchParams } from "react-router-dom";
+import { createSearchParams } from "react-router";
 
 import { TournamentBadge } from "../../../../../../../../components/TournamentBadge";
 import { Paths } from "../../../../../../../../routes";

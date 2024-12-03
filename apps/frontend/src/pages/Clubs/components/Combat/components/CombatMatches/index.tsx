@@ -7,7 +7,7 @@ import {
   _getTournamentTitle,
   prepareClub,
 } from "@fbs2.0/utils";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { Country, Club as ClubInterface } from "@fbs2.0/types";
 
 import { useGetCombatMatches } from "../../../../../../react-query-hooks/matches/useGetCombatMatches";

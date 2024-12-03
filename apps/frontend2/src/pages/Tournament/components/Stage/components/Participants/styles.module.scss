@@ -1,13 +1,13 @@
-@use "../../../../../../style/mixins.scss" as *;
-@use "../../../../../../style/colors.module.scss" as *;
+@use "../../../../../../style/mixins.scss";
+@use "../../../../../../style/colors.module.scss";
 
 .participants {
   h3 {
-    @include flex(row, space-between, center);
+    @include mixins.flex(row, space-between, center);
   }
 
   .panels {
-    @include flex(row, flex-start, flex-start);
+    @include mixins.flex(row, flex-start, flex-start);
 
     .panel {
       width: 50%;
@@ -23,7 +23,7 @@
   &.UCL {
     h3 {
       .num {
-        background-color: $ucl-secondary-light;
+        background-color: colors.$ucl-secondary-light;
       }
     }
   }
@@ -31,7 +31,7 @@
   &.UEL {
     h3 {
       .num {
-        background-color: $uel-secondary-light;
+        background-color: colors.$uel-secondary-light;
       }
     }
   }
@@ -39,7 +39,7 @@
   &.UECL {
     h3 {
       .num {
-        background-color: $uecl-secondary-light;
+        background-color: colors.$uecl-secondary-light;
       }
     }
   }
@@ -47,7 +47,7 @@
   &.ICFC {
     h3 {
       .num {
-        background-color: $icfc-secondary-light;
+        background-color: colors.$icfc-secondary-light;
       }
     }
   }

@@ -14,7 +14,7 @@ import {
   createSearchParams,
   ParamKeyValuePair,
   useSearchParams,
-} from "react-router-dom";
+} from "react-router";
 import {
   SEASON_FROM_SEARCH_PARAM,
   SEASON_TO_SEARCH_PARAM,

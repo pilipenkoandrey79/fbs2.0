@@ -1,15 +1,15 @@
-@use "../../../../../../style/colors.module.scss" as *;
-@use "../../../../../../style/mixins.scss" as *;
+@use "../../../../../../style/colors.module.scss";
+@use "../../../../../../style/mixins.scss";
 
 .root {
-  @include flex(row, space-between, stretch);
+  @include mixins.flex(row, space-between, stretch);
   margin-bottom: 20px;
   padding: 8px 20px 8px 2px;
-  background-color: $contentBg;
-  border-top: 1px solid $primaryBase;
+  background-color: colors.$contentBg;
+  border-top: 1px solid colors.$primaryBase;
 
   .title {
-    @include flex(row);
+    @include mixins.flex(row);
 
     .flag {
       margin-right: 6px;

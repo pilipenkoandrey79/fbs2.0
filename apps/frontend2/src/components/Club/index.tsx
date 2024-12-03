@@ -3,7 +3,7 @@ import { FC } from "react";
 import classNames from "classnames";
 import { Tooltip, Typography } from "antd";
 import { useTranslation } from "react-i18next";
-import { createSearchParams, generatePath, Link } from "react-router-dom";
+import { createSearchParams, generatePath, Link } from "react-router";
 
 import { Flag } from "../Flag";
 import { Language } from "../../i18n/locales";

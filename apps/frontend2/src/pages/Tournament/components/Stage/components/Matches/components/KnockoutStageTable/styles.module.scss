@@ -1,5 +1,5 @@
-@use "../../../../../../../../style/mixins.scss" as *;
-@use "../../../../../../../../style/colors.module.scss" as *;
+@use "../../../../../../../../style/mixins.scss";
+@use "../../../../../../../../style/colors.module.scss";
 
 :global {
   .ant-table-tbody th.ant-table-cell {
@@ -12,22 +12,22 @@ table tbody td.delete {
   padding: 0 !important;
 
   .results {
-    @include flex(column, flex-start, stretch);
+    @include mixins.flex(column, flex-start, stretch);
 
     .match {
-      @include flex(row, space-between, stretch);
+      @include mixins.flex(row, space-between, stretch);
       position: relative;
 
       &:not(:last-child) {
-        border-bottom: 1px solid $border;
+        border-bottom: 1px solid colors.$border;
       }
 
       .result {
-        @include flex(column, flex-start, stretch);
+        @include mixins.flex(column, flex-start, stretch);
         flex: 1;
 
         &:not(:last-child) {
-          border-right: 1px solid $border;
+          border-right: 1px solid colors.$border;
         }
 
         .date {
@@ -67,4 +67,4 @@ table tbody td.delete {
   padding: 1px !important;
 }
 
-@include highlighted;
+@include mixins.highlighted;

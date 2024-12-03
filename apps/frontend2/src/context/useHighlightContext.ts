@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createSearchParams, useSearchParams } from "react-router-dom";
+import { createSearchParams, useSearchParams } from "react-router";
 import { HIGHLIGHTED_CLUB_ID_SEARCH_PARAM } from "@fbs2.0/types";
 
 import { HighlightContextValue } from "./highlightContext";

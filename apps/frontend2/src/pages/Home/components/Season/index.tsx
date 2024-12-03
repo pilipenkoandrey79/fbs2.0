@@ -6,7 +6,7 @@ import {
   TournamentSeason,
 } from "@fbs2.0/types";
 import { generatePath } from "react-router";
-import { createSearchParams, Link } from "react-router-dom";
+import { createSearchParams, Link } from "react-router";
 import {
   DeleteOutlined,
   EditOutlined,

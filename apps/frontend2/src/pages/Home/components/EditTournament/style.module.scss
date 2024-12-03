@@ -1,6 +1,5 @@
-@use "../../../../style/variables.module.scss" as *;
-@use "../../../../style/mixins.scss" as *;
-@use "../../../../style/colors.module.scss" as *;
+@use "../../../../style/variables.module.scss";
+@use "../../../../style/colors.module.scss";
 
 .modal {
   top: 0;
@@ -9,23 +8,23 @@
     min-height: 100px;
 
     &.edit-UCL {
-      background-color: $ucl-background;
+      background-color: colors.$ucl-background;
     }
 
     &.edit-UEL {
-      background-color: $uel-background;
+      background-color: colors.$uel-background;
     }
 
     &.edit-UECL {
-      background-color: $uecl-background;
+      background-color: colors.$uecl-background;
     }
 
     &.edit-CWC {
-      background-color: $cwc-background;
+      background-color: colors.$cwc-background;
     }
 
     &.edit-ICFC {
-      background-color: $icfc-background;
+      background-color: colors.$icfc-background;
     }
   }
 
@@ -35,7 +34,7 @@
     }
   }
 
-  @media (min-width: $screen-sm) {
+  @media (min-width: variables.$screen-sm) {
     top: 10px;
   }
 }

@@ -1,19 +1,19 @@
-@use "../../../../../../style/mixins.scss" as *;
-@use "../../../../../../style/variables.module.scss" as *;
+@use "../../../../../../style/mixins.scss";
+@use "../../../../../../style/variables.module.scss";
 
 .selectors {
   margin: 4px 0;
 
   .country {
-    @include flex;
+    @include mixins.flex;
   }
 }
 
 .buttons {
-  @include flex(row, space-between, center);
+  @include mixins.flex(row, space-between, center);
 
   .submission {
-    @include flex(row, flex-start, center);
+    @include mixins.flex(row, flex-start, center);
 
     &-button {
       margin-right: 4px;
@@ -21,10 +21,10 @@
   }
 }
 
-@media (min-width: $screen-sm) {
+@media (min-width: variables.$screen-sm) {
   .selectors,
   .selectors .participant {
-    @include flex(row, space-between, center);
+    @include mixins.flex(row, space-between, center);
 
     & > div {
       width: 50%;
@@ -48,7 +48,7 @@
   }
 
   .add-club {
-    @include flex(row, space-between, flex-start);
+    @include mixins.flex(row, space-between, flex-start);
 
     & > div {
       width: 33%;

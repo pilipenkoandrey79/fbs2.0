@@ -1,5 +1,5 @@
-@use "../../../../style/variables.module.scss" as *;
-@use "../../../../style/mixins.scss" as *;
+@use "../../../../style/variables.module.scss";
+@use "../../../../style/mixins.scss";
 
 .modal {
   top: 0;
@@ -12,11 +12,11 @@
     }
 
     .stages-header {
-      @include flex(row, space-between);
+      @include mixins.flex(row, space-between);
     }
 
     .stage {
-      @include flex(column);
+      @include mixins.flex(column);
       row-gap: 16px;
     }
   }
@@ -27,7 +27,7 @@
     }
   }
 
-  @media (min-width: $screen-sm) {
+  @media (min-width: variables.$screen-sm) {
     top: 10px;
   }
 }

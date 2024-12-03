@@ -6,7 +6,7 @@ import {
 } from "@fbs2.0/types";
 import { FC, useContext } from "react";
 import { Button, Intent, Tooltip } from "@blueprintjs/core";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 import { UserContext } from "../../../../context/userContext";
 import { TournamentBadge } from "../../../../components/TournamentBadge";

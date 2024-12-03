@@ -2,7 +2,7 @@ import { Menu } from "antd";
 import { FC, useContext } from "react";
 import { AvailableTournaments } from "@fbs2.0/types";
 import { generatePath, useParams } from "react-router";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { getTournamentTitle } from "@fbs2.0/utils";
 import { OrderedListOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";

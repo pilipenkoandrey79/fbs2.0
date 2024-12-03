@@ -1,4 +1,4 @@
-@import "@blueprintjs/core/lib/scss/variables";
+@use "@blueprintjs/core/lib/scss/variables" as *;
 
 $min-width: 1024px;
 $max-width: 1680px;

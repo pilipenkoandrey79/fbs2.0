@@ -1,5 +1,5 @@
-@use "../../../../../../../../style/mixins.scss" as *;
+@use "../../../../../../../../style/mixins.scss";
 
 .substituted {
-  @include flex(column, flex-start, flex-start);
+  @include mixins.flex(column, flex-start, flex-start);
 }

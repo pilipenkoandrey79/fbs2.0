@@ -1,5 +1,5 @@
-@use "../../../../../../../../style/mixins.scss" as *;
+@use "../../../../../../../../style/mixins.scss";
 
 .buttons {
-  @include flex(row);
+  @include mixins.flex(row);
 }

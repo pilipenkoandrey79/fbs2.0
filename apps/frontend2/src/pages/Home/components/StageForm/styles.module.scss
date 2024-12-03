@@ -1,11 +1,11 @@
-@use "../../../../style/mixins.scss" as *;
-@use "../../../../style/variables.module.scss" as *;
-@use "../../../../style/colors.module.scss" as *;
+@use "../../../../style/mixins.scss";
+@use "../../../../style/variables.module.scss";
+@use "../../../../style/colors.module.scss";
 
 .stage {
   width: 100%;
   position: relative;
-  border-color: $primaryBase;
+  border-color: colors.$primaryBase;
 
   .remove {
     position: absolute;
@@ -20,7 +20,7 @@
   }
 
   .container {
-    @include flex(column, flex-start, flex-start);
+    @include mixins.flex(column, flex-start, flex-start);
     margin-top: 20px;
 
     .stage-section {
@@ -31,8 +31,8 @@
       margin-top: 12px;
     }
 
-    @media (min-width: $screen-md) {
-      @include flex(row, flex-start, flex-start);
+    @media (min-width: variables.$screen-md) {
+      @include mixins.flex(row, flex-start, flex-start);
       flex-wrap: wrap;
 
       .stage-section {

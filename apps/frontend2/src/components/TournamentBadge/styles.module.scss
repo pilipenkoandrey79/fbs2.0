@@ -1,5 +1,5 @@
-@use "../../style/colors.module.scss" as *;
-@use "../../style/variables.module.scss" as *;
+@use "../../style/colors.module.scss";
+@use "../../style/variables.module.scss";
 
 .badge {
   display: inline-block;
@@ -21,68 +21,68 @@
     }
   }
 
-  @media (min-width: $screen-md) {
+  @media (min-width: variables.$screen-md) {
     font-size: 14px;
     width: 48px;
     height: 30px;
   }
 
   &.UCL {
-    background-color: $ucl-primary;
-    color: $ucl-background;
+    background-color: colors.$ucl-primary;
+    color: colors.$ucl-background;
 
     a {
       &:hover,
       &:active {
-        color: $ucl-primary-light;
+        color: colors.$ucl-primary-light;
       }
     }
   }
 
   &.UEL {
-    background-color: $uel-primary;
-    color: $uel-background;
+    background-color: colors.$uel-primary;
+    color: colors.$uel-background;
 
     a {
       &:hover,
       &:active {
-        color: $uel-primary-light;
+        color: colors.$uel-primary-light;
       }
     }
   }
 
   &.UECL {
-    background-color: $uecl-primary;
-    color: $uecl-background;
+    background-color: colors.$uecl-primary;
+    color: colors.$uecl-background;
 
     a {
       &:hover,
       &:active {
-        color: $uecl-primary-light;
+        color: colors.$uecl-primary-light;
       }
     }
   }
 
   &.CWC {
-    background-color: $cwc-primary;
-    color: $cwc-background;
+    background-color: colors.$cwc-primary;
+    color: colors.$cwc-background;
 
     a {
       &:hover,
       &:active {
-        color: $cwc-primary-light;
+        color: colors.$cwc-primary-light;
       }
     }
   }
 
   &.ICFC {
-    background-color: $icfc-primary;
-    color: $icfc-background;
+    background-color: colors.$icfc-primary;
+    color: colors.$icfc-background;
 
     a {
       &:hover,
       &:active {
-        color: $icfc-primary-light;
+        color: colors.$icfc-primary-light;
       }
     }
   }

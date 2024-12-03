@@ -1,9 +1,9 @@
-@use "../../style/variables.module.scss" as *;
-@use "../../style/mixins.scss" as *;
-@use "../../style/colors.module.scss" as *;
+@use "../../style/variables.module.scss";
+@use "../../style/mixins.scss";
+@use "../../style/colors.module.scss";
 
 .container {
-  max-width: $screen-xl;
+  max-width: variables.$screen-xl;
   margin: 0 auto;
   padding: 10px;
 
@@ -11,7 +11,7 @@
     padding-bottom: 4px;
 
     .buttons {
-      @include flex(row, flex-start, center);
+      @include mixins.flex(row, flex-start, center);
       gap: 20px;
     }
 
@@ -21,14 +21,14 @@
   }
 
   .body {
-    @include flex(row, center, flex-start);
+    @include mixins.flex(row, center, flex-start);
     gap: 20px;
 
     .timeline {
-      @include flex(column, flex-start, stretch);
+      @include mixins.flex(column, flex-start, stretch);
       flex: 1;
       padding: 16px 4px 8px;
-      background-color: $contentBg;
+      background-color: colors.$contentBg;
       width: 100%;
 
       .spin {
@@ -36,11 +36,11 @@
         width: 100%;
       }
 
-      @media (min-width: $screen-md) {
-        width: calc(50% - #{$panelGap}/ 2);
+      @media (min-width: variables.$screen-md) {
+        width: calc(50% - #{variables.$panelGap}/ 2);
       }
 
-      @media (min-width: $screen-lg) {
+      @media (min-width: variables.$screen-lg) {
         max-width: 600px;
       }
     }

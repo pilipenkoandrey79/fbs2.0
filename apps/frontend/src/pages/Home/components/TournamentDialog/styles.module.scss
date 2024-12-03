@@ -1,4 +1,4 @@
-@import "@blueprintjs/core/lib/scss/variables";
+@use "@blueprintjs/core/lib/scss/variables" as *;
 
 .tournament-dialog {
   min-width: 1000px;

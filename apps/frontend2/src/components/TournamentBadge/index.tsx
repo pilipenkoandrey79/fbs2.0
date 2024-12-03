@@ -2,7 +2,7 @@ import { FC } from "react";
 import { getTournamentTitle } from "@fbs2.0/utils";
 import { TournamentSeason } from "@fbs2.0/types";
 import classNames from "classnames";
-import { Link, To } from "react-router-dom";
+import { Link, To } from "react-router";
 import { Tooltip } from "antd";
 import { useTranslation } from "react-i18next";
 

@@ -1,16 +1,16 @@
-@use "../../../../../../style/variables.module.scss" as *;
-@use "../../../../../../style/mixins.scss" as *;
-@use "../../../../../../style/colors.module.scss" as *;
+@use "../../../../../../style/variables.module.scss";
+@use "../../../../../../style/mixins.scss";
+@use "../../../../../../style/colors.module.scss";
 
 .matches {
   .groups {
-    @include flex(row, flex-start, flex-start);
+    @include mixins.flex(row, flex-start, flex-start);
     flex-wrap: wrap;
     gap: 12px;
 
     .group {
       flex: 0;
-      border: 1px solid $border;
+      border: 1px solid colors.$border;
       padding: 2px;
 
       h4 {
@@ -30,53 +30,53 @@
       margin: 0;
     }
 
-    @media (min-width: $screen-md) {
+    @media (min-width: variables.$screen-md) {
       h3 {
         display: block;
       }
     }
 
-    @media (min-width: $screen-lg) {
+    @media (min-width: variables.$screen-lg) {
       flex: 0;
     }
   }
 
   &.UCL {
     .groups .group {
-      border-color: $ucl-primary-light;
+      border-color: colors.$ucl-primary-light;
 
       h4:not(.tour-title) {
-        background-color: $ucl-secondary-light;
+        background-color: colors.$ucl-secondary-light;
       }
     }
   }
 
   &.UEL {
     .groups .group {
-      border-color: $uel-primary-light;
+      border-color: colors.$uel-primary-light;
 
       h4:not(.tour-title) {
-        background-color: $uel-secondary-light;
+        background-color: colors.$uel-secondary-light;
       }
     }
   }
 
   &.UECL {
     .groups .group {
-      border-color: $uecl-primary-light;
+      border-color: colors.$uecl-primary-light;
 
       h4:not(.tour-title) {
-        background-color: $uecl-secondary-light;
+        background-color: colors.$uecl-secondary-light;
       }
     }
   }
 
   &.ICFC {
     .groups .group {
-      border-color: $icfc-primary-light;
+      border-color: colors.$icfc-primary-light;
 
       h4:not(.tour-title) {
-        background-color: $icfc-secondary-light;
+        background-color: colors.$icfc-secondary-light;
       }
     }
   }

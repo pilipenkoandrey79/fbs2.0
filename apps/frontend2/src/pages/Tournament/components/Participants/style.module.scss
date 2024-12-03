@@ -1,5 +1,5 @@
-@use "../../../../style/variables.module.scss" as *;
-@use "../../../../style/mixins.scss" as *;
+@use "../../../../style/variables.module.scss";
+@use "../../../../style/mixins.scss";
 
 .modal {
   top: 0;
@@ -16,7 +16,7 @@
         padding: 4px;
 
         .buttons {
-          @include flex(row, space-between, center);
+          @include mixins.flex(row, space-between, center);
 
           .additional-buttons {
             button {
@@ -34,7 +34,7 @@
     }
   }
 
-  @media (min-width: $screen-sm) {
+  @media (min-width: variables.$screen-sm) {
     top: 10px;
   }
 }

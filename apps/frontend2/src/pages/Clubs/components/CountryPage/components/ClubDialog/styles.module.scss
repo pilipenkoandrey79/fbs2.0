@@ -1,6 +1,6 @@
-@use "../../../../../../style/variables.module.scss" as *;
-@use "../../../../../../style/mixins.scss" as *;
-@use "../../../../../../style/colors.module.scss" as *;
+@use "../../../../../../style/variables.module.scss";
+@use "../../../../../../style/mixins.scss";
+@use "../../../../../../style/colors.module.scss";
 
 .modal {
   top: 0;
@@ -15,13 +15,13 @@
     }
 
     .label {
-      @include flex(row, space-between);
+      @include mixins.flex(row, space-between);
     }
 
     .old-name {
       width: 100%;
       position: relative;
-      border-color: $primaryBase;
+      border-color: colors.$primaryBase;
       margin: 8px 0;
 
       .remove {
@@ -31,14 +31,14 @@
       }
 
       .old-name-container {
-        @include flex(column, flex-start, stretch);
+        @include mixins.flex(column, flex-start, stretch);
 
         .old-name-sub-container {
-          @include flex(row, space-between);
+          @include mixins.flex(row, space-between);
         }
 
-        @media (min-width: $screen-md) {
-          @include flex(row, flex-start, flex-start);
+        @media (min-width: variables.$screen-md) {
+          @include mixins.flex(row, flex-start, flex-start);
 
           .old-name-sub-container {
             gap: 10px;
@@ -52,7 +52,7 @@
     }
 
     .footer {
-      @include flex(row, space-between);
+      @include mixins.flex(row, space-between);
     }
   }
 
@@ -62,7 +62,7 @@
     }
   }
 
-  @media (min-width: $screen-sm) {
+  @media (min-width: variables.$screen-sm) {
     top: 10px;
   }
 }

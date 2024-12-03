@@ -1,6 +1,6 @@
 import { FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { generatePath, Link } from "react-router-dom";
+import { generatePath, Link } from "react-router";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import classNames from "classnames";
 

@@ -2,7 +2,7 @@
 import { Spinner } from "@blueprintjs/core";
 import { AxiosError } from "axios";
 import { FC, ReactNode, useEffect } from "react";
-import { redirect } from "react-router-dom";
+import { redirect } from "react-router";
 
 import { showError } from "../Toaster/utils";
 

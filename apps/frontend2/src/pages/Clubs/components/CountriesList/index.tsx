@@ -1,6 +1,6 @@
 import { FC, Fragment } from "react";
 import { Divider, Skeleton, Typography } from "antd";
-import { createSearchParams, generatePath, Link } from "react-router-dom";
+import { createSearchParams, generatePath, Link } from "react-router";
 import { useTranslation } from "react-i18next";
 import { Country, CV_SEARCH_PARAMETER } from "@fbs2.0/types";
 import { isNotEmpty } from "@fbs2.0/utils";

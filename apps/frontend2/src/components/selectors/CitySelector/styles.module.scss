@@ -1,5 +1,5 @@
-@use "../../../style/colors.module.scss" as *;
+@use "../../../style/colors.module.scss";
 
 .new {
-  color: $link;
+  color: colors.$link;
 }

@@ -1,24 +1,23 @@
-@use "../../../../style/variables.module.scss" as *;
-@use "../../../../style/mixins.scss" as *;
-@use "../../../../style/colors.module.scss" as *;
+@use "../../../../style/mixins.scss";
+@use "../../../../style/colors.module.scss";
 
 .countries {
-  @include flex(row, center, flex-start);
+  @include mixins.flex(row, center, flex-start);
   flex-wrap: wrap;
   margin-top: 20px;
 
   .country {
-    @include flex(row, flex-start, center);
+    @include mixins.flex(row, flex-start, center);
     flex-wrap: nowrap;
     width: 150px;
     margin: 6px;
-    background-color: $contentBg;
+    background-color: colors.$contentBg;
     border-radius: 3px;
-    border: 1px solid $border;
+    border: 1px solid colors.$border;
     color: inherit;
 
     &.old {
-      background-color: $headerColor;
+      background-color: colors.$headerColor;
 
       img {
         -webkit-filter: grayscale(100%);
@@ -38,8 +37,8 @@
     }
 
     &:hover {
-      background-color: $border;
-      border-color: $primaryBase;
+      background-color: colors.$border;
+      border-color: colors.$primaryBase;
       text-decoration: underline;
     }
   }

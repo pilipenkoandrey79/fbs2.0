@@ -1,5 +1,5 @@
-@use "../../../../../../style/mixins.scss" as *;
-@use "../../../../../../style/variables.module.scss" as *;
+@use "../../../../../../style/mixins.scss";
+@use "../../../../../../style/variables.module.scss";
 
 .stage {
   width: 100%;
@@ -13,7 +13,7 @@
   }
 
   .container {
-    @include flex(column, flex-start, flex-start);
+    @include mixins.flex(column, flex-start, flex-start);
 
     .divider {
       margin: 8px 0;
@@ -24,13 +24,13 @@
     }
 
     .submit {
-      @include flex(row, flex-end);
+      @include mixins.flex(row, flex-end);
       width: 100%;
       margin-top: 8px;
     }
 
-    @media (min-width: $screen-md) {
-      @include flex(row, flex-start, flex-start);
+    @media (min-width: variables.$screen-md) {
+      @include mixins.flex(row, flex-start, flex-start);
       flex-wrap: wrap;
 
       .stage-section {

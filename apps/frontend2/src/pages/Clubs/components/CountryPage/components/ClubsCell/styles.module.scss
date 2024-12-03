@@ -1,8 +1,8 @@
-@use "../../../../../../style/mixins.scss" as *;
-@use "../../../../../../style/colors.module.scss" as *;
+@use "../../../../../../style/mixins.scss";
+@use "../../../../../../style/colors.module.scss";
 
 .clubs {
-  @include flex(row);
+  @include mixins.flex(row);
   gap: 6px;
   flex-wrap: wrap;
   list-style: none;
@@ -11,7 +11,7 @@
 
   & > li.clubs-item {
     padding: 2px 2px 2px 8px;
-    background-color: $headerColor;
+    background-color: colors.$headerColor;
     border: 1px transparent solid;
     border-radius: 3px;
     margin: 0;
@@ -27,7 +27,7 @@
 
     &:hover,
     &.active {
-      border-color: $border;
+      border-color: colors.$border;
 
       span {
         text-decoration: underline;

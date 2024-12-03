@@ -1,9 +1,9 @@
-@use "../../style/mixins.scss" as *;
+@use "../../style/mixins.scss";
 
 .fallback {
   width: 100%;
   height: 100%;
-  @include flex(column, center, center);
+  @include mixins.flex(column, center, center);
 
   &.page {
     height: 100vh;

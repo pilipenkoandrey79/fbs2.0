@@ -1,9 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from "react";
-import {
-  createSearchParams,
-  useParams,
-  useSearchParams,
-} from "react-router-dom";
+import { createSearchParams, useParams, useSearchParams } from "react-router";
 import {
   AvailableTournaments,
   HIGHLIGHTED_CLUB_ID_SEARCH_PARAM,

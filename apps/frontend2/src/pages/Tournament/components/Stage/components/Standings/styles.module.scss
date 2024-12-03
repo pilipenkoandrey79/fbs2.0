@@ -1,11 +1,11 @@
-@use "../../../../../../style/mixins.scss" as *;
-@use "../../../../../../style/variables.module.scss" as *;
+@use "../../../../../../style/mixins.scss";
+@use "../../../../../../style/variables.module.scss";
 
 .standings {
-  @include flex(column);
+  @include mixins.flex(column);
 
-  @media (min-width: $screen-xl) {
-    @include flex(row, space-between, flex-start);
+  @media (min-width: variables.$screen-xl) {
+    @include mixins.flex(row, space-between, flex-start);
     gap: 12px;
   }
 }

@@ -1,11 +1,11 @@
-@use "../../../../../../style/mixins.scss" as *;
+@use "../../../../../../style/mixins.scss";
 
 .form {
   display: block;
   margin: 0 2px;
 
   .stage {
-    @include flex(column);
+    @include mixins.flex(column);
     row-gap: 16px;
   }
 }

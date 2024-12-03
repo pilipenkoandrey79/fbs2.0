@@ -1,9 +1,7 @@
-@use "../../style/variables.module.scss" as *;
-@use "../../style/mixins.scss" as *;
-@use "../../style/colors.module.scss" as *;
+@use "../../style/variables.module.scss";
 
 .container {
-  max-width: $screen-xl;
+  max-width: variables.$screen-xl;
   margin: 0 auto;
   padding: 10px;
 
