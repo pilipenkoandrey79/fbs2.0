@@ -15,6 +15,7 @@ export const QUERY_KEY = {
   coefficient: "coefficient",
   coefficientGraph: "coefficient-graph",
   winners: "winners",
+  combat: "combat",
 };
 
 export const MUTATION_KEY = {

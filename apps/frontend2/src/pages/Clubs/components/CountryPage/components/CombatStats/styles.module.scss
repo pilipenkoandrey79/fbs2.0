@@ -1,0 +1,20 @@
+@use "../../../../../../style/variables.module.scss";
+
+.modal {
+  top: 0;
+
+  .flag {
+    display: block;
+    min-width: 1.5em;
+  }
+
+  :global {
+    .ant-modal-content {
+      padding: 10px;
+    }
+  }
+
+  @media (min-width: variables.$screen-sm) {
+    top: 10px;
+  }
+}

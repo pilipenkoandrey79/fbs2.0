@@ -4,15 +4,18 @@ import { Button, Divider, Table, TableProps } from "antd";
 import {
   EditOutlined,
   PlusSquareFilled,
+  TeamOutlined,
   TrophyOutlined,
 } from "@ant-design/icons";
 import { City, Country as CountryInterface } from "@fbs2.0/types";
+import { useMediaQuery } from "react-responsive";
 
 import { ClubsCell } from "../ClubsCell";
 import { SubHeader } from "../SubHeader";
 import { ClubCV } from "../ClubCV";
 import { CountryCV } from "../CountryCV";
 import { CityDialog } from "../CityDialog";
+import { CombatStats } from "../CombatStats";
 import { CvContext } from "../../../../../../context/cvContext";
 import { UserContext } from "../../../../../../context/userContext";
 import { ResponsivePanel } from "../../../../../../components/ResponsivePanel";
@@ -20,6 +23,7 @@ import { useGetCitiesByCountry } from "../../../../../../react-query-hooks/city/
 import { Language } from "../../../../../../i18n/locales";
 
 import styles from "./styles.module.scss";
+import variables from "../../../../../../style/variables.module.scss";
 
 interface Props {
   country: CountryInterface;
@@ -31,6 +35,11 @@ const Country: FC<Props> = ({ country }) => {
   const { i18n, t } = useTranslation();
   const cities = useGetCitiesByCountry(country.id);
   const [cityIdToEdit, setCityIdToEdit] = useState<number | null>(null);
+  const [combatStatsIsOpen, setCombatStatsIsOpen] = useState(false);
+
+  const isMdScreen = useMediaQuery({
+    query: `(min-width: ${variables.screenMd})`,
+  });
 
   const columns: TableProps<City>["columns"] = [
     {
@@ -71,6 +80,15 @@ const Country: FC<Props> = ({ country }) => {
           disabled={isPending || cvInput?.type === "country"}
           loading={isPending}
         />
+        <Divider type="vertical" />
+        <Button
+          icon={<TeamOutlined />}
+          onClick={() => setCombatStatsIsOpen(true)}
+          title={t("clubs.combats.action")}
+        >
+          {isMdScreen ? t("clubs.combats.action") : ""}
+        </Button>
+
         {!country?.till && user?.isEditor && (
           <>
             <Divider type="vertical" />
@@ -79,8 +97,9 @@ const Country: FC<Props> = ({ country }) => {
               icon={<PlusSquareFilled />}
               type="primary"
               onClick={() => setCityIdToEdit(-1)}
+              title={t("clubs.add_city")}
             >
-              {t("clubs.add_city")}
+              {isMdScreen ? t("clubs.add_city") : ""}
             </Button>
           </>
         )}
@@ -123,6 +142,13 @@ const Country: FC<Props> = ({ country }) => {
               ?.length || 0) === 0
           }
           onClose={() => setCityIdToEdit(null)}
+        />
+      )}
+      {combatStatsIsOpen && (
+        <CombatStats
+          country={country}
+          open={combatStatsIsOpen}
+          onClose={() => setCombatStatsIsOpen(false)}
         />
       )}
     </>
