@@ -32,6 +32,7 @@ const CountrySelector: FC<CountrySelectorProps> = ({ rival, setRival }) => {
       value={rival?.id}
       onClear={() => setRival(undefined)}
       onChange={(value) => setRival(data?.find(({ id }) => id === value))}
+      style={{ minWidth: 200 }}
     />
   );
 };

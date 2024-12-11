@@ -14,6 +14,7 @@ import { EditFilled, PlusOutlined } from "@ant-design/icons";
 import { useIsFetching, useIsMutating } from "@tanstack/react-query";
 
 import { UserContext } from "../../../../../../../../../../context/userContext";
+import { Score } from "../../../../../../../../../../components/Score";
 
 import styles from "./styles.module.scss";
 
@@ -47,7 +48,7 @@ const ResultsCell: FC<Props> = ({
     !isNotEmpty(forceWinnerId) &&
     results.length <
       ([...ONE_MATCH_STAGES, ...GROUP_STAGES, StageSchemeType.LEAGUE].includes(
-        stageSchemeType
+        stageSchemeType,
       )
         ? 1
         : 2);
@@ -55,17 +56,10 @@ const ResultsCell: FC<Props> = ({
   return (
     <div className={styles.results}>
       {results.length > 0 ? (
-        results.map(
-          ({
-            date,
-            hostScore,
-            guestScore,
-            replayDate,
-            hostPen,
-            guestPen,
-            tech,
-            unplayed,
-          }) => (
+        results.map((match) => {
+          const { date, replayDate, hostPen, guestPen } = match;
+
+          return (
             <div
               key={date}
               className={classNames(styles.match, {
@@ -77,18 +71,7 @@ const ResultsCell: FC<Props> = ({
                   {dateRenderer(date)}
                 </Typography.Text>
                 <span className={styles.score}>
-                  {unplayed
-                    ? "-"
-                    : `${hostScore}:${guestScore}${tech ? "*" : ""} ${
-                        !replayDate &&
-                        isNotEmpty(hostPen) &&
-                        isNotEmpty(guestPen)
-                          ? t("tournament.stages.matches.pen", {
-                              h: hostPen,
-                              g: guestPen,
-                            })
-                          : ""
-                      }`}
+                  <Score match={match} />
                 </span>
               </div>
               {replayDate && (
@@ -105,7 +88,7 @@ const ResultsCell: FC<Props> = ({
                       <Tooltip
                         title={t("tournament.stages.matches.coin", {
                           club: [host, guest].find(
-                            ({ id }) => id === forceWinnerId
+                            ({ id }) => id === forceWinnerId,
                           )?.club.name,
                         })}
                       >{`${hostPen}:${guestPen}`}</Tooltip>
@@ -138,8 +121,8 @@ const ResultsCell: FC<Props> = ({
                 </>
               )}
             </div>
-          )
-        )
+          );
+        })
       ) : (
         <div className={styles.match}>
           {!adding && user?.isEditor && canAddResult && (

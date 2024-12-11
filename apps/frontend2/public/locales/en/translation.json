@@ -247,7 +247,8 @@
     "add_city": "Add city",
     "combats": {
       "action": "Statistics with another country",
-      "title": "{{country}} vs {{rival}}"
+      "title": "{{country}} vs {{rival}}",
+      "presented": "{{country}} is presented by clubs ({{number}}):"
     },
     "old_country_description": "This country is no longer exist. All its cities and clubs are presented in another countries",
     "city": {

@@ -1,7 +1,9 @@
 import { FC } from "react";
-import { Flex, Skeleton } from "antd";
-import { Country } from "@fbs2.0/types";
+import { Divider, Flex, Skeleton } from "antd";
+import { Combat, Country } from "@fbs2.0/types";
 
+import { CombatStats } from "./components/CombatStats";
+import { CombatTable } from "./components/CombatTable";
 import { CountrySelector, CountrySelectorProps } from "../CountrySelector";
 import { useGetCombatMatches } from "../../../../../../../../react-query-hooks/match/useGetCombatMatches";
 
@@ -12,20 +14,36 @@ interface Props extends CountrySelectorProps {
   rival: Country;
 }
 
+export interface CombatComponentProps {
+  country: Country;
+  rival: Country;
+  data: Combat | undefined;
+}
+
 const CombatMatches: FC<Props> = ({ rival, country, setRival }) => {
   const combatMatches = useGetCombatMatches(country.id, rival.id);
 
-  console.log(combatMatches.data);
-
   return (
     <Flex vertical>
-      <CountrySelector rival={rival} setRival={setRival} />
+      <div className={styles.selector}>
+        <CountrySelector rival={rival} setRival={setRival} />
+      </div>
       {combatMatches.isLoading ? (
-        <div className={styles.matches}>
-          <Skeleton.Node active />
-        </div>
+        <Skeleton.Node active className={styles.skeleton} />
       ) : (
-        <div></div>
+        <div>
+          <CombatStats
+            country={country}
+            rival={rival}
+            data={combatMatches.data}
+          />
+          <Divider />
+          <CombatTable
+            country={country}
+            rival={rival}
+            data={combatMatches.data}
+          />
+        </div>
       )}
     </Flex>
   );

@@ -1,0 +1,22 @@
+@use "../../../../../../../../../../style/colors.module.scss";
+
+.matches {
+  table-layout: fixed;
+  border-collapse: collapse !important;
+
+  td {
+    border-top: 1px solid colors.$border;
+  }
+
+  .date {
+    width: 72px;
+
+    span {
+      font-size: 12px;
+    }
+  }
+
+  .score {
+    width: 40px;
+  }
+}

@@ -27,7 +27,7 @@ export interface BaseMatchResult {
   hostScore: number | null;
   guestScore: number | null;
   date: string;
-  label?: string; // @Deprected
+  label?: string; // @Deprecated
   unplayed?: boolean;
   tech?: boolean;
 }
