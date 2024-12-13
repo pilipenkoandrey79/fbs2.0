@@ -4,6 +4,8 @@ import { Repository } from "typeorm";
 import {
   AvailableTournament,
   AvailableTournaments,
+  GROUP_STAGES,
+  StageSchemeType,
   StageType,
   StageUpdateDto,
   Tournament,
@@ -110,7 +112,7 @@ export class TournamentService {
           winner,
           finalist,
         } as AvailableTournament;
-      })
+      }),
     );
 
     return tournamentSeasons.reduce<AvailableTournaments>(
@@ -127,7 +129,7 @@ export class TournamentService {
 
         return acc;
       },
-      {}
+      {},
     );
   }
 
@@ -187,7 +189,7 @@ export class TournamentService {
           winner,
           finalist,
         } as TournamentSummary;
-      })
+      }),
     );
   }
 
@@ -216,13 +218,13 @@ export class TournamentService {
         });
 
         return { ...stage, matchesCount };
-      })
+      }),
     );
   }
 
   private async createStage(
     stageDto: StageDto,
-    tournamentSeason: TournamentSeason
+    tournamentSeason: TournamentSeason,
   ) {
     const stage = new Stage();
 
@@ -248,7 +250,10 @@ export class TournamentService {
         groups: stageDto.groups ?? null,
         swissNum: stageDto.swissNum ?? null,
         swissTours: stageDto.swissTours ?? null,
-        pen: !!stageDto.pen,
+        pen:
+          [...GROUP_STAGES, StageSchemeType.LEAGUE].includes(
+            stageDto.stageSchemeType,
+          ) || !!stageDto.pen,
         awayGoal: !!stageDto.awayGoal,
       } as StageScheme);
 
@@ -265,7 +270,7 @@ export class TournamentService {
   public async createTournament(
     season: string,
     tournament: Tournament,
-    stages: StageDto[]
+    stages: StageDto[],
   ) {
     const tournamentSeason = await this.tournamentSeasonRepository.save({
       tournament,
@@ -274,8 +279,8 @@ export class TournamentService {
 
     await Promise.all(
       stages.map(async (stageDto) =>
-        this.createStage(stageDto, tournamentSeason)
-      )
+        this.createStage(stageDto, tournamentSeason),
+      ),
     );
 
     await Promise.all(
@@ -295,7 +300,7 @@ export class TournamentService {
         stage.previousStage = previousStage;
 
         await this.stageRepository.save(stage);
-      })
+      }),
     );
 
     return tournamentSeason;
@@ -379,7 +384,7 @@ export class TournamentService {
   public async appendStage(
     season: string,
     tournament: Tournament,
-    stageDto: StageDto
+    stageDto: StageDto,
   ) {
     const tournamentSeason = await this.tournamentSeasonRepository.findOne({
       where: { season, tournament },
