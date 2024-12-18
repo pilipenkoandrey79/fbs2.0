@@ -26,13 +26,10 @@ export const getTournamentPartMatchesQueryFn =
     tournament: Tournament | undefined,
     stage: Stage | null,
   ) =>
-  async () => {
-    if (stage === null) {
-      return null;
-    }
-
-    return await fetchStageMatches(season, tournament, stage.stageType);
-  };
+  async () =>
+    stage === null
+      ? null
+      : await fetchStageMatches(season, tournament, stage.stageType);
 
 export const useGetTournamentPartMatches = (
   season: string | undefined,

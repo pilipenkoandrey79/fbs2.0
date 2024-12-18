@@ -131,28 +131,26 @@ export class MatchService {
     tournament: Tournament,
     stageType: StageType,
   ) {
-    const stage = await this.stageRepository.findOne({
-      relations: {
-        previousStage: true,
-        stageScheme: true,
-        tournamentSeason: true,
-        stageSubstitutions: {
-          expelled: {
-            club: { city: { country: true, oldNames: true }, oldNames: true },
-          },
-          sub: {
-            club: { city: { country: true, oldNames: true }, oldNames: true },
-          },
-        },
-      },
-      where: { tournamentSeason: { tournament, season }, stageType },
-    });
-
     return transformTournamentPart({
       matches: (await this.findMatches(season, tournament, stageType)).sort(
         (a) => (a.answer ? 1 : -1),
       ),
-      stage,
+      stage: await this.stageRepository.findOne({
+        relations: {
+          previousStage: true,
+          stageScheme: true,
+          tournamentSeason: true,
+          stageSubstitutions: {
+            expelled: {
+              club: { city: { country: true, oldNames: true }, oldNames: true },
+            },
+            sub: {
+              club: { city: { country: true, oldNames: true }, oldNames: true },
+            },
+          },
+        },
+        where: { tournamentSeason: { tournament, season }, stageType },
+      }),
     });
   }
 
