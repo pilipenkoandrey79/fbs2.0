@@ -7,7 +7,11 @@ import {
   StageType,
   Tournament,
 } from "@fbs2.0/types";
-import { isNotEmpty, prepareMatchesList } from "@fbs2.0/utils";
+import {
+  isNotEmpty,
+  prepareMatchesList,
+  transformTournamentPart,
+} from "@fbs2.0/utils";
 
 import { Match } from "./entities/match.entity";
 import { Participant } from "../participant/entities/participant.entity";
@@ -35,7 +39,7 @@ export class MatchService {
   private async findMatches(
     season: string,
     tournament?: Tournament,
-    stageType?: StageType
+    stageType?: StageType,
   ) {
     return await this.matchRepository.find({
       relations: {
@@ -110,7 +114,7 @@ export class MatchService {
 
     return getSecuencedStagesList(stages).map((tournamentStage) => {
       const existedStage = availableMatches.find(
-        ({ stage }) => stage.stageType === tournamentStage.stageType
+        ({ stage }) => stage.stageType === tournamentStage.stageType,
       );
 
       return (
@@ -125,11 +129,31 @@ export class MatchService {
   public async getStageMatches(
     season: string,
     tournament: Tournament,
-    stage: StageType
+    stageType: StageType,
   ) {
-    return (await this.findMatches(season, tournament, stage)).sort((a) =>
-      a.answer ? 1 : -1
-    );
+    const stage = await this.stageRepository.findOne({
+      relations: {
+        previousStage: true,
+        stageScheme: true,
+        tournamentSeason: true,
+        stageSubstitutions: {
+          expelled: {
+            club: { city: { country: true, oldNames: true }, oldNames: true },
+          },
+          sub: {
+            club: { city: { country: true, oldNames: true }, oldNames: true },
+          },
+        },
+      },
+      where: { tournamentSeason: { tournament, season }, stageType },
+    });
+
+    return transformTournamentPart({
+      matches: (await this.findMatches(season, tournament, stageType)).sort(
+        (a) => (a.answer ? 1 : -1),
+      ),
+      stage,
+    });
   }
 
   public async createMatch(
@@ -152,7 +176,7 @@ export class MatchService {
       unplayed,
       tech,
       deductions = [],
-    }: CreateMatchDto
+    }: CreateMatchDto,
   ) {
     const host = await this.participantRepository.findOne({
       where: { id: hostId },
@@ -209,7 +233,7 @@ export class MatchService {
             item.participant = { id: participantId } as Participant;
 
             return item;
-          }
+          },
         );
 
         return await this.matchRepository.save(existedMatch);
@@ -260,7 +284,7 @@ export class MatchService {
       tech,
       date,
       deductions = [],
-    }: MatchResultDto
+    }: MatchResultDto,
   ) {
     const match = await this.matchRepository.findOne({
       relations: { host: true, guest: true, deductedPointsList: true },
@@ -341,7 +365,7 @@ export class MatchService {
 
   public async removeMatchResults(
     id: number,
-    { answerMatchId }: DeleteMatchDto
+    { answerMatchId }: DeleteMatchDto,
   ) {
     if (isNotEmpty(answerMatchId)) {
       const answerMatch = await this.matchRepository.findOne({

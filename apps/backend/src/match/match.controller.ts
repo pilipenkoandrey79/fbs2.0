@@ -42,7 +42,7 @@ export class MatchController {
   @ApiOkResponse({ type: [Match] })
   public getTwoCountriesMatches(
     @Query("countryId", new ParseIntPipe()) countryId: number,
-    @Query("rivalId", new ParseIntPipe()) rivalId: number
+    @Query("rivalId", new ParseIntPipe()) rivalId: number,
   ) {
     return this.service.getTwoCountriesMatches(countryId, rivalId);
   }
@@ -66,7 +66,7 @@ export class MatchController {
   @ApiOkResponse({ type: [TournamentPart] })
   public getMatches(
     @Param("season") season: string,
-    @Param("tournament") tournament: Tournament
+    @Param("tournament") tournament: Tournament,
   ) {
     if (!isSeasonLabelValid(season, false) || !isTournamentValid(tournament)) {
       throw new NotFoundException();
@@ -80,11 +80,11 @@ export class MatchController {
   @ApiParam({ name: "tournament", enum: Tournament })
   @ApiParam({ name: "stage", enum: StageType })
   @ApiNotFoundResponse()
-  @ApiOkResponse({ type: [BaseMatch] })
+  @ApiOkResponse()
   public getStageMatches(
     @Param("season") season: string,
     @Param("tournament") tournament: Tournament,
-    @Param("stage") stage: StageType
+    @Param("stage") stage: StageType,
   ) {
     if (!isSeasonLabelValid(season, false) || !isTournamentValid(tournament)) {
       throw new NotFoundException();
@@ -102,7 +102,7 @@ export class MatchController {
   public createMatch(
     @Param("season") season: string,
     @Param("tournament") tournament: Tournament,
-    @Body() body: CreateMatchDto
+    @Body() body: CreateMatchDto,
   ): Promise<Match> {
     return this.service.createMatch(season, tournament, body);
   }
@@ -114,7 +114,7 @@ export class MatchController {
   @ApiOkResponse({ type: Match })
   public setResults(
     @Param("id") id: number,
-    @Body() body: UpdateMatchResultDto
+    @Body() body: UpdateMatchResultDto,
   ): Promise<Match> {
     return this.service.updateMatchResult(id, body);
   }
@@ -126,7 +126,7 @@ export class MatchController {
   @ApiNoContentResponse()
   public deleteMatch(
     @Param("id", new ParseIntPipe()) id: number,
-    @Body() body: DeleteMatchDto
+    @Body() body: DeleteMatchDto,
   ) {
     return this.service.removeMatch(id, body);
   }
@@ -138,7 +138,7 @@ export class MatchController {
   @ApiNoContentResponse()
   public deleteMatchResults(
     @Param("id", new ParseIntPipe()) id: number,
-    @Body() body: DeleteMatchDto
+    @Body() body: DeleteMatchDto,
   ) {
     return this.service.removeMatchResults(id, body);
   }
