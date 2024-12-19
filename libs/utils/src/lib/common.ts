@@ -41,12 +41,12 @@ export const dateRenderer = (time: string | number | null) => {
 
 export const formatDatePickerValue = (
   value: string | number | undefined,
-  format = DATE_FORMAT
+  format = DATE_FORMAT,
 ) => (!!value && dayjs(value).isValid() ? dayjs(value, format) : null);
 
 export const normalizeDatePickerValue = (
   value: dayjs.Dayjs | null,
-  format = DATE_FORMAT
+  format = DATE_FORMAT,
 ) => value && `${dayjs(value).format(format)}`;
 
 export const handleStringChange =
@@ -60,7 +60,7 @@ export const isNotEmpty = (value: unknown, shouldValidateEmptyString = false) =>
 
 export const isSeasonLabelValid = (
   season?: string,
-  validateFinishInFuture = true
+  validateFinishInFuture = true,
 ) => {
   if (!season || !SEASON_REGEXP.test(season || "")) {
     return false;
@@ -100,7 +100,7 @@ export const _getTournamentTitle = (
   season?: string,
   tournament?: Tournament,
   showSeason = true,
-  short = false
+  short = false,
 ) => {
   let title = "";
   const seasonBoundaries = (season || "").split("-").map((v) => Number(v));
@@ -112,8 +112,8 @@ export const _getTournamentTitle = (
           ? "КЄЧ"
           : "ЛЧ"
         : seasonBoundaries[0] < Years.START_OF_CHAMPIONS_LEAGUE
-        ? "Кубок Європейських Чемпіонів"
-        : "Ліга Чемпіонів УЄФА";
+          ? "Кубок Європейських Чемпіонів"
+          : "Ліга Чемпіонів УЄФА";
       break;
     case Tournament.CUP_WINNERS_CUP:
       title = short ? "КВК" : "Кубок Володарів Кубків";
@@ -124,8 +124,8 @@ export const _getTournamentTitle = (
           ? "КУЄФА"
           : "ЛЄ"
         : seasonBoundaries[0] < Years.START_OF_EUROPA_LEAGUE
-        ? "Кубок УЄФА"
-        : "Ліга Європи";
+          ? "Кубок УЄФА"
+          : "Ліга Європи";
       break;
     case Tournament.EUROPE_CONFERENCE_LEAGUE:
       title = short ? "ЛК" : "Ліга Конференцій";
@@ -220,7 +220,7 @@ const renderResultLabel = (
     afterMatchPenalties = true,
     unplayed = false,
     tech = false,
-  }: ResultLabelOptions
+  }: ResultLabelOptions,
 ) => {
   if (unplayed) {
     return "-";
@@ -249,7 +249,7 @@ export interface ResultLabelOptions {
 
 export const getResultLabel = (
   { hostScore, guestScore, hostPen, guestPen }: Partial<BaseMatch>,
-  options?: ResultLabelOptions
+  options?: ResultLabelOptions,
 ) =>
   options?.answer
     ? renderResultLabel(guestScore, hostScore, guestPen, hostPen, {
@@ -305,24 +305,28 @@ export const prepareClub = (club: Club, year: string) => {
       .find(({ till }) => Number(till) > givenYear),
   };
 
-  let city = club.city;
+  return { ...club, name, name_ua, city: prepareCity(club.city, year) };
+};
 
-  if ((club.city?.oldNames || []).length > 0) {
-    const oldCityName = [...(club.city?.oldNames || [])]
-      .sort((a, b) => Number(a.till) - Number(b.till))
-      .find(({ till }) => Number(till) > givenYear);
-
-    const { name, country, name_ua } = { ...oldCityName };
-
-    city = {
-      ...club.city,
-      name: name || club.city?.name || "",
-      name_ua: name_ua || club.city?.name_ua || "",
-      country: country || club.city?.country,
-    } as City;
+export const prepareCity = (city: City, year: string | number) => {
+  if ((city?.oldNames?.length || 0) === 0) {
+    return city;
   }
 
-  return { ...club, name, name_ua, city };
+  const givenYear = Number(year);
+
+  const oldCityName = [...(city?.oldNames || [])]
+    .sort((a, b) => Number(a.till) - Number(b.till))
+    .find(({ till }) => Number(till) > givenYear);
+
+  const { name, country, name_ua } = { ...oldCityName };
+
+  return {
+    ...city,
+    name: name || city?.name || "",
+    name_ua: name_ua || city?.name_ua || "",
+    country: country || city?.country,
+  };
 };
 
 export const prepareMatchesList = (matches: Match[]) => {
@@ -331,7 +335,7 @@ export const prepareMatchesList = (matches: Match[]) => {
       const { stage, ...restMatch } = match;
 
       const existentStageIdx = acc.findIndex(
-        ({ stage }) => stage.id === match.stage.id
+        ({ stage }) => stage.id === match.stage.id,
       );
 
       if (existentStageIdx >= 0) {
@@ -381,12 +385,12 @@ export const isGroupFinished = (rows: GroupRow[], stageScheme: StageScheme) =>
         ({ games }) =>
           games >=
           (getTeamsQuantityInGroup(stageScheme) - 1) *
-            (ONE_MATCH_STAGES.includes(stageScheme.type) ? 1 : 2)
+            (ONE_MATCH_STAGES.includes(stageScheme.type) ? 1 : 2),
       )
     : false;
 
 export const getSeasonsForCoefficientcalculation = (
-  season: string | undefined
+  season: string | undefined,
 ) => {
   const [start, finish] = (season || "").split("-").map((v) => Number(v));
 
@@ -418,7 +422,7 @@ export const getWinners = (matches: Match[]) =>
     .reduce<{ tournament: TournamentSeason; matches: Match[] }[]>(
       (acc, match) => {
         const existedTournamentSeasonIdx = acc.findIndex(
-          ({ tournament }) => tournament.id === match.stage.tournamentSeason.id
+          ({ tournament }) => tournament.id === match.stage.tournamentSeason.id,
         );
 
         if (existedTournamentSeasonIdx >= 0) {
@@ -432,7 +436,7 @@ export const getWinners = (matches: Match[]) =>
 
         return acc;
       },
-      []
+      [],
     )
     .map<Winner>(({ tournament, matches }) => {
       const finalResults = matches.map<KnockoutStageTableRowResult>(
@@ -443,7 +447,7 @@ export const getWinners = (matches: Match[]) =>
           guestPen: answer ? hostPen : guestPen,
           answer,
           date: date ?? "",
-        })
+        }),
       );
 
       const { stage, forceWinner, host, guest, answer } = {
@@ -459,9 +463,9 @@ export const getWinners = (matches: Match[]) =>
               ? "guest"
               : "host"
             : forceWinner?.id === host?.id
-            ? "host"
-            : "guest"
-          : undefined
+              ? "host"
+              : "guest"
+          : undefined,
       );
 
       const winner = winnerInfo.host
@@ -469,20 +473,20 @@ export const getWinners = (matches: Match[]) =>
           ? guest
           : host
         : winnerInfo.guest
-        ? answer
-          ? host
-          : guest
-        : undefined;
+          ? answer
+            ? host
+            : guest
+          : undefined;
 
       const finalist = winnerInfo.host
         ? answer
           ? host
           : guest
         : winnerInfo.guest
-        ? answer
-          ? guest
-          : host
-        : undefined;
+          ? answer
+            ? guest
+            : host
+          : undefined;
 
       const year = tournament.season.split("-")[0];
 
@@ -507,7 +511,7 @@ export const getCVBalance = (cv: ClubCV[] | undefined) => {
 
       return acc;
     },
-    { w: 0, d: 0, l: 0, u: 0 }
+    { w: 0, d: 0, l: 0, u: 0 },
   );
 
   return {
@@ -519,17 +523,17 @@ export const getCVBalance = (cv: ClubCV[] | undefined) => {
 export const getWinner = (
   results: KnockoutStageTableRowResult[],
   awayGoalRule: boolean,
-  forceWinner?: "host" | "guest"
+  forceWinner?: "host" | "guest",
 ): { host: boolean; guest: boolean } => {
   const totalHostScore = results.reduce<number>(
     (acc, { hostScore, hostPen }) => acc + (hostScore ?? 0) + (hostPen ?? 0),
-    0
+    0,
   );
 
   const totalGuestScore = results.reduce<number>(
     (acc, { guestScore, guestPen }) =>
       acc + (guestScore ?? 0) + (guestPen ?? 0),
-    0
+    0,
   );
 
   if (totalHostScore > totalGuestScore) {

@@ -9,6 +9,7 @@ import {
 } from "@ant-design/icons";
 import { City, Country as CountryInterface } from "@fbs2.0/types";
 import { useMediaQuery } from "react-responsive";
+import { prepareCity } from "@fbs2.0/utils";
 
 import { ClubsCell } from "../ClubsCell";
 import { SubHeader } from "../SubHeader";
@@ -46,20 +47,26 @@ const Country: FC<Props> = ({ country }) => {
       key: "city",
       width: 100,
       className: styles.cell,
-      render: (_, { name, name_ua, id }: City) => (
-        <>
-          {(i18n.resolvedLanguage === Language.en ? name : name_ua) || name}
-          {user?.isEditor && !country.till && (
-            <Button
-              type="link"
-              size="small"
-              icon={<EditOutlined />}
-              className={styles["edit-city-button"]}
-              onClick={() => setCityIdToEdit(id)}
-            />
-          )}
-        </>
-      ),
+      render: (_, city: City) => {
+        const { name, name_ua, id } = country.till
+          ? prepareCity(city, Number(country.till) - 1)
+          : city;
+
+        return (
+          <>
+            {(i18n.resolvedLanguage === Language.en ? name : name_ua) || name}
+            {user?.isEditor && !country.till && (
+              <Button
+                type="link"
+                size="small"
+                icon={<EditOutlined />}
+                className={styles["edit-city-button"]}
+                onClick={() => setCityIdToEdit(id)}
+              />
+            )}
+          </>
+        );
+      },
     },
     {
       key: "clubs",
@@ -122,7 +129,9 @@ const Country: FC<Props> = ({ country }) => {
           }}
         >
           <>
-            {cvInput?.type === "club" && <ClubCV id={cvInput.id} />}
+            {cvInput?.type === "club" && (
+              <ClubCV id={cvInput.id} till={country.till} />
+            )}
             {cvInput?.type === "country" && <CountryCV id={cvInput.id} />}
           </>
         </ResponsivePanel>

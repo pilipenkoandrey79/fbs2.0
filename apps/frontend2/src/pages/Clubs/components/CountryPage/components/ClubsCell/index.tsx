@@ -1,13 +1,19 @@
-import { Club as ClubInterface, Country } from "@fbs2.0/types";
+import {
+  Club as ClubInterface,
+  Country,
+  CV_SEARCH_PARAMETER,
+} from "@fbs2.0/types";
 import { FC, useContext, useState } from "react";
 import classNames from "classnames";
 import { Button } from "antd";
 import { EditOutlined, PlusOutlined } from "@ant-design/icons";
+import { createSearchParams, generatePath } from "react-router";
 
 import { Club } from "../../../../../../components/Club";
 import { CvContext } from "../../../../../../context/cvContext";
 import { UserContext } from "../../../../../../context/userContext";
 import { ClubDialog } from "../ClubDialog";
+import { Paths } from "../../../../../../routes";
 
 import styles from "./styles.module.scss";
 
@@ -36,7 +42,21 @@ const ClubsCell: FC<Props> = ({ clubs, country, cityId }) => {
                 setCvInput({ type: "club", id: club.id });
               }}
             >
-              <Club club={club} showCity={false} showCountry={false} />
+              <Club
+                club={club}
+                showCity={false}
+                showCountry={false}
+                to={
+                  country?.till
+                    ? `${generatePath(Paths.CLUBS)}/${generatePath(
+                        Paths.COUNTRY_CLUBS,
+                        {
+                          code: `${country.code}`,
+                        },
+                      )}?${createSearchParams([[CV_SEARCH_PARAMETER, `club-${club.id}`]])}`
+                    : undefined
+                }
+              />
             </span>
             {user?.isEditor && !country?.till && (
               <Button

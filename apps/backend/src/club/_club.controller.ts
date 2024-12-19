@@ -55,8 +55,11 @@ export class _ClubController {
   @Get("/:id/cv")
   @ApiParam({ name: "id", type: "number" })
   @ApiOkResponse({ type: [ClubCV] })
-  public getClubCV(@Param("id", ParseIntPipe) id: number): Promise<ClubCV[]> {
-    return this.service.getClubCV(id);
+  public getClubCV(
+    @Param("id", ParseIntPipe) id: number,
+    @Query("till") till?: string,
+  ): Promise<ClubCV[]> {
+    return this.service.getClubCV(id, till);
   }
 
   @Put("/:id")
@@ -92,7 +95,7 @@ export class _ClubController {
   @ApiCreatedResponse({ type: OldClubName })
   public createClubOldName(
     @Param("id", ParseIntPipe) clubId: number,
-    @Body() body: _OldClubNameDto
+    @Body() body: _OldClubNameDto,
   ) {
     return this.service.createClubOldName(clubId, body);
   }

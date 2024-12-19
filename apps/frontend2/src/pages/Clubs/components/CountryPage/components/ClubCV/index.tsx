@@ -17,12 +17,13 @@ import colors from "../../../../../../style/colors.module.scss";
 
 interface Props {
   id: number | undefined;
+  till?: string | null;
 }
 
-const ClubCV: FC<Props> = ({ id }) => {
+const ClubCV: FC<Props> = ({ id, till }) => {
   const { t } = useTranslation();
   const club = useGetClub(id);
-  const cv = useGetClubCV(id);
+  const cv = useGetClubCV(id, till ?? "");
   const { balance, matches } = getCVBalance(cv.data);
 
   return cv.isLoading || club.isLoading ? (
@@ -47,7 +48,7 @@ const ClubCV: FC<Props> = ({ id }) => {
             <span>
               {cv.data?.reduce<number>(
                 (acc, { isWinner }) => acc + (isWinner ? 1 : 0),
-                0
+                0,
               )}
             </span>
           </Flex>
@@ -62,14 +63,18 @@ const ClubCV: FC<Props> = ({ id }) => {
       <Timeline
         mode="right"
         className={styles.timeline}
-        items={new Array(new Date().getFullYear() - Years.GLOBAL_START + 1)
+        items={new Array(
+          (till ? Number(till) : new Date().getFullYear()) -
+            Years.GLOBAL_START +
+            1,
+        )
           .fill(1)
           .map((_, index) => {
             const start = Years.GLOBAL_START + index;
             const finish = Years.GLOBAL_START + index + 1;
 
             const additionalLabel = FIRST_ICFC_SEASONS.find(
-              (item) => `${finish}` === item.split("-")[1]
+              (item) => `${finish}` === item.split("-")[1],
             );
 
             const labels = additionalLabel

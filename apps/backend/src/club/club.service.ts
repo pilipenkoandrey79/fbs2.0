@@ -41,7 +41,7 @@ export class ClubService {
 
   public async createClubOldName(
     clubId: number,
-    body: _OldClubNameDto
+    body: _OldClubNameDto,
   ): Promise<OldClubName> {
     const club = await this.clubRepository.findOne({ where: { id: clubId } });
     const clubOldName = new OldClubName();
@@ -133,7 +133,7 @@ export class ClubService {
 
     if (club.oldNames.length > 0) {
       club.oldNames.forEach(
-        async (item) => await this.clubOldNameRepository.remove(item)
+        async (item) => await this.clubOldNameRepository.remove(item),
       );
     }
 
@@ -162,7 +162,7 @@ export class ClubService {
         oldClubName.till = till;
 
         return oldClubName;
-      })
+      }),
     );
 
     return this.clubRepository.save(club);
@@ -195,7 +195,7 @@ export class ClubService {
         } else {
           await this.clubOldNameRepository.remove(item);
         }
-      })
+      }),
     );
 
     await Promise.all(
@@ -210,7 +210,7 @@ export class ClubService {
           oldName.club = updatedClub;
 
           await this.clubOldNameRepository.save(oldName);
-        })
+        }),
     );
 
     return await this.clubRepository.findOne({
@@ -219,11 +219,18 @@ export class ClubService {
     });
   }
 
-  public async getClubCV(clubId: number) {
-    const participations = await this.participantRepository.find({
-      where: { club: { id: clubId } },
-      relations: { tournamentSeason: true, club: true },
-    });
+  public async getClubCV(clubId: number, till: string | undefined) {
+    const participations = (
+      await this.participantRepository.find({
+        where: { club: { id: clubId } },
+        relations: { tournamentSeason: true, club: true },
+      })
+    ).filter((participation) =>
+      till
+        ? Number(participation.tournamentSeason.season.split("-")[0]) <=
+          Number(till)
+        : true,
+    );
 
     const matches = await this.matchRepository.find({
       relations: {
@@ -246,7 +253,7 @@ export class ClubService {
             stage: {
               tournamentSeason: { id },
             },
-          }) => id === participation.tournamentSeason.id
+          }) => id === participation.tournamentSeason.id,
         );
 
         const latestMatch = seasonMatches[seasonMatches.length - 1];
@@ -262,7 +269,7 @@ export class ClubService {
             : latestMatch.host.club.id === clubId;
 
           const finalMatches = seasonMatches.filter(
-            ({ stage }) => stage.stageType === StageType.FINAL
+            ({ stage }) => stage.stageType === StageType.FINAL,
           );
 
           const finalResults = finalMatches.map<KnockoutStageTableRowResult>(
@@ -273,7 +280,7 @@ export class ClubService {
               guestPen: answer ? hostPen : guestPen,
               answer,
               date,
-            })
+            }),
           );
 
           const winnerInfo = getWinner(
@@ -285,9 +292,9 @@ export class ClubService {
                   ? "host"
                   : "guest"
                 : latestMatch.forceWinner.club.id === clubId
-                ? "guest"
-                : "host"
-              : undefined
+                  ? "guest"
+                  : "host"
+              : undefined,
           );
 
           isWinner = givenClubIsHost ? winnerInfo.host : winnerInfo.guest;
@@ -328,7 +335,7 @@ export class ClubService {
 
               return acc;
             },
-            { w: 0, d: 0, l: 0, u: 0 }
+            { w: 0, d: 0, l: 0, u: 0 },
           ),
         } as ClubCV;
       })

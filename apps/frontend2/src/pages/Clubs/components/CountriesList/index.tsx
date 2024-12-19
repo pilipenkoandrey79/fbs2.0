@@ -29,7 +29,7 @@ const CountriesList: FC = () => {
 
       return acc;
     },
-    { old: [], current: [] }
+    { old: [], current: [] },
   );
 
   return countries.isLoading ? (
@@ -56,7 +56,7 @@ const CountriesList: FC = () => {
                 src={`./src/assets/flags/${code || "xx"}.svg`}
                 height={42}
               />
-              <Typography.Text className={styles.name} disabled={key === "old"}>
+              <Typography.Text className={styles.name}>
                 {(i18n.resolvedLanguage === Language.en ? name : name_ua) ||
                   name}
               </Typography.Text>
