@@ -14,6 +14,8 @@ import {
   HIGHLIGHTED_CLUB_ID_SEARCH_PARAM,
   SeasonCoefficient,
   TournamentSeason,
+  UKRAINE,
+  USSR,
 } from "@fbs2.0/types";
 import { useTranslation } from "react-i18next";
 import { createSearchParams } from "react-router";
@@ -41,7 +43,7 @@ const CoefficientTable: FC = () => {
 
   const coefficients = useMemo(
     () => sortCoefficientData(coefficientsQuery.data, sortBy),
-    [coefficientsQuery.data, sortBy]
+    [coefficientsQuery.data, sortBy],
   );
 
   const columns: TableProps<CoefficientData>["columns"] = [
@@ -162,7 +164,7 @@ const CoefficientTable: FC = () => {
                 .map(({ coefficient }) => coefficient)
                 .join(" + ")} = ${data.reduce<number>(
                 (acc, { coefficient }) => acc + coefficient,
-                0
+                0,
               )}) / ${data.length}`}
             </Table.Summary.Cell>
           </Table.Summary.Row>
@@ -184,6 +186,9 @@ const CoefficientTable: FC = () => {
         pagination={false}
         bordered
         rowKey={({ country }) => country.id}
+        rowClassName={({ country }) =>
+          [UKRAINE, USSR].includes(country.name) ? styles.mine : ""
+        }
         scroll={{ x: "max-content" }}
         sticky={{ offsetHeader: 0 }}
         expandable={{

@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, Repository } from "typeorm";
 import {
@@ -56,6 +56,59 @@ export class CountryService {
   }
 
   public async getCountryCities(countryId: number) {
+    const country = await this.countryRepository.findOne({
+      where: { id: countryId },
+    });
+
+    if (country.till) {
+      const cities = await this.cityRepository.find({
+        relations: {
+          clubs: { city: { country: true, oldNames: true } },
+          oldNames: { country: true },
+        },
+        where: { oldNames: { country: { id: countryId } } },
+      });
+
+      return (
+        await Promise.all(
+          cities.map(async (city) => ({
+            ...city,
+            clubs: (
+              await Promise.all(
+                city.clubs.map(async (club) => ({
+                  ...club,
+                  matches: (
+                    await this.matchRepository.find({
+                      relations: {
+                        guest: { club: true },
+                        host: { club: true },
+                        stage: { tournamentSeason: true },
+                      },
+                      where: [
+                        { guest: { club: { id: club.id } } },
+                        { host: { club: { id: club.id } } },
+                      ],
+                    })
+                  ).filter(
+                    ({
+                      stage: {
+                        tournamentSeason: { season },
+                      },
+                    }) => Number(season.split("-")[0]) < Number(country.till),
+                  ),
+                })),
+              )
+            ).filter(({ matches }) => matches.length > 0),
+          })),
+        )
+      )
+        .filter(({ clubs }) => clubs.length > 0)
+        .map((city) => ({
+          ...city,
+          clubs: city.clubs.map(({ matches, ...restClub }) => restClub),
+        }));
+    }
+
     return await this.cityRepository.find({
       where: { country: { id: countryId } },
       relations: { clubs: { city: { country: true } } },
@@ -103,8 +156,8 @@ export class CountryService {
                   { host: { club: { city: { id: cityId } } } },
                   { guest: { club: { city: { id: cityId } } } },
                 ],
-              })
-          )
+              }),
+          ),
         )
       )
         .flat()
@@ -118,7 +171,7 @@ export class CountryService {
           ({ stage }) =>
             stage.stageType === StageType.FINAL &&
             Number(country?.till) >=
-              Number(stage.tournamentSeason.season.split("-")[0])
+              Number(stage.tournamentSeason.season.split("-")[0]),
         );
     }
 
@@ -141,7 +194,7 @@ export class CountryService {
     return (await this.getFinalMatchesForCountry(country))
       .reduce<{ t: TournamentSeason; m: Match[] }[]>((acc, match) => {
         const existedTournamentSeasonIdx = acc.findIndex(
-          ({ t }) => t.id === match.stage.tournamentSeason.id
+          ({ t }) => t.id === match.stage.tournamentSeason.id,
         );
 
         if (existedTournamentSeasonIdx >= 0) {
@@ -161,7 +214,7 @@ export class CountryService {
             guestPen: answer ? hostPen : guestPen,
             answer,
             date,
-          })
+          }),
         );
 
         const latestMatch =
@@ -176,9 +229,9 @@ export class CountryService {
                 ? "guest"
                 : "host"
               : latestMatch.forceWinner.id === latestMatch.host.id
-              ? "host"
-              : "guest"
-            : undefined
+                ? "host"
+                : "guest"
+            : undefined,
         );
 
         const rawHost: ClubWithWinner = {
@@ -218,8 +271,8 @@ export class CountryService {
           status: monoFinal
             ? CountryCVStatus.Both
             : isWinner
-            ? CountryCVStatus.Winner
-            : CountryCVStatus.RunnerUp,
+              ? CountryCVStatus.Winner
+              : CountryCVStatus.RunnerUp,
         };
       });
   }

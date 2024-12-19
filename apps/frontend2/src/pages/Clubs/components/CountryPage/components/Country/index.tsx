@@ -49,7 +49,7 @@ const Country: FC<Props> = ({ country }) => {
       render: (_, { name, name_ua, id }: City) => (
         <>
           {(i18n.resolvedLanguage === Language.en ? name : name_ua) || name}
-          {user?.isEditor && (
+          {user?.isEditor && !country.till && (
             <Button
               type="link"
               size="small"
@@ -66,7 +66,7 @@ const Country: FC<Props> = ({ country }) => {
       dataIndex: "clubs",
       className: styles.cell,
       render: (clubs, { id: cityId }) => (
-        <ClubsCell clubs={clubs} countryId={country.id} cityId={cityId} />
+        <ClubsCell clubs={clubs} country={country} cityId={cityId} />
       ),
     },
   ];
@@ -80,19 +80,17 @@ const Country: FC<Props> = ({ country }) => {
           disabled={isPending || cvInput?.type === "country"}
           loading={isPending}
         />
-        <Divider type="vertical" />
-        <Button
-          icon={<TeamOutlined />}
-          onClick={() => setCombatStatsIsOpen(true)}
-          title={t("clubs.combats.action")}
-        >
-          {isMdScreen ? t("clubs.combats.action") : ""}
-        </Button>
-
         {!country?.till && user?.isEditor && (
           <>
             <Divider type="vertical" />
-
+            <Button
+              icon={<TeamOutlined />}
+              onClick={() => setCombatStatsIsOpen(true)}
+              title={t("clubs.combats.action")}
+            >
+              {isMdScreen ? t("clubs.combats.action") : ""}
+            </Button>
+            <Divider type="vertical" />
             <Button
               icon={<PlusSquareFilled />}
               type="primary"
@@ -114,9 +112,6 @@ const Country: FC<Props> = ({ country }) => {
             pagination={false}
             showHeader={false}
             bordered
-            locale={{
-              emptyText: !!country?.till && t("clubs.old_country_description"),
-            }}
             loading={cities.isLoading}
           />
         </div>

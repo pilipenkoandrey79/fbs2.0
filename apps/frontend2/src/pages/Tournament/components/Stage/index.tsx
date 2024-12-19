@@ -50,19 +50,19 @@ const Stage: FC<Props> = ({ stage, previousStages }) => {
   const currentStageMatches = useGetTournamentPartMatches(
     season,
     tournament as Tournament,
-    stage
+    stage,
   );
 
   const previousStageMatches = useGetTournamentPartMatches(
     season,
     tournament as Tournament,
-    previousStages[0]
+    previousStages[0],
   );
 
   const prePreviousStageMatches = useGetTournamentPartMatches(
     season,
     tournament as Tournament,
-    previousStages[1]
+    previousStages[1],
   );
 
   const tournamentParticipants = useGetParticipants(season, tournament);
@@ -71,7 +71,7 @@ const Stage: FC<Props> = ({ stage, previousStages }) => {
   const [segment, setSegment] = useState(Segments.matches);
 
   const [seconsarySegment, setSecondarySegment] = useState(
-    SecondarySegments.standings
+    SecondarySegments.standings,
   );
 
   const isMdScreen = useMediaQuery({
@@ -79,7 +79,7 @@ const Stage: FC<Props> = ({ stage, previousStages }) => {
   });
 
   const hasTable = [...GROUP_STAGES, StageSchemeType.LEAGUE].includes(
-    stage.stageScheme.type
+    stage.stageScheme.type,
   );
 
   const participants = prepareStageParticipants(
@@ -92,7 +92,7 @@ const Stage: FC<Props> = ({ stage, previousStages }) => {
       : undefined,
     prePreviousStageMatches.data && previousStages[1]
       ? { matches: prePreviousStageMatches.data, stage: previousStages[1] }
-      : undefined
+      : undefined,
   );
 
   return [

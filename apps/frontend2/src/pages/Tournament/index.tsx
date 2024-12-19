@@ -1,4 +1,4 @@
-import { FC, useMemo, useState, useTransition } from "react";
+import { FC, useEffect, useMemo, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
 import {
@@ -39,13 +39,13 @@ const Tournament: FC = () => {
   const [participantsDialogOpened, setParticipantsDialogOpened] =
     useState(false);
 
-  const [activeKey, setActiveKey] = useState<(number | string)[]>();
+  const [activeKey, setActiveKey] = useState<CollapseProps["activeKey"]>();
 
   const title = `${t(
     getTournamentTitle({
       season,
       tournament: tournament as TournamentType,
-    })
+    }),
   )} ${season}`;
 
   const stages = useGetTournamentStages(season, tournament as TournamentType);
@@ -53,7 +53,7 @@ const Tournament: FC = () => {
   const finalMatches = useGetTournamentPartMatches(
     season,
     tournament as TournamentType,
-    stages.data?.find(({ stageType }) => stageType === StageType.FINAL) ?? null
+    stages.data?.find(({ stageType }) => stageType === StageType.FINAL) ?? null,
   );
 
   const { results, forceWinnerId, host } = {
@@ -68,7 +68,7 @@ const Tournament: FC = () => {
       ? forceWinnerId === host?.id
         ? "guest"
         : "host"
-      : undefined
+      : undefined,
   );
 
   const items: CollapseProps["items"] = useMemo(
@@ -87,8 +87,18 @@ const Tournament: FC = () => {
           />
         ),
       })),
-    [stages.data, t]
+    [stages.data, t],
   );
+
+  useEffect(() => {
+    setActiveKey(
+      stages.isLoading
+        ? undefined
+        : stages?.data
+            ?.filter(({ matchesCount }) => matchesCount)
+            .map(({ id }) => Number(id)),
+    );
+  }, [stages.isLoading, stages.data]);
 
   return (
     <HighlightContext.Provider value={highlightedState}>
@@ -109,24 +119,26 @@ const Tournament: FC = () => {
           open={participantsDialogOpened}
           finished={winnerInfo.host || winnerInfo.guest}
         />
-        <Collapse
-          bordered={false}
-          collapsible="header"
-          activeKey={activeKey}
-          items={items}
-          onChange={(key) => {
-            startTransition(() => {
-              setActiveKey(key);
-            });
-          }}
-          expandIcon={({ isActive }) =>
-            isPending ? (
-              <LoadingOutlined />
-            ) : (
-              <CaretRightOutlined rotate={isActive ? 90 : 0} />
-            )
-          }
-        />
+        {stages.isSuccess && (
+          <Collapse
+            collapsible="header"
+            size="large"
+            activeKey={activeKey}
+            items={items}
+            onChange={(key) => {
+              startTransition(() => {
+                setActiveKey(key);
+              });
+            }}
+            expandIcon={({ isActive }) =>
+              isPending ? (
+                <LoadingOutlined />
+              ) : (
+                <CaretRightOutlined rotate={isActive ? 90 : 0} />
+              )
+            }
+          />
+        )}
       </Page>
     </HighlightContext.Provider>
   );

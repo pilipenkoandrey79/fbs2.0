@@ -1,4 +1,4 @@
-import { Club as ClubInterface } from "@fbs2.0/types";
+import { Club as ClubInterface, Country } from "@fbs2.0/types";
 import { FC, useContext, useState } from "react";
 import classNames from "classnames";
 import { Button } from "antd";
@@ -13,11 +13,11 @@ import styles from "./styles.module.scss";
 
 interface Props {
   clubs: ClubInterface[];
-  countryId: number | undefined;
+  country: Country | undefined;
   cityId: number | undefined;
 }
 
-const ClubsCell: FC<Props> = ({ clubs, countryId, cityId }) => {
+const ClubsCell: FC<Props> = ({ clubs, country, cityId }) => {
   const { user } = useContext(UserContext);
   const { cvInput, setCvInput } = useContext(CvContext);
   const [clubIdToEdit, setClubIdToEdit] = useState<number | null>(null);
@@ -38,7 +38,7 @@ const ClubsCell: FC<Props> = ({ clubs, countryId, cityId }) => {
             >
               <Club club={club} showCity={false} showCountry={false} />
             </span>
-            {user?.isEditor && (
+            {user?.isEditor && !country?.till && (
               <Button
                 type="link"
                 size="small"
@@ -50,7 +50,7 @@ const ClubsCell: FC<Props> = ({ clubs, countryId, cityId }) => {
           </li>
         ))}
       </ul>
-      {user?.isEditor && (
+      {user?.isEditor && !country?.till && (
         <Button
           icon={<PlusOutlined />}
           size="small"
@@ -62,7 +62,7 @@ const ClubsCell: FC<Props> = ({ clubs, countryId, cityId }) => {
       {clubIdToEdit !== null && user?.isEditor && (
         <ClubDialog
           id={clubIdToEdit}
-          countryId={countryId}
+          countryId={country?.id}
           cityId={cityId}
           onClose={() => setClubIdToEdit(null)}
         />
