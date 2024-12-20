@@ -1,0 +1,8 @@
+@use "../../../../../../../../../../style/colors.module.scss";
+@use "../../../../../../../../../../style/mixins.scss";
+
+.club {
+  width: 100%;
+}
+
+@include mixins.highlighted;

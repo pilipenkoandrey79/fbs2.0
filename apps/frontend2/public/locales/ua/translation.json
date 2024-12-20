@@ -140,7 +140,7 @@
         "title": "Матчі",
         "subtitle": "{{tour}} тур",
         "group_subtitle": "Група {{group}}",
-        "pen": "пен. {{h}}:{{g}}",
+        "pen": "({{h}}:{{g}})",
         "coin": "{{club}} - переможець за жеребом",
         "match": {
           "added": "Додано матч до {{tournament}} сезону {{season}}",

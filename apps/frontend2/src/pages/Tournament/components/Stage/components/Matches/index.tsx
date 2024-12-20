@@ -11,7 +11,8 @@ import { FC, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 
-import { KnockoutStageTable } from "./components/KnockoutStageTable";
+// import { KnockoutStageTable } from "./components/KnockoutStageTable";
+import { KnockoutStageTable2 } from "./components/KnockoutStageTable2";
 
 import styles from "./styles.module.scss";
 
@@ -30,7 +31,7 @@ const Matches: FC<Props> = ({ visible, tournamentPart, participants }) => {
 
   const groupIndexes = Object.values(Group).slice(
     0,
-    tournamentPart.stage.stageScheme.groups || 1
+    tournamentPart.stage.stageScheme.groups || 1,
   );
 
   return (
@@ -38,7 +39,7 @@ const Matches: FC<Props> = ({ visible, tournamentPart, participants }) => {
       style={{ display: visible ? "block" : "none" }}
       className={classNames(
         styles.matches,
-        styles[tournamentPart.stage.tournamentSeason.tournament]
+        styles[tournamentPart.stage.tournamentSeason.tournament],
       )}
     >
       <h3>{`${t("tournament.stages.matches.title")}`}</h3>
@@ -51,7 +52,7 @@ const Matches: FC<Props> = ({ visible, tournamentPart, participants }) => {
               })}`}</h4>
             )}
             {Object.keys(
-              tournamentPart.matches?.[group as Group]?.tours ?? { "1": [] }
+              tournamentPart.matches?.[group as Group]?.tours ?? { "1": [] },
             ).map((tour, index, tours) => (
               <Fragment key={tour}>
                 {tours.length > 1 && (
@@ -59,16 +60,16 @@ const Matches: FC<Props> = ({ visible, tournamentPart, participants }) => {
                     "tournament.stages.matches.subtitle",
                     {
                       tour,
-                    }
+                    },
                   )}`}</h4>
                 )}
-                <KnockoutStageTable
+                <KnockoutStageTable2
                   participants={participants}
                   matches={tournamentPart.matches}
                   stage={tournamentPart.stage as StageInternal}
                   tour={
                     [...GROUP_STAGES, StageSchemeType.LEAGUE].includes(
-                      tournamentPart.stage.stageScheme.type
+                      tournamentPart.stage.stageScheme.type,
                     )
                       ? Number(tour)
                       : undefined

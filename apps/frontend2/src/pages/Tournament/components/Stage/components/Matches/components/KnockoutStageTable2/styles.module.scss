@@ -1,0 +1,12 @@
+@use "../../../../../../../../style/colors.module.scss";
+
+.table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+
+  td {
+    border: 1px solid colors.$border;
+    padding: 4px;
+  }
+}
