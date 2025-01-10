@@ -1,20 +1,20 @@
-import { Stage, Tournament } from '@fbs2.0/types';
+import { Stage, Tournament } from "@fbs2.0/types";
 
 export enum TiebreakerRule {
-  Score = 'score',
-  Head2HeadScore = 'head-to-head-score',
-  Head2HeadDiff = 'head-to-head-difference',
-  Head2HeadAwayGoals = 'head-to-head-away-goals',
-  TotalDiff = 'total-difference',
-  GoalsFor = 'goals-for',
-  Head2HeadGoalsFor = 'head-to-head-goals-for',
-  GoalsAway = 'goals-away',
-  Wins = 'wins',
-  WinsAway = 'wins-away',
+  Score = "score",
+  Head2HeadScore = "head-to-head-score",
+  Head2HeadDiff = "head-to-head-difference",
+  Head2HeadAwayGoals = "head-to-head-away-goals",
+  TotalDiff = "total-difference",
+  GoalsFor = "goals-for",
+  Head2HeadGoalsFor = "head-to-head-goals-for",
+  GoalsAway = "goals-away",
+  Wins = "wins",
+  WinsAway = "wins-away",
 }
 
 export const getTiebreakersRules = (stage: Stage) => {
-  const startYear = Number(stage.tournamentSeason.season.split('-')[0]);
+  const startYear = Number(stage.tournamentSeason.season.split("-")[0]);
 
   switch (stage.tournamentSeason.tournament) {
     case Tournament.CHAMPIONS_LEAGUE: {
@@ -56,7 +56,7 @@ export const getTiebreakersRules = (stage: Stage) => {
         ];
       }
 
-      if (startYear <= 2024) {
+      if (startYear <= 2023) {
         return [
           TiebreakerRule.Score,
           TiebreakerRule.Head2HeadScore,
@@ -121,7 +121,7 @@ export const getTiebreakersRules = (stage: Stage) => {
         ];
       }
 
-      if (startYear <= 2024) {
+      if (startYear <= 2023) {
         return [
           TiebreakerRule.Score,
           TiebreakerRule.Head2HeadScore,
@@ -149,7 +149,7 @@ export const getTiebreakersRules = (stage: Stage) => {
       ];
     }
     case Tournament.EUROPE_CONFERENCE_LEAGUE: {
-      if (startYear <= 2024) {
+      if (startYear <= 2023) {
         return [
           TiebreakerRule.Score,
           TiebreakerRule.Head2HeadScore,
