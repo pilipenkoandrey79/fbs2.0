@@ -102,6 +102,26 @@
       "1/2F": "1/2 final",
       "F": "Final"
     },
+    "stage-short": {
+      "PQ1/2F": "PQ hf",
+      "PQF": "PQ f",
+      "PR": "PQ",
+      "1Q": "1q",
+      "2Q": "2q",
+      "3Q": "3q",
+      "POQ": "Q po",
+      "LG": "L",
+      "G": "G",
+      "G_2": "G 2",
+      "KPO": "PO",
+      "1R": "1",
+      "2R": "2",
+      "3R": "3",
+      "R16": "R16",
+      "1/4F": "1/4",
+      "1/2F": "1/2",
+      "F": "F"
+    },
     "highlight": "Highlight a participant",
     "participants": {
       "title": "Participants",

@@ -9,6 +9,8 @@ import {
   ImportOutlined,
 } from "@ant-design/icons";
 import toast from "react-hot-toast";
+import { StageType, Tournament } from "@fbs2.0/types";
+import { getWinner, isNotEmpty } from "@fbs2.0/utils";
 
 import { AddForm } from "./components/AddForm";
 import { Fallback } from "../../../../components/Fallback";
@@ -17,17 +19,18 @@ import { useGetParticipants } from "../../../../react-query-hooks/participant/us
 import { useGetTournamentSeasons } from "../../../../react-query-hooks/tournament/useGetTournamentSeasons";
 import { useTransferParticipants } from "../../../../react-query-hooks/participant/useTransferParticipants";
 import { useLoadParticipants } from "../../../../react-query-hooks/participant/useLoadParticipants";
+import { useGetTournamentPartMatches } from "../../../../react-query-hooks/match/useGetTournamentPartMatches";
+import { useGetTournamentStages } from "../../../../react-query-hooks/tournament/useGetTournamentStages";
 import { UserContext } from "../../../../context/userContext";
 
 import styles from "./style.module.scss";
 
 interface Props {
   open: boolean;
-  finished: boolean;
   onClose: () => void;
 }
 
-const Participants: FC<Props> = ({ open, finished, onClose }) => {
+const Participants: FC<Props> = ({ open, onClose }) => {
   const { season, tournament } = useParams();
   const { t } = useTranslation();
   const { user } = useContext(UserContext);
@@ -40,11 +43,35 @@ const Participants: FC<Props> = ({ open, finished, onClose }) => {
 
   const hasLinkedTournament =
     availableTournaments?.[season ?? ""]?.find(
-      (availableTournament) => tournament === availableTournament.type
+      (availableTournament) => tournament === availableTournament.type,
     )?.hasLinkedTournaments || false;
 
   const transferParticipants = useTransferParticipants();
   const loadParticipants = useLoadParticipants();
+  const stages = useGetTournamentStages(season, tournament as Tournament);
+
+  const finalMatches = useGetTournamentPartMatches(
+    season,
+    tournament as Tournament,
+    stages.data?.find(({ stageType }) => stageType === StageType.FINAL) ?? null,
+  );
+
+  const { results, forceWinnerId, host } = {
+    ...finalMatches.data?.A?.tours?.["1"]?.[0],
+  };
+
+  const winnerInfo = getWinner(
+    results || [],
+    !!stages.data?.find(({ stageType }) => stageType === StageType.FINAL)
+      ?.stageScheme.awayGoal,
+    isNotEmpty(forceWinnerId)
+      ? forceWinnerId === host?.id
+        ? "guest"
+        : "host"
+      : undefined,
+  );
+
+  const finished = winnerInfo.host || winnerInfo.guest;
 
   const transfer = async () => {
     const count = await transferParticipants.mutateAsync();
@@ -52,8 +79,8 @@ const Participants: FC<Props> = ({ open, finished, onClose }) => {
     toast.success(
       t(
         `tournament.participants.list.${count === 0 ? "zero_" : ""}transfered`,
-        { count, season, tournament }
-      )
+        { count, season, tournament },
+      ),
     );
   };
 

@@ -1,0 +1,24 @@
+@use "../../../../style/mixins.scss";
+@use "../../../../style/variables.module.scss";
+
+.panel {
+  width: 100%;
+  @include mixins.flex(row, space-between, center);
+
+  .nav {
+    a {
+      margin: 0 4px;
+      white-space: nowrap;
+    }
+  }
+
+  @media (min-width: variables.$screen-xl) {
+    @include mixins.flex(row, flex-start, stretch);
+
+    .nav {
+      a {
+        margin: 0 18px;
+      }
+    }
+  }
+}

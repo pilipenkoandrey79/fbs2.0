@@ -9,6 +9,7 @@ import { Fallback } from "./components/Fallback";
 export enum Paths {
   HOME = "/",
   TOURNAMENT = "/tournaments/:season/:tournament",
+  STAGE = ":stage",
   COEFFICIENT = "/coefficient/:season",
   CLUBS = "/clubs",
   COUNTRY_CLUBS = ":code",
@@ -41,6 +42,28 @@ export const routes: RouteObject[] = [
 
           return { Component: Tournament };
         },
+        children: [
+          {
+            index: true,
+            async lazy() {
+              const { StagesList } = await import(
+                "./pages/Tournament/components/StagesList"
+              );
+
+              return { Component: StagesList };
+            },
+          },
+          {
+            path: Paths.STAGE,
+            async lazy() {
+              const { Stage } = await import(
+                "./pages/Tournament/components/Stage"
+              );
+
+              return { Component: Stage };
+            },
+          },
+        ],
       },
       {
         path: getLocalizedPath(Paths.COEFFICIENT),

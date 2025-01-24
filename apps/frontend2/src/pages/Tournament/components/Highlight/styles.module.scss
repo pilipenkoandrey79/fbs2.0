@@ -1,0 +1,26 @@
+@use "../../../../style/colors.module.scss";
+@use "../../../../style/mixins.scss";
+@use "../../../../style/variables.module.scss";
+
+.highlight {
+  @include mixins.flex(row, space-between, center);
+  width: 400px;
+  align-self: flex-end;
+  flex-shrink: 0;
+  margin: 4px;
+  white-space: nowrap;
+
+  & > div {
+    width: 100%;
+    margin-left: 4px;
+  }
+
+  @media (min-width: variables.$screen-xl) {
+    align-self: unset;
+    width: 300px;
+  }
+
+  @media (min-width: variables.$screen-xxl) {
+    width: 400px;
+  }
+}

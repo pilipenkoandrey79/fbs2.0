@@ -1,4 +1,39 @@
 @use "../../style/colors.module.scss";
+@use "../../style/mixins.scss";
+@use "../../style/variables.module.scss";
+
+.header {
+  @include mixins.flex(column);
+
+  .title {
+    @include mixins.flex(row, flex-start);
+
+    img {
+      display: none;
+      margin-right: 8px;
+    }
+  }
+
+  .title {
+    width: 100%;
+  }
+
+  h1 {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  @media (min-width: variables.$screen-md) {
+    .title img {
+      display: inline-block;
+    }
+  }
+
+  @media (min-width: variables.$screen-xl) {
+    @include mixins.flex(row, flex-start, center);
+  }
+}
 
 .tournament {
   &-UCL main {
@@ -20,8 +55,4 @@
   &-ICFC main {
     background-color: colors.$icfc-background;
   }
-}
-
-.collapse-header:hover {
-  background-color: rgba($color: #000000, $alpha: 0.1);
 }

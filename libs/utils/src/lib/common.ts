@@ -138,12 +138,14 @@ export const _getTournamentTitle = (
   return `${title} ${showSeason && season ? season : ""}`;
 };
 
-export const getStageTransKey = (stageType: StageType) =>
-  `tournament.stage.${stageType}${
-    stageType === StageType.GROUP || stageType === StageType.GROUP_2
-      ? ".short"
-      : ""
-  }`;
+export const getStageTransKey = (stageType: StageType, short = false) =>
+  short
+    ? `tournament.stage-short.${stageType}`
+    : `tournament.stage.${stageType}${
+        stageType === StageType.GROUP || stageType === StageType.GROUP_2
+          ? ".short"
+          : ""
+      }`;
 
 export const _getStageLabel = (stageType: StageType | null, group?: Group) => {
   switch (stageType) {
