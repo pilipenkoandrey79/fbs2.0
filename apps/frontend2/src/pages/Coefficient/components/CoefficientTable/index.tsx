@@ -125,15 +125,10 @@ const CoefficientTable: FC = () => {
           <TournamentBadge
             key={`${tournament}-${coefficient}`}
             tournamentSeason={{ tournament, season } as TournamentSeason}
-            linkTo={
-              generatePath(Paths.TOURNAMENT, {
-                season: season || "",
-                tournament,
-              }) +
-              `?${createSearchParams([
-                [HIGHLIGHTED_CLUB_ID_SEARCH_PARAM, `${club?.id}`],
-              ])}`
-            }
+            linkTo={generatePath(Paths.TOURNAMENT, {
+              season: season || "",
+              tournament,
+            })}
           />
         )),
     },

@@ -28,7 +28,7 @@ const CVItem: FC<Props> = ({ entries, clubId }) => {
     Record<Tournament, number>
   >(
     (acc, value, index) => ({ ...acc, [value]: index }),
-    {} as Record<Tournament, number>
+    {} as Record<Tournament, number>,
   );
 
   return (
@@ -38,7 +38,7 @@ const CVItem: FC<Props> = ({ entries, clubId }) => {
           .sort(
             (a, b) =>
               tournamentSequence[a.tournamentSeason.tournament] -
-              tournamentSequence[b.tournamentSeason.tournament]
+              tournamentSequence[b.tournamentSeason.tournament],
           )
           .map(({ tournamentSeason, start, finish, isWinner }) => {
             const startLabel = t(
@@ -46,7 +46,7 @@ const CVItem: FC<Props> = ({ entries, clubId }) => {
                 start === StageType.GROUP || start === StageType.GROUP_2
                   ? ".short"
                   : ""
-              }`
+              }`,
             );
 
             const finishlabel = t(
@@ -54,7 +54,7 @@ const CVItem: FC<Props> = ({ entries, clubId }) => {
                 finish === StageType.GROUP || finish === StageType.GROUP_2
                   ? ".short"
                   : ""
-              }`
+              }`,
             );
 
             return (
@@ -70,15 +70,12 @@ const CVItem: FC<Props> = ({ entries, clubId }) => {
                 <div className={styles.badge}>
                   <TournamentBadge
                     tournamentSeason={tournamentSeason}
-                    linkTo={
-                      generatePath(Paths.TOURNAMENT, {
-                        season: tournamentSeason.season,
-                        tournament: tournamentSeason.tournament,
-                      }) +
-                      `?${createSearchParams([
-                        [HIGHLIGHTED_CLUB_ID_SEARCH_PARAM, `${clubId}`],
-                      ])}`
-                    }
+                    linkTo={`${generatePath(Paths.TOURNAMENT, {
+                      season: tournamentSeason.season,
+                      tournament: tournamentSeason.tournament,
+                    })}/${generatePath(Paths.STAGE, { stage: start })}?${createSearchParams(
+                      [[HIGHLIGHTED_CLUB_ID_SEARCH_PARAM, `${clubId}`]],
+                    )}`}
                   />
                 </div>
                 <div className={styles.value}>

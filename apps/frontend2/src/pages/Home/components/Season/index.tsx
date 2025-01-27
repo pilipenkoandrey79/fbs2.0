@@ -52,7 +52,7 @@ const Season: FC<Props> = ({ season, tournaments, narrow, onEdit }) => {
             <ul>
               {tournaments?.map(({ id, type }) => {
                 const tournamentSummary = summary.data?.find(
-                  (item) => item.type === type
+                  (item) => item.type === type,
                 );
 
                 return (
@@ -106,18 +106,6 @@ const Season: FC<Props> = ({ season, tournaments, narrow, onEdit }) => {
                         <Club
                           club={tournamentSummary?.winner?.club}
                           className={styles.winner}
-                          to={
-                            generatePath(Paths.TOURNAMENT, {
-                              season,
-                              tournament: type,
-                            }) +
-                            `?${createSearchParams([
-                              [
-                                HIGHLIGHTED_CLUB_ID_SEARCH_PARAM,
-                                `${tournamentSummary?.winner?.club?.id}`,
-                              ],
-                            ])}`
-                          }
                         />
                         {tournamentSummary?.finalist && (
                           <Club

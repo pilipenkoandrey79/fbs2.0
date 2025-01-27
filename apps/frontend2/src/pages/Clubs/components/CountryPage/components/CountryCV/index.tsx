@@ -14,6 +14,7 @@ import {
   CountryCV as CountryCVInterface,
   Club as ClubInterface,
   HIGHLIGHTED_CLUB_ID_SEARCH_PARAM,
+  StageType,
 } from "@fbs2.0/types";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
@@ -123,12 +124,9 @@ const CountryCV: FC<Props> = ({ id }) => {
                 club={club}
                 key={club.id}
                 showCountry={false}
-                to={
-                  generatePath(Paths.TOURNAMENT, tournamentSeason) +
-                  `?${createSearchParams([
-                    [HIGHLIGHTED_CLUB_ID_SEARCH_PARAM, `${club.id}`],
-                  ])}`
-                }
+                to={`${generatePath(Paths.TOURNAMENT, tournamentSeason)}/${generatePath(Paths.STAGE, { stage: StageType.FINAL })}?${createSearchParams(
+                  [[HIGHLIGHTED_CLUB_ID_SEARCH_PARAM, `${club.id}`]],
+                )}`}
                 className={classNames(
                   styles.club,
                   clubs.length > 1
@@ -136,8 +134,8 @@ const CountryCV: FC<Props> = ({ id }) => {
                       ? styles["runner-up"]
                       : styles.winner
                     : status === CountryCVStatus.Winner
-                    ? styles.winner
-                    : styles["runner-up"]
+                      ? styles.winner
+                      : styles["runner-up"],
                 )}
               />
             ))}
@@ -163,7 +161,7 @@ const CountryCV: FC<Props> = ({ id }) => {
           {cv.data?.reduce<number>(
             (acc, { status }) =>
               acc + (status === CountryCVStatus.RunnerUp ? 0 : 1),
-            0
+            0,
           )}
         </span>
       </Flex>
