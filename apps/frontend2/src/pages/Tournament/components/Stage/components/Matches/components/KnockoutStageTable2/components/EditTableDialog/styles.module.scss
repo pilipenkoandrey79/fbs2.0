@@ -1,0 +1,37 @@
+@use "../../../../../../../../../../style/variables.module.scss";
+@use "../../../../../../../../../../style/mixins.scss";
+@use "../../../../../../../../../../style/colors.module.scss";
+
+.modal {
+  top: 0;
+
+  .content {
+    min-height: 100px;
+
+    table.table {
+      background-color: colors.$contentBg;
+      border-collapse: collapse;
+
+      tbody td {
+        border: 1px solid colors.$border;
+        padding: 6px;
+
+        &.number {
+          max-width: 20px;
+          padding: 6px 2px;
+          text-align: center;
+        }
+      }
+    }
+  }
+
+  :global {
+    .ant-modal-content {
+      padding: 10px;
+    }
+  }
+
+  @media (min-width: variables.$screen-sm) {
+    top: 10px;
+  }
+}

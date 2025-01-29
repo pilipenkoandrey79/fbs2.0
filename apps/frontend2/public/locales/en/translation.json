@@ -188,6 +188,9 @@
           "replay": "Additional match",
           "deduction": "Points deduction punishment",
           "deducted": "{{points}} points deducted"
+        },
+        "edit": {
+          "title": "Edit matches"
         }
       },
       "tables": {

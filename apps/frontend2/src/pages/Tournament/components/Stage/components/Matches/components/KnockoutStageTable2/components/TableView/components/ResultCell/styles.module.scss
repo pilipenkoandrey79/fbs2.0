@@ -1,0 +1,32 @@
+@use "../../../../../../../../../../../../style/colors.module.scss";
+
+.results {
+  padding: 0;
+
+  .date {
+    max-width: 75px;
+    min-width: 75px;
+
+    & > div {
+      font-size: 10px;
+      margin: 0;
+    }
+  }
+
+  .coin {
+    font-weight: bold;
+  }
+
+  table.results-table {
+    border-collapse: collapse;
+
+    &.two-matches tr:first-of-type td {
+      border-bottom: 1px solid colors.$border;
+    }
+
+    tbody td {
+      border: none;
+      white-space: nowrap;
+    }
+  }
+}

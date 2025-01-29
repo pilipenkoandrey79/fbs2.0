@@ -1,0 +1,12 @@
+@use "../../../../../../../../../../../../style/variables.module.scss";
+@use "../../../../../../../../../../../../style/mixins.scss";
+
+.team {
+  max-width: 90px;
+
+  @media (min-width: variables.$screen-lg) {
+    max-width: 200px;
+  }
+}
+
+@include mixins.highlighted;
