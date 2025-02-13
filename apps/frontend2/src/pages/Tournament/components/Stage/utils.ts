@@ -12,12 +12,12 @@ import { getNumGroupRows, isLeagueStage, isNotEmpty } from "@fbs2.0/utils";
 
 export const applyStageSubstitutions = (
   participants: Participant[] | undefined,
-  stageSubstitutions: StageSubstitution[] | undefined
+  stageSubstitutions: StageSubstitution[] | undefined,
 ) =>
   (stageSubstitutions?.length || 0) > 0
     ? participants?.map((participant) => {
         const substitution = stageSubstitutions?.find(
-          ({ expelled }) => expelled.id === participant.id
+          ({ expelled }) => expelled.id === participant.id,
         );
 
         return substitution ? substitution.sub : participant;
@@ -43,7 +43,7 @@ export const getGroupWinnersQuantity = (stageSchemeType: StageSchemeType) => {
 const getParticipantsSkippedPreviousStage = (
   participants: Participant[] | undefined,
   previousTournamentPart: TournamentPart | undefined,
-  prePreviousTournamentPart: TournamentPart | undefined
+  prePreviousTournamentPart: TournamentPart | undefined,
 ) => {
   if (
     !previousTournamentPart?.stage ||
@@ -56,13 +56,13 @@ const getParticipantsSkippedPreviousStage = (
   const seeded =
     applyStageSubstitutions(
       getSeededParticipants(participants, previousTournamentPart.stage),
-      previousTournamentPart?.stage.stageSubstitutions
+      previousTournamentPart?.stage.stageSubstitutions,
     ) || [];
 
   const winners =
     applyStageSubstitutions(
       getPreviousStageWinners(participants, prePreviousTournamentPart),
-      previousTournamentPart?.stage.stageSubstitutions
+      previousTournamentPart?.stage.stageSubstitutions,
     ) || [];
 
   const allParticipants = [...seeded, ...winners];
@@ -73,9 +73,9 @@ const getParticipantsSkippedPreviousStage = (
         Object.values(tours).find((item) =>
           item.find(
             ({ host, guest }) =>
-              host.id === participant.id || guest.id === participant.id
-          )
-        )
+              host.id === participant.id || guest.id === participant.id,
+          ),
+        ),
       )
     ) {
       acc.push(participant);
@@ -87,17 +87,17 @@ const getParticipantsSkippedPreviousStage = (
 
 const getSeededParticipants = (
   participants: Participant[] | undefined,
-  currentStage: Stage | undefined
+  currentStage: Stage | undefined,
 ) =>
   participants?.filter(
     ({ startingStage, fromStage }) =>
       startingStage === currentStage?.stageType ||
-      fromStage?.linkedTournamentStage === currentStage?.stageType
+      fromStage?.linkedTournamentStage === currentStage?.stageType,
   );
 
 const getPreviousStageWinners = (
   participants: Participant[] | undefined,
-  previousTournamentPart: TournamentPart | undefined
+  previousTournamentPart: TournamentPart | undefined,
 ) => {
   const previousStageWinnersClubIds: number[] = [];
 
@@ -112,13 +112,16 @@ const getPreviousStageWinners = (
           ?.slice(
             0,
             getGroupWinnersQuantity(
-              previousTournamentPart?.stage.stageScheme.type
-            )
+              previousTournamentPart?.stage.stageScheme.type,
+            ) *
+              (previousTournamentPart?.stage.stageType === StageType.LEAGUE
+                ? 3
+                : 1),
           )
           .forEach(
             ({ team }) =>
               isNotEmpty(team) &&
-              previousStageWinnersClubIds.push(team?.club.id)
+              previousStageWinnersClubIds.push(team?.club.id),
           );
       } else {
         return Object.values(tours).forEach((item) =>
@@ -130,14 +133,14 @@ const getPreviousStageWinners = (
             if (guest.isWinner) {
               previousStageWinnersClubIds.push(guest.club.id);
             }
-          })
+          }),
         );
       }
-    }
+    },
   );
 
   return participants?.filter(({ club }) =>
-    previousStageWinnersClubIds.includes(club.id)
+    previousStageWinnersClubIds.includes(club.id),
   );
 };
 
@@ -145,7 +148,7 @@ export const getStageParticipants = (
   seededParticipants: Participant[] | undefined,
   previousStageWinners: Participant[] | undefined,
   skippers: Participant[] | undefined,
-  substitutions: StageSubstitution[] | undefined
+  substitutions: StageSubstitution[] | undefined,
 ) => [
   ...(applyStageSubstitutions(seededParticipants, substitutions) || []),
   ...(applyStageSubstitutions(previousStageWinners, substitutions) || []),
@@ -158,7 +161,7 @@ export const getFilteredParticipants = (
   skippers: Participant[] | undefined,
   currentTournamentPart: TournamentPart,
   group: Group | undefined,
-  tour: number | undefined
+  tour: number | undefined,
 ) => {
   const usedParticipantsIds =
     currentTournamentPart.matches?.[group as Group]?.tours?.[tour || 1].reduce<
@@ -173,14 +176,14 @@ export const getFilteredParticipants = (
   }
 
   const usedParticipantsIdsInOtherGroups = Object.keys(
-    currentTournamentPart.matches
+    currentTournamentPart.matches,
   )
     .filter((key) => key.toString() !== group?.toString())
     .reduce<number[]>((acc, group) => {
       currentTournamentPart.matches[group as Group].table?.forEach(
         ({ team }) => {
           acc.push(team.id);
-        }
+        },
       );
 
       return acc;
@@ -190,21 +193,21 @@ export const getFilteredParticipants = (
     (currentTournamentPart.matches?.[group as Group]?.table?.length || 0) >=
     getNumGroupRows(currentTournamentPart.stage.stageScheme.type)
       ? currentTournamentPart.matches?.[group as Group].table?.map(
-          ({ team }) => team
+          ({ team }) => team,
         )
       : getStageParticipants(
           seededParticipants,
           previousStageWinners,
           skippers,
-          currentTournamentPart.stage.stageSubstitutions
+          currentTournamentPart.stage.stageSubstitutions,
         );
 
   return (
     allParticipants?.filter(
       ({ id }) =>
         ![...usedParticipantsIds, ...usedParticipantsIdsInOtherGroups].includes(
-          id
-        )
+          id,
+        ),
     ) || []
   );
 };
@@ -213,23 +216,23 @@ export const prepareStageParticipants = (
   participants: Participant[] | undefined,
   currentTournamentPart: TournamentPart | undefined,
   previousTournamentPart: TournamentPart | undefined,
-  prePreviousTournamentPart: TournamentPart | undefined
+  prePreviousTournamentPart: TournamentPart | undefined,
 ) => ({
   seeded: getSeededParticipants(participants, currentTournamentPart?.stage),
   previousStageWinners: getPreviousStageWinners(
     participants,
-    previousTournamentPart
+    previousTournamentPart,
   ),
   skippers: getParticipantsSkippedPreviousStage(
     participants,
     previousTournamentPart,
-    prePreviousTournamentPart
+    prePreviousTournamentPart,
   ),
 });
 
 export const getPreviousTournamentPart = (
   matches: TournamentPart[],
-  stage: Stage | undefined
+  stage: Stage | undefined,
 ) =>
   isNotEmpty(stage?.previousStage)
     ? matches.find((entry) => entry.stage.id === stage?.previousStage?.id)
