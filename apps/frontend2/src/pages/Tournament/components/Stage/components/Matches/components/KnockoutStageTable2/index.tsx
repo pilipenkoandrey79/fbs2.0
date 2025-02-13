@@ -12,39 +12,10 @@ import { getFilteredParticipants } from "../../../../utils";
 
 import styles from "./styles.module.scss";
 
-const KnockoutStageTable: FC<
-  BaseEditTableProps & {
-    participants: {
-      seeded: Participant[] | undefined;
-      previousStageWinners: Participant[] | undefined;
-      skippers: Participant[] | undefined;
-    };
-  }
-> = (props) => {
+const KnockoutStageTable: FC<BaseEditTableProps> = (props) => {
   const { participants, stage, matches, group, tour } = props;
   const rows = matches?.[group as Group]?.tours?.[tour || 1] || [];
   const [editing, setEditing] = useState(false);
-
-  const availableParticipants = useMemo(
-    () =>
-      getFilteredParticipants(
-        participants.seeded,
-        participants.previousStageWinners,
-        participants.skippers,
-        { stage, matches },
-        group,
-        tour,
-      ),
-    [
-      group,
-      matches,
-      participants.previousStageWinners,
-      participants.seeded,
-      participants.skippers,
-      stage,
-      tour,
-    ],
-  );
 
   return (
     <div className={styles.container}>
@@ -56,7 +27,8 @@ const KnockoutStageTable: FC<
       />
       <EditTableDialog
         {...props}
-        participants={availableParticipants}
+        matches={matches}
+        participants={participants}
         onClose={() => setEditing(false)}
         open={editing}
       />

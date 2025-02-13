@@ -1,4 +1,4 @@
-import { Button, Divider, Form, Modal } from "antd";
+import { Divider, Form, Modal } from "antd";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -23,27 +23,67 @@ export interface BaseEditTableProps {
   stage: StageInternal;
   tour: number | undefined;
   group: Group | undefined;
+  participants: {
+    seeded: Participant[] | undefined;
+    previousStageWinners: Participant[] | undefined;
+    skippers: Participant[] | undefined;
+  };
 }
 
 interface Props extends BaseEditTableProps {
-  participants: Participant[];
   open: boolean;
   onClose: () => void;
 }
 
-const EditTableDialog: FC<Props> = ({ participants, open, onClose }) => {
+const EditTableDialog: FC<Props> = ({
+  matches,
+  participants,
+  stage,
+  group,
+  tour,
+  open,
+  onClose,
+}) => {
   const { t } = useTranslation();
+  const rows = matches?.[group as Group]?.tours?.[tour || 1] || [];
 
   const [form] = Form.useForm<MatchesDto>();
 
-  const selectedIds = Form.useWatch(["matches"], form)?.reduce<number[]>(
-    (acc, row) => [...acc, row?.hostId, row?.guestId],
-    [],
-  );
+  const participantsOptions = [
+    ...(participants.previousStageWinners || []),
+    ...(participants.seeded || []),
+    ...(participants.skippers || []),
+  ];
 
-  const availableTeamOptions = participants?.filter(
-    ({ id }) => !selectedIds?.includes(id),
-  );
+  // const availableParticipants = useMemo(
+  //   () =>
+  //     getFilteredParticipants(
+  //       participants.seeded,
+  //       participants.previousStageWinners,
+  //       participants.skippers,
+  //       { stage, matches },
+  //       group,
+  //       tour,
+  //     ),
+  //   [
+  //     group,
+  //     matches,
+  //     participants.previousStageWinners,
+  //     participants.seeded,
+  //     participants.skippers,
+  //     stage,
+  //     tour,
+  //   ],
+  // );
+
+  // const selectedIds = Form.useWatch(["matches"], form)?.reduce<number[]>(
+  //   (acc, row) => [...acc, row?.hostId, row?.guestId],
+  //   [],
+  // );
+
+  // const availableTeamOptions = availableParticipants?.filter(
+  //   ({ id }) => !selectedIds?.includes(id),
+  // );
 
   const submit = (values: MatchesDto) => {
     console.log(values);
@@ -67,44 +107,36 @@ const EditTableDialog: FC<Props> = ({ participants, open, onClose }) => {
       footer={[]}
     >
       <div className={styles.content}>
-        <Form<MatchesDto> form={form} layout="inline" onFinish={submit}>
-          <Form.List name="matches">
-            {(fields, { add }) => (
-              <div>
-                <table className={styles.table}>
-                  <tbody>
-                    {fields.map((field, index, array) => (
-                      <tr key={field.key}>
-                        {array.length > 5 && (
-                          <td className={styles.number}>{index + 1}</td>
-                        )}
-                        <TeamCell
-                          name={[field.name, "hostId"]}
-                          participants={availableTeamOptions}
-                        />
-                        <td></td>
-                        <TeamCell
-                          name={[field.name, "guestId"]}
-                          participants={availableTeamOptions}
-                        />
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                {availableTeamOptions.length > 0 && (
-                  <Button
-                    type="dashed"
-                    size="small"
-                    onClick={() => {
-                      add();
-                    }}
-                  >
-                    +
-                  </Button>
-                )}
-              </div>
-            )}
-          </Form.List>
+        <Form<MatchesDto>
+          form={form}
+          layout="inline"
+          onFinish={submit}
+          initialValues={{ matches: rows }}
+        >
+          <table className={styles.table}>
+            <Form.List name="matches">
+              {(fields) => (
+                <tbody>
+                  {fields.map((field, index, array) => (
+                    <tr key={field.key}>
+                      {array.length > 5 && (
+                        <td className={styles.number}>{index + 1}</td>
+                      )}
+                      <TeamCell
+                        name={[field.name, "hostId"]}
+                        participants={participantsOptions}
+                      />
+                      <td></td>
+                      <TeamCell
+                        name={[field.name, "guestId"]}
+                        participants={participantsOptions}
+                      />
+                    </tr>
+                  ))}
+                </tbody>
+              )}
+            </Form.List>
+          </table>
           <Divider type="horizontal" />
           <SubmitButton form={form} label={t("common.save")} size="small" />
         </Form>
