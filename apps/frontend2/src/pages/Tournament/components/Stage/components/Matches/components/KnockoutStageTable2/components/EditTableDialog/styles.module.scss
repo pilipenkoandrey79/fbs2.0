@@ -11,13 +11,15 @@
     table.table {
       background-color: colors.$contentBg;
       border-collapse: collapse;
+      width: 100%;
+      table-layout: fixed;
 
       tbody td {
         border: 1px solid colors.$border;
         padding: 6px;
 
         &.number {
-          max-width: 20px;
+          width: 20px;
           padding: 6px 2px;
           text-align: center;
         }

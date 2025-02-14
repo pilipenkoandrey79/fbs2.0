@@ -11,6 +11,7 @@ import {
 
 import { TeamCell } from "./components/TeamCell";
 import { SubmitButton } from "../../../../../../../../../../components/SubmitButton";
+import { ResultCell } from "./components/ResultCell";
 
 import styles from "./styles.module.scss";
 
@@ -46,7 +47,6 @@ const EditTableDialog: FC<Props> = ({
 }) => {
   const { t } = useTranslation();
   const rows = matches?.[group as Group]?.tours?.[tour || 1] || [];
-
   const [form] = Form.useForm<MatchesDto>();
 
   const participantsOptions = [
@@ -109,32 +109,35 @@ const EditTableDialog: FC<Props> = ({
       <div className={styles.content}>
         <Form<MatchesDto>
           form={form}
-          layout="inline"
           onFinish={submit}
           initialValues={{ matches: rows }}
         >
           <table className={styles.table}>
             <Form.List name="matches">
-              {(fields) => (
-                <tbody>
-                  {fields.map((field, index, array) => (
-                    <tr key={field.key}>
+              {(fields) =>
+                fields.map((field, index, array) => (
+                  <tbody key={field.key}>
+                    <tr>
                       {array.length > 5 && (
-                        <td className={styles.number}>{index + 1}</td>
+                        <td className={styles.number} rowSpan={2}>
+                          {index + 1}
+                        </td>
                       )}
                       <TeamCell
-                        name={[field.name, "hostId"]}
+                        name={[field.name, "host", "id"]}
                         participants={participantsOptions}
                       />
-                      <td></td>
+                      <ResultCell name={[field.name, "results"]} />
+                    </tr>
+                    <tr>
                       <TeamCell
-                        name={[field.name, "guestId"]}
+                        name={[field.name, "guest", "id"]}
                         participants={participantsOptions}
                       />
                     </tr>
-                  ))}
-                </tbody>
-              )}
+                  </tbody>
+                ))
+              }
             </Form.List>
           </table>
           <Divider type="horizontal" />

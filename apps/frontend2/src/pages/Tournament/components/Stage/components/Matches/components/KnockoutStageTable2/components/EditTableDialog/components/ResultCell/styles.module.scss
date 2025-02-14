@@ -1,0 +1,35 @@
+@use "../../../../../../../../../../../../style/colors.module.scss";
+
+.result {
+  padding: 0 !important;
+  vertical-align: top;
+  width: 60%;
+
+  table.result-table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+
+    tbody {
+      tr {
+        td {
+          border: none !important;
+
+          &.score {
+            width: 64px;
+
+            .number {
+              max-width: 30px;
+            }
+          }
+
+          &.cog {
+            vertical-align: middle;
+            width: 24px;
+            text-align: center;
+          }
+        }
+      }
+    }
+  }
+}
