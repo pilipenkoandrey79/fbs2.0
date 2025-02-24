@@ -16,17 +16,31 @@
           border: none !important;
 
           &.score {
-            width: 64px;
+            width: 72px;
 
             .number {
               max-width: 30px;
             }
           }
 
-          &.cog {
+          &.more,
+          &.delete {
             vertical-align: middle;
-            width: 24px;
+            width: 16px;
             text-align: center;
+          }
+
+          &.more {
+            width: 14px;
+            padding: 0;
+          }
+
+          &.date {
+            :global {
+              .ant-picker-input input {
+                font-size: 12px;
+              }
+            }
           }
         }
       }

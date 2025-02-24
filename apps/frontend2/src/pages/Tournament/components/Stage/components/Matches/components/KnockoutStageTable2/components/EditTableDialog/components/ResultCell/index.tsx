@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { NamePath } from "antd/es/form/interface";
 import { Flex, Form, InputNumber } from "antd";
-import { SettingOutlined } from "@ant-design/icons";
+import { DeleteOutlined, MoreOutlined } from "@ant-design/icons";
 
 import { DateInput } from "../../../../../../../../../../../../components/selectors/DateInput";
 
@@ -47,8 +47,11 @@ const ResultCell: FC<Props> = ({ name }) => {
                         </Form.Item>
                       </Flex>
                     </td>
-                    <td className={styles.cog}>
-                      <SettingOutlined />
+                    <td className={styles.more}>
+                      <MoreOutlined />
+                    </td>
+                    <td className={styles.delete}>
+                      <DeleteOutlined />
                     </td>
                   </tr>
                 );
