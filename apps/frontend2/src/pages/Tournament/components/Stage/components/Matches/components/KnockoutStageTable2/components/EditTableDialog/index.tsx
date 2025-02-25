@@ -4,8 +4,11 @@ import { useTranslation } from "react-i18next";
 import {
   ClubWithWinner,
   Group,
+  GROUP_STAGES,
+  ONE_MATCH_STAGES,
   Participant,
   StageInternal,
+  StageSchemeType,
   StageTableRow,
   TournamentStage,
 } from "@fbs2.0/types";
@@ -14,7 +17,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { TeamCell } from "./components/TeamCell";
 import { SubmitButton } from "../../../../../../../../../../components/SubmitButton";
 import { ResultCell } from "./components/ResultCell";
-import { getFilteredParticipants } from "../../../../../../utils";
+import { getAvailableStageParticipants } from "../../../../../../utils";
 
 import styles from "./styles.module.scss";
 
@@ -52,26 +55,31 @@ const EditTableDialog: FC<Props> = ({
   const rows = matches?.[group as Group]?.tours?.[tour || 1] || [];
   const [form] = Form.useForm<MatchesDto>();
 
-  const participantsOptions = useMemo(
-    () =>
-      getFilteredParticipants(
-        participants.seeded,
-        participants.previousStageWinners,
-        participants.skippers,
-        { stage, matches },
-        group,
-        tour,
-      ),
-    [
-      group,
-      matches,
-      participants.previousStageWinners,
-      participants.seeded,
-      participants.skippers,
-      stage,
-      tour,
-    ],
+  const availableParticipants = getAvailableStageParticipants(
+    participants.seeded,
+    participants.previousStageWinners,
+    participants.skippers,
+    { stage, matches },
+    group,
   );
+
+  const selectedIds =
+    Form.useWatch(["matches"], form)?.reduce<number[]>(
+      (acc, row) => [...acc, row?.host.id, row?.guest.id],
+      [],
+    ) || [];
+
+  const participantsOptions = availableParticipants.filter(
+    ({ id }) => !selectedIds.includes(id),
+  );
+
+  const nResults = [
+    ...ONE_MATCH_STAGES,
+    ...GROUP_STAGES,
+    StageSchemeType.LEAGUE,
+  ].includes(stage.stageScheme.type)
+    ? 1
+    : 2;
 
   const submit = (values: MatchesDto) => {
     console.log(values);
@@ -79,8 +87,8 @@ const EditTableDialog: FC<Props> = ({
   };
 
   const close = () => {
-    form.resetFields();
     onClose();
+    form.resetFields();
   };
 
   return (
@@ -102,7 +110,7 @@ const EditTableDialog: FC<Props> = ({
         >
           <table className={styles.table}>
             <Form.List name="matches">
-              {(fields, { add }) => (
+              {(fields, { add, remove }) => (
                 <>
                   {fields.map((field, index, array) => {
                     const host: ClubWithWinner = form.getFieldValue([
@@ -117,6 +125,13 @@ const EditTableDialog: FC<Props> = ({
                       "guest",
                     ]);
 
+                    const clearResult = (key: number) => {
+                      form.setFieldValue(
+                        ["matches", field.name, "results", key],
+                        {},
+                      );
+                    };
+
                     return (
                       <tbody key={field.key}>
                         <tr>
@@ -128,22 +143,32 @@ const EditTableDialog: FC<Props> = ({
                           <TeamCell
                             name={[field.name, "host"]}
                             form={form}
+                            selectedIds={selectedIds}
                             participants={
-                              (host?.id ?? undefined) !== undefined
-                                ? [...participantsOptions, host]
-                                : participantsOptions
+                              participantsOptions.length > 0
+                                ? participantsOptions
+                                : host?.id !== undefined
+                                  ? [host]
+                                  : []
                             }
                           />
-                          <ResultCell name={[field.name, "results"]} />
+                          <ResultCell
+                            name={[field.name, "results"]}
+                            remove={remove}
+                            clearResult={clearResult}
+                          />
                         </tr>
                         <tr>
                           <TeamCell
                             name={[field.name, "guest"]}
                             form={form}
+                            selectedIds={selectedIds}
                             participants={
-                              (guest?.id ?? undefined) !== undefined
-                                ? [...participantsOptions, guest]
-                                : participantsOptions
+                              participantsOptions.length > 0
+                                ? participantsOptions
+                                : guest?.id !== undefined
+                                  ? [guest]
+                                  : []
                             }
                           />
                         </tr>
@@ -158,7 +183,14 @@ const EditTableDialog: FC<Props> = ({
                           type="dashed"
                           icon={<PlusOutlined />}
                           onClick={() =>
-                            add({ host: {}, guest: {} } as StageTableRow)
+                            add({
+                              host: {},
+                              guest: {},
+                              results: new Array(nResults).fill({}),
+                            } as StageTableRow)
+                          }
+                          disabled={
+                            selectedIds.length >= availableParticipants.length
                           }
                         />
                       </td>

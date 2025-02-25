@@ -14,27 +14,16 @@ import { MatchesDto } from "../..";
 interface Props {
   name: FieldProps["name"];
   form: FormInstance<MatchesDto>;
+  selectedIds: number[];
   participants?: Participant[];
 }
 
-const TeamCell: FC<Props> = ({ name, participants, form }) => {
+const TeamCell: FC<Props> = ({ name, participants, selectedIds, form }) => {
   const { t, i18n } = useTranslation();
 
   const collator = new Intl.Collator(
     BCP47Locales[i18n.resolvedLanguage as Language],
   );
-
-  const selectedIds = Form.useWatch(["matches"], form)
-    ?.reduce<number[]>((acc, row) => [...acc, row?.host.id, row?.guest.id], [])
-    .filter(
-      (id) =>
-        id !==
-        form.getFieldValue([
-          "matches",
-          ...(name as [number, "host" | "guest"]),
-          "id",
-        ]),
-    );
 
   const options = participants
     ?.sort((a, b) =>
@@ -47,7 +36,20 @@ const TeamCell: FC<Props> = ({ name, participants, form }) => {
           : b?.club?.name_ua) || b?.club?.name,
       ),
     )
-    .filter((participant) => !(selectedIds ?? []).includes(participant?.id));
+    .filter(
+      (participant) =>
+        !selectedIds
+          .filter(
+            (id) =>
+              id !==
+              form.getFieldValue([
+                "matches",
+                ...(name as [number, "host" | "guest"]),
+                "id",
+              ]),
+          )
+          .includes(participant?.id),
+    );
 
   return (
     <td>

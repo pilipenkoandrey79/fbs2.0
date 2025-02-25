@@ -1,9 +1,16 @@
 @use "../../../../../../../../../../../../style/colors.module.scss";
 
 .result {
-  padding: 0 !important;
+  padding: 18px 0 0 0 !important;
   vertical-align: top;
   width: 60%;
+  position: relative;
+
+  .remove {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
 
   table.result-table {
     border-collapse: collapse;
@@ -14,6 +21,8 @@
       tr {
         td {
           border: none !important;
+          vertical-align: middle;
+          text-align: center;
 
           &.score {
             width: 72px;
@@ -23,11 +32,9 @@
             }
           }
 
-          &.more,
-          &.delete {
-            vertical-align: middle;
-            width: 16px;
-            text-align: center;
+          &.clear {
+            width: 24px;
+            padding: 0;
           }
 
           &.more {

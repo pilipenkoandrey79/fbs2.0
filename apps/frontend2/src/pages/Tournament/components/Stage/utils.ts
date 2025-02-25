@@ -155,6 +155,45 @@ export const getStageParticipants = (
   ...(applyStageSubstitutions(skippers, substitutions) || []),
 ];
 
+export const getAvailableStageParticipants = (
+  seededParticipants: Participant[] | undefined,
+  previousStageWinners: Participant[] | undefined,
+  skippers: Participant[] | undefined,
+  currentTournamentPart: TournamentPart,
+  group: Group | undefined,
+) => {
+  const usedParticipantsIdsInOtherGroups = Object.keys(
+    currentTournamentPart.matches,
+  )
+    .filter((key) => key.toString() !== group?.toString())
+    .reduce<number[]>((acc, group) => {
+      currentTournamentPart.matches[group as Group].table?.forEach(
+        ({ team }) => {
+          acc.push(team.id);
+        },
+      );
+
+      return acc;
+    }, []);
+
+  // if given group has enough participants return the list of those participants
+  // otherwise return the list of all participants minus used in other groups
+  return (
+    ((currentTournamentPart.matches?.[group as Group]?.table?.length || 0) >=
+    getNumGroupRows(currentTournamentPart.stage.stageScheme.type)
+      ? currentTournamentPart.matches?.[group as Group].table?.map(
+          ({ team }) => team,
+        )
+      : getStageParticipants(
+          seededParticipants,
+          previousStageWinners,
+          skippers,
+          currentTournamentPart.stage.stageSubstitutions,
+        )
+    )?.filter(({ id }) => !usedParticipantsIdsInOtherGroups.includes(id)) || []
+  );
+};
+
 export const getFilteredParticipants = (
   seededParticipants: Participant[] | undefined,
   previousStageWinners: Participant[] | undefined,
@@ -175,39 +214,17 @@ export const getFilteredParticipants = (
     return [];
   }
 
-  const usedParticipantsIdsInOtherGroups = Object.keys(
-    currentTournamentPart.matches,
-  )
-    .filter((key) => key.toString() !== group?.toString())
-    .reduce<number[]>((acc, group) => {
-      currentTournamentPart.matches[group as Group].table?.forEach(
-        ({ team }) => {
-          acc.push(team.id);
-        },
-      );
-
-      return acc;
-    }, []);
-
-  const allParticipants =
-    (currentTournamentPart.matches?.[group as Group]?.table?.length || 0) >=
-    getNumGroupRows(currentTournamentPart.stage.stageScheme.type)
-      ? currentTournamentPart.matches?.[group as Group].table?.map(
-          ({ team }) => team,
-        )
-      : getStageParticipants(
-          seededParticipants,
-          previousStageWinners,
-          skippers,
-          currentTournamentPart.stage.stageSubstitutions,
-        );
+  const availableParticipants = getAvailableStageParticipants(
+    seededParticipants,
+    previousStageWinners,
+    skippers,
+    currentTournamentPart,
+    group,
+  );
 
   return (
-    allParticipants?.filter(
-      ({ id }) =>
-        ![...usedParticipantsIds, ...usedParticipantsIdsInOtherGroups].includes(
-          id,
-        ),
+    availableParticipants.filter(
+      ({ id }) => !usedParticipantsIds.includes(id),
     ) || []
   );
 };

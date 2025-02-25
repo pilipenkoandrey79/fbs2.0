@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { NamePath } from "antd/es/form/interface";
-import { Flex, Form, InputNumber } from "antd";
-import { DeleteOutlined, MoreOutlined } from "@ant-design/icons";
+import { Button, Flex, Form, InputNumber, Popconfirm } from "antd";
+import { ClearOutlined, DeleteOutlined, MoreOutlined } from "@ant-design/icons";
 
 import { DateInput } from "../../../../../../../../../../../../components/selectors/DateInput";
 
@@ -9,11 +9,25 @@ import styles from "./styles.module.scss";
 
 interface Props {
   name: NamePath;
+  remove: (index: number | number[]) => void;
+  clearResult: (key: number) => void;
 }
 
-const ResultCell: FC<Props> = ({ name }) => {
+const ResultCell: FC<Props> = ({ name, remove, clearResult }) => {
   return (
     <td className={styles.result} rowSpan={2}>
+      <Popconfirm
+        title="Delete tournament pair?"
+        onConfirm={() => remove(name)}
+      >
+        <Button
+          danger
+          icon={<DeleteOutlined />}
+          size="small"
+          type="text"
+          className={styles.remove}
+        />
+      </Popconfirm>
       <table className={styles["result-table"]}>
         <tbody>
           <Form.List name={name}>
@@ -50,8 +64,18 @@ const ResultCell: FC<Props> = ({ name }) => {
                     <td className={styles.more}>
                       <MoreOutlined />
                     </td>
-                    <td className={styles.delete}>
-                      <DeleteOutlined />
+                    <td className={styles.clear}>
+                      <Popconfirm
+                        title="Clear result?"
+                        onConfirm={() => clearResult(field.key)}
+                      >
+                        <Button
+                          danger
+                          icon={<ClearOutlined />}
+                          size="small"
+                          type="text"
+                        />
+                      </Popconfirm>
                     </td>
                   </tr>
                 );
