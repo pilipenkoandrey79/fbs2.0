@@ -11,9 +11,16 @@ interface Props {
   label?: string;
   availableDates?: string[];
   size?: SizeType;
+  required?: boolean;
 }
 
-const DateInput: FC<Props> = ({ name, label, availableDates, size }) => {
+const DateInput: FC<Props> = ({
+  name,
+  label,
+  availableDates,
+  size,
+  required = true,
+}) => {
   const presets: DatePickerProps["presets"] = availableDates
     ?.map((label) => ({
       label,
@@ -25,7 +32,7 @@ const DateInput: FC<Props> = ({ name, label, availableDates, size }) => {
     <Form.Item
       name={name}
       label={label}
-      rules={[{ required: true, message: "" }]}
+      rules={[{ required, message: "" }]}
       getValueProps={(value) => ({ value: formatDatePickerValue(value) })}
       normalize={(value) => normalizeDatePickerValue(value)}
     >
@@ -33,6 +40,7 @@ const DateInput: FC<Props> = ({ name, label, availableDates, size }) => {
         format={DATE_FORMAT}
         presets={presets}
         size={size || "middle"}
+        placement="bottomLeft"
       />
     </Form.Item>
   );

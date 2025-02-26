@@ -3,6 +3,7 @@ import { FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ClubWithWinner,
+  DeductedPoints,
   Group,
   GROUP_STAGES,
   ONE_MATCH_STAGES,
@@ -13,6 +14,7 @@ import {
   TournamentStage,
 } from "@fbs2.0/types";
 import { PlusOutlined } from "@ant-design/icons";
+import { getStageTransKey } from "@fbs2.0/utils";
 
 import { TeamCell } from "./components/TeamCell";
 import { SubmitButton } from "../../../../../../../../../../components/SubmitButton";
@@ -95,7 +97,22 @@ const EditTableDialog: FC<Props> = ({
     <Modal
       open={open}
       className={styles.modal}
-      title={t("tournament.stages.matches.edit.title")}
+      title={
+        <span>
+          {`${t(getStageTransKey(stage.stageType, false, group), { group })}${
+            [...GROUP_STAGES, StageSchemeType.LEAGUE].includes(
+              stage.stageScheme.type,
+            )
+              ? ` (${t("tournament.stages.matches.subtitle", {
+                  tour,
+                })})`
+              : ""
+          }`}
+
+          <br />
+          {t("tournament.stages.matches.edit.title")}
+        </span>
+      }
       onClose={close}
       onCancel={close}
       width={800}
@@ -145,17 +162,19 @@ const EditTableDialog: FC<Props> = ({
                             form={form}
                             selectedIds={selectedIds}
                             participants={
-                              participantsOptions.length > 0
-                                ? participantsOptions
-                                : host?.id !== undefined
-                                  ? [host]
-                                  : []
+                              host.id !== undefined
+                                ? [...participantsOptions, host]
+                                : participantsOptions
                             }
                           />
+                          <Form.Item noStyle name={[field.name, "tour"]} />
+                          <Form.Item noStyle name={[field.name, "group"]} />
                           <ResultCell
                             name={[field.name, "results"]}
+                            form={form}
                             remove={remove}
                             clearResult={clearResult}
+                            stageScheme={stage.stageScheme}
                           />
                         </tr>
                         <tr>
@@ -164,11 +183,9 @@ const EditTableDialog: FC<Props> = ({
                             form={form}
                             selectedIds={selectedIds}
                             participants={
-                              participantsOptions.length > 0
-                                ? participantsOptions
-                                : guest?.id !== undefined
-                                  ? [guest]
-                                  : []
+                              guest.id !== undefined
+                                ? [...participantsOptions, guest]
+                                : participantsOptions
                             }
                           />
                         </tr>
@@ -186,7 +203,12 @@ const EditTableDialog: FC<Props> = ({
                             add({
                               host: {},
                               guest: {},
-                              results: new Array(nResults).fill({}),
+                              group,
+                              tour,
+                              results:
+                                nResults === 1
+                                  ? [{}]
+                                  : [{ answer: false }, { answer: true }],
                             } as StageTableRow)
                           }
                           disabled={

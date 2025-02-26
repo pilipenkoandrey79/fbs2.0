@@ -32,13 +32,9 @@
             }
           }
 
-          &.clear {
-            width: 24px;
-            padding: 0;
-          }
-
+          &.clear,
           &.more {
-            width: 14px;
+            width: 24px;
             padding: 0;
           }
 
