@@ -14,14 +14,12 @@ import { MoreOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { NamePath } from "antd/es/form/interface";
 import {
-  GROUP_STAGES,
   KnockoutStageTableRowResult,
+  MatchesDto,
   ONE_MATCH_STAGES,
   StageScheme,
-  StageSchemeType,
 } from "@fbs2.0/types";
 
-import { MatchesDto } from "../..";
 import { DateInput } from "../../../../../../../../../../../../components/selectors/DateInput";
 import { Club } from "../../../../../../../../../../../../components/Club";
 
@@ -39,16 +37,6 @@ const MoreResultCell: FC<Props> = ({ namePath, form, stageScheme }) => {
   const [open, setOpen] = useState(false);
   const [showPenaltyOrReplay, setShowPenaltyOrReplay] = useState(false);
   const [showFoceWinner, setShowFoceWinner] = useState(false);
-
-  const [showDeduction, setShowDeduction] = useState(
-    () =>
-      ((
-        form.getFieldValue([
-          ...namePath.slice(0, -2),
-          "deductedPointsList",
-        ] as NamePath) || []
-      ).length || 0) > 0,
-  );
 
   const values = Form.useWatch(namePath, form);
 
@@ -142,6 +130,13 @@ const MoreResultCell: FC<Props> = ({ namePath, form, stageScheme }) => {
       form.setFieldValue([...namePath, "guestPen"] as NamePath, undefined);
     }
   }, [form, values?.unplayed]);
+
+  useEffect(() => {
+    form.setFieldValue(
+      [...namePath.slice(0, 2), "forceWinnerId"] as NamePath,
+      values?.forceWinnerId,
+    );
+  }, [values?.forceWinnerId]);
 
   return (
     <Popover
@@ -238,36 +233,6 @@ const MoreResultCell: FC<Props> = ({ namePath, form, stageScheme }) => {
               ]}
             />
           </Form.Item>
-
-          {/** #4: Deduction */}
-          {[...GROUP_STAGES, StageSchemeType.LEAGUE].includes(
-            stageScheme.type,
-          ) && (
-            <div>
-              <label>
-                {t("tournament.stages.matches.form.deduction")}{" "}
-                <Checkbox
-                  checked={showDeduction}
-                  onChange={() => setShowDeduction(!showDeduction)}
-                />
-              </label>
-              <div style={{ display: showDeduction ? "flex" : "none" }}>
-                {["hostDeduction", "guestDeduction"].map((key) => (
-                  <div key={key}>
-                    <Form.Item name={[namePath.at(-1) as number, key]}>
-                      <InputNumber
-                        min={0}
-                        controls
-                        changeOnWheel
-                        size="small"
-                        className={styles.number}
-                      />
-                    </Form.Item>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </Flex>
       }
     >

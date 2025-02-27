@@ -39,17 +39,17 @@ const ParticipantSelector: FC<Props> = ({
 
   const { data: clubs } = useGetClubs(
     undefined,
-    getYearSelector(i18n.resolvedLanguage as Language, season?.split("-")?.[0])
+    getYearSelector(i18n.resolvedLanguage as Language, season?.split("-")?.[0]),
   );
 
   const { data: usedClubIds } = useGetParticipants<number[]>(
     season,
     tournament,
-    (data: Participant[]) => data.map(({ club }) => club.id)
+    (data: Participant[]) => data.map(({ club }) => club.id),
   );
 
   const collator = new Intl.Collator(
-    BCP47Locales[i18n.resolvedLanguage as Language]
+    BCP47Locales[i18n.resolvedLanguage as Language],
   );
 
   const options = clubs
@@ -64,14 +64,14 @@ const ParticipantSelector: FC<Props> = ({
     .sort((a, b) =>
       collator.compare(
         (i18n.resolvedLanguage === Language.en ? a.name : a.name_ua) || a.name,
-        (i18n.resolvedLanguage === Language.en ? b.name : b.name_ua) || b.name
-      )
+        (i18n.resolvedLanguage === Language.en ? b.name : b.name_ua) || b.name,
+      ),
     );
 
   const node = (
     <Selector<ClubInterface>
       options={options}
-      renderOption={(option) => <Club club={option} />}
+      renderOption={(option) => <Club club={option} to={false} />}
       className={className}
       allowClear={allowClear}
       placeholder={t("common.placeholder.club")}

@@ -219,3 +219,7 @@ export interface Winner {
   winner: Participant | undefined;
   finalist: Participant | undefined;
 }
+
+export interface MatchesDto {
+  matches: StageTableRow[];
+}

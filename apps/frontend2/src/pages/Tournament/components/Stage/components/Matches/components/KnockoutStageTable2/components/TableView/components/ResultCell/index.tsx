@@ -26,8 +26,8 @@ const ResultCell: FC<Props> = ({ match }) => {
           })}
         >
           <tbody>
-            {match.results.map((result) => (
-              <tr key={result.date}>
+            {match.results.map((result, index) => (
+              <tr key={result.date || index}>
                 <td className={styles.date}>
                   <Typography.Paragraph type="secondary">
                     {dateRenderer(result.date)}

@@ -12,6 +12,22 @@
     top: 0;
   }
 
+  .deduction {
+    padding: 0 6px;
+
+    &-item {
+      width: 50%;
+
+      & div {
+        padding-bottom: 0;
+      }
+    }
+  }
+
+  .number {
+    max-width: 30px;
+  }
+
   table.result-table {
     border-collapse: collapse;
     width: 100%;
@@ -26,10 +42,6 @@
 
           &.score {
             width: 72px;
-
-            .number {
-              max-width: 30px;
-            }
           }
 
           &.clear,

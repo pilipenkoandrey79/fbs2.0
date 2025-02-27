@@ -1,11 +1,12 @@
 import { Button, Divider, Form, Modal } from "antd";
-import { FC, useMemo } from "react";
+import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ClubWithWinner,
-  DeductedPoints,
   Group,
   GROUP_STAGES,
+  KnockoutStageTableRowResult,
+  MatchesDto,
   ONE_MATCH_STAGES,
   Participant,
   StageInternal,
@@ -14,18 +15,15 @@ import {
   TournamentStage,
 } from "@fbs2.0/types";
 import { PlusOutlined } from "@ant-design/icons";
-import { getStageTransKey } from "@fbs2.0/utils";
+import { getStageTransKey, isNotEmpty } from "@fbs2.0/utils";
 
 import { TeamCell } from "./components/TeamCell";
 import { SubmitButton } from "../../../../../../../../../../components/SubmitButton";
 import { ResultCell } from "./components/ResultCell";
 import { getAvailableStageParticipants } from "../../../../../../utils";
+import { useUpdateKnockoutMatchTable } from "../../../../../../../../../../react-query-hooks/match/useUpdateKnockoutMatchTable";
 
 import styles from "./styles.module.scss";
-
-export interface MatchesDto {
-  matches: StageTableRow[];
-}
 
 export interface BaseEditTableProps {
   matches: TournamentStage;
@@ -56,6 +54,7 @@ const EditTableDialog: FC<Props> = ({
   const { t } = useTranslation();
   const rows = matches?.[group as Group]?.tours?.[tour || 1] || [];
   const [form] = Form.useForm<MatchesDto>();
+  const updateTable = useUpdateKnockoutMatchTable(stage, group, tour);
 
   const availableParticipants = getAvailableStageParticipants(
     participants.seeded,
@@ -83,9 +82,10 @@ const EditTableDialog: FC<Props> = ({
     ? 1
     : 2;
 
-  const submit = (values: MatchesDto) => {
-    console.log(values);
+  const submit = async (values: MatchesDto) => {
     close();
+
+    await updateTable.mutateAsync(values);
   };
 
   const close = () => {
@@ -123,7 +123,26 @@ const EditTableDialog: FC<Props> = ({
         <Form<MatchesDto>
           form={form}
           onFinish={submit}
-          initialValues={{ matches: rows }}
+          initialValues={{
+            matches: rows.map((row) => {
+              if (isNotEmpty(row.forceWinnerId)) {
+                const answerMatchIdx = row.results.findIndex(
+                  (result) => result.answer,
+                );
+
+                if (answerMatchIdx !== -1) {
+                  row.results[answerMatchIdx] = {
+                    ...row.results[answerMatchIdx],
+                    forceWinnerId: row.forceWinnerId,
+                  } as KnockoutStageTableRowResult & {
+                    forceWinnerId: number | null | undefined;
+                  };
+                }
+              }
+
+              return row;
+            }),
+          }}
         >
           <table className={styles.table}>
             <Form.List name="matches">
@@ -145,7 +164,11 @@ const EditTableDialog: FC<Props> = ({
                     const clearResult = (key: number) => {
                       form.setFieldValue(
                         ["matches", field.name, "results", key],
-                        {},
+                        {
+                          hostScore: null,
+                          guestScore: null,
+                          date: "",
+                        } as KnockoutStageTableRowResult,
                       );
                     };
 
@@ -175,6 +198,8 @@ const EditTableDialog: FC<Props> = ({
                             remove={remove}
                             clearResult={clearResult}
                             stageScheme={stage.stageScheme}
+                            host={host}
+                            guest={guest}
                           />
                         </tr>
                         <tr>
@@ -207,8 +232,27 @@ const EditTableDialog: FC<Props> = ({
                               tour,
                               results:
                                 nResults === 1
-                                  ? [{}]
-                                  : [{ answer: false }, { answer: true }],
+                                  ? [
+                                      {
+                                        date: "",
+                                        hostScore: null,
+                                        guestScore: null,
+                                      },
+                                    ]
+                                  : [
+                                      {
+                                        date: "",
+                                        hostScore: null,
+                                        guestScore: null,
+                                        answer: false,
+                                      },
+                                      {
+                                        date: "",
+                                        hostScore: null,
+                                        guestScore: null,
+                                        answer: true,
+                                      },
+                                    ],
                             } as StageTableRow)
                           }
                           disabled={
@@ -223,7 +267,12 @@ const EditTableDialog: FC<Props> = ({
             </Form.List>
           </table>
           <Divider type="horizontal" />
-          <SubmitButton form={form} label={t("common.save")} size="small" />
+          <SubmitButton
+            form={form}
+            label={t("common.save")}
+            size="small"
+            loading={updateTable.isPending}
+          />
         </Form>
       </div>
     </Modal>

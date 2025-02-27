@@ -20,6 +20,10 @@ const Score: FC<Props> = ({
 }) => {
   const { t } = useTranslation();
 
+  if (hostScore === null || guestScore === null) {
+    return "";
+  }
+
   return unplayed
     ? "-"
     : `${hostScore}:${guestScore}${tech ? "*" : ""} ${
