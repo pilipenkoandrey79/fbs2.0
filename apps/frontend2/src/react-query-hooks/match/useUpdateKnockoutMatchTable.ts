@@ -31,7 +31,10 @@ export const useUpdateKnockoutMatchTable = (
           ...oldData,
           [group as Group]: {
             ...oldData?.[group as Group],
-            tours: { [tour || 1]: data.matches },
+            tours: {
+              ...oldData?.[group as Group]?.tours,
+              [tour || 1]: data.matches,
+            },
           },
         }),
       );

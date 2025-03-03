@@ -1,0 +1,20 @@
+@use "../../../../../../../../../../../../style/colors.module.scss";
+
+.results {
+  padding: 18px 0 0 0 !important;
+  vertical-align: top;
+  width: 60%;
+  position: relative;
+
+  .remove {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  table.results-table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+  }
+}

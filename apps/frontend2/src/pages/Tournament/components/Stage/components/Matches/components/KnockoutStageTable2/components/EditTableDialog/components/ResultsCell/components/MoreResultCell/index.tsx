@@ -20,8 +20,8 @@ import {
   StageScheme,
 } from "@fbs2.0/types";
 
-import { DateInput } from "../../../../../../../../../../../../components/selectors/DateInput";
-import { Club } from "../../../../../../../../../../../../components/Club";
+import { DateInput } from "../../../../../../../../../../../../../../components/selectors/DateInput";
+import { Club } from "../../../../../../../../../../../../../../components/Club";
 
 import styles from "./styles.module.scss";
 import { isNotEmpty } from "@fbs2.0/utils";
@@ -30,12 +30,17 @@ interface Props {
   namePath: NamePath;
   form: FormInstance<MatchesDto>;
   stageScheme: StageScheme;
+  showPenaltyOrReplay: boolean;
 }
 
-const MoreResultCell: FC<Props> = ({ namePath, form, stageScheme }) => {
+const MoreResultCell: FC<Props> = ({
+  namePath,
+  form,
+  stageScheme,
+  showPenaltyOrReplay,
+}) => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-  const [showPenaltyOrReplay, setShowPenaltyOrReplay] = useState(false);
   const [showFoceWinner, setShowFoceWinner] = useState(false);
 
   const values = Form.useWatch(namePath, form);
@@ -49,45 +54,6 @@ const MoreResultCell: FC<Props> = ({ namePath, form, stageScheme }) => {
     ...namePath.slice(0, -2),
     "guest",
   ] as NamePath);
-
-  useEffect(() => {
-    const isOneMatch = ONE_MATCH_STAGES.includes(stageScheme.type);
-
-    if (!isOneMatch && !values?.answer) {
-      setShowPenaltyOrReplay(false);
-
-      return;
-    }
-
-    const previousResult = isOneMatch
-      ? undefined
-      : (
-          form.getFieldValue(
-            namePath.slice(0, -1),
-          ) as KnockoutStageTableRowResult[]
-        ).find(({ answer, date }) => !answer && !!date);
-
-    const totalHostScore =
-      (values?.hostScore || 0) + (previousResult?.hostScore || 0);
-
-    const totalGuestScore =
-      (values?.guestScore || 0) + (previousResult?.guestScore || 0);
-
-    const hostAwayScore = values?.hostScore || 0;
-    const guestAwayScore = previousResult?.guestScore || 0;
-
-    setShowPenaltyOrReplay(
-      totalHostScore === totalGuestScore &&
-        (stageScheme.awayGoal ? hostAwayScore === guestAwayScore : true),
-    );
-  }, [
-    values?.answer,
-    values?.hostScore,
-    values?.guestScore,
-    form,
-    namePath,
-    stageScheme.awayGoal,
-  ]);
 
   useEffect(() => {
     setShowFoceWinner(

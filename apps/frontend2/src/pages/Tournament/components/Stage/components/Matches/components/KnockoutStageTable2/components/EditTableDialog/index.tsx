@@ -19,7 +19,7 @@ import { getStageTransKey, isNotEmpty } from "@fbs2.0/utils";
 
 import { TeamCell } from "./components/TeamCell";
 import { SubmitButton } from "../../../../../../../../../../components/SubmitButton";
-import { ResultCell } from "./components/ResultCell";
+import { ResultsCell } from "./components/ResultsCell";
 import { getAvailableStageParticipants } from "../../../../../../utils";
 import { useUpdateKnockoutMatchTable } from "../../../../../../../../../../react-query-hooks/match/useUpdateKnockoutMatchTable";
 
@@ -56,6 +56,25 @@ const EditTableDialog: FC<Props> = ({
   const [form] = Form.useForm<MatchesDto>();
   const updateTable = useUpdateKnockoutMatchTable(stage, group, tour);
 
+  const initialValues: MatchesDto = {
+    matches: rows.map((row) => {
+      if (isNotEmpty(row.forceWinnerId)) {
+        const answerMatchIdx = row.results.findIndex((result) => result.answer);
+
+        if (answerMatchIdx !== -1) {
+          row.results[answerMatchIdx] = {
+            ...row.results[answerMatchIdx],
+            forceWinnerId: row.forceWinnerId,
+          } as KnockoutStageTableRowResult & {
+            forceWinnerId: number | null | undefined;
+          };
+        }
+      }
+
+      return row;
+    }),
+  };
+
   const availableParticipants = getAvailableStageParticipants(
     participants.seeded,
     participants.previousStageWinners,
@@ -83,9 +102,9 @@ const EditTableDialog: FC<Props> = ({
     : 2;
 
   const submit = async (values: MatchesDto) => {
-    close();
-
     await updateTable.mutateAsync(values);
+
+    close();
   };
 
   const close = () => {
@@ -123,26 +142,7 @@ const EditTableDialog: FC<Props> = ({
         <Form<MatchesDto>
           form={form}
           onFinish={submit}
-          initialValues={{
-            matches: rows.map((row) => {
-              if (isNotEmpty(row.forceWinnerId)) {
-                const answerMatchIdx = row.results.findIndex(
-                  (result) => result.answer,
-                );
-
-                if (answerMatchIdx !== -1) {
-                  row.results[answerMatchIdx] = {
-                    ...row.results[answerMatchIdx],
-                    forceWinnerId: row.forceWinnerId,
-                  } as KnockoutStageTableRowResult & {
-                    forceWinnerId: number | null | undefined;
-                  };
-                }
-              }
-
-              return row;
-            }),
-          }}
+          initialValues={initialValues}
         >
           <table className={styles.table}>
             <Form.List name="matches">
@@ -192,7 +192,7 @@ const EditTableDialog: FC<Props> = ({
                           />
                           <Form.Item noStyle name={[field.name, "tour"]} />
                           <Form.Item noStyle name={[field.name, "group"]} />
-                          <ResultCell
+                          <ResultsCell
                             name={[field.name, "results"]}
                             form={form}
                             remove={remove}
@@ -200,6 +200,7 @@ const EditTableDialog: FC<Props> = ({
                             stageScheme={stage.stageScheme}
                             host={host}
                             guest={guest}
+                            removable={stage.nextStage?.matchesCount === 0}
                           />
                         </tr>
                         <tr>

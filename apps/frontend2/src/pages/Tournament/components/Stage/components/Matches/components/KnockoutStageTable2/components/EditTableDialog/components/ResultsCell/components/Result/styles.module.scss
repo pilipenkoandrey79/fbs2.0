@@ -1,0 +1,29 @@
+tr.result {
+  td {
+    border: none !important;
+    vertical-align: middle;
+    text-align: center;
+
+    &.score {
+      width: 72px;
+    }
+
+    &.clear,
+    &.more {
+      width: 24px;
+      padding: 0;
+    }
+
+    &.date {
+      :global {
+        .ant-picker-input input {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}
+
+.number {
+  max-width: 30px;
+}

@@ -1,0 +1,11 @@
+.deduction {
+  padding: 0 6px;
+
+  &-item {
+    width: 50%;
+
+    & div {
+      padding-bottom: 0;
+    }
+  }
+}

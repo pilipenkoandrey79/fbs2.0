@@ -2,14 +2,13 @@ import { Form, FormInstance, Select } from "antd";
 import { FC } from "react";
 import { FieldProps } from "rc-field-form/lib/Field";
 import { useTranslation } from "react-i18next";
-import { Participant } from "@fbs2.0/types";
+import { MatchesDto, Participant } from "@fbs2.0/types";
 
 import { Club } from "../../../../../../../../../../../../components/Club";
 import {
   BCP47Locales,
   Language,
 } from "../../../../../../../../../../../../i18n/locales";
-import { MatchesDto } from "../..";
 
 interface Props {
   name: FieldProps["name"];
