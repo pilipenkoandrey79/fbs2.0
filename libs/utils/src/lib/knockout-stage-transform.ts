@@ -12,10 +12,11 @@ import {
   getWinner,
   isNotEmpty,
   prepareClub,
+  getWinnerDefinitor,
 } from "./common";
 
 export const getKnockoutStageMatchesData = (
-  tournamentPart: _TournamentPart
+  tournamentPart: _TournamentPart,
 ): StageTableRow[] => {
   const year = tournamentPart.stage.tournamentSeason.season.split("-")[0];
   const afterMatchPenalties = !!tournamentPart.stage.stageScheme.pen;
@@ -42,12 +43,12 @@ export const getKnockoutStageMatchesData = (
           tour,
           group,
           deductedPointsList,
-        }
+        },
       ) => {
         if (answer) {
           const rowIndex = acc.findIndex(
             ({ host: { id: hostId }, guest: { id: guestId } }) =>
-              hostId === guest.id && guestId === host.id
+              hostId === guest.id && guestId === host.id,
           );
 
           acc[rowIndex].answerMatchId = id;
@@ -97,33 +98,9 @@ export const getKnockoutStageMatchesData = (
           return [...acc, row];
         }
       },
-      []
+      [],
     )
-    .map((row) => {
-      const { results, host, guest, forceWinnerId } = row;
-
-      const winner = getWinner(
-        results,
-        awayGoalRule,
-        isNotEmpty(forceWinnerId)
-          ? forceWinnerId === host.id
-            ? "host"
-            : "guest"
-          : undefined
-      );
-
-      return {
-        ...row,
-        host: {
-          ...host,
-          isWinner: winner.host,
-        },
-        guest: {
-          ...guest,
-          isWinner: winner.guest,
-        },
-      };
-    })
+    .map(getWinnerDefinitor(awayGoalRule))
     .sort((a, b) => a.id - b.id);
 };
 
@@ -173,7 +150,7 @@ export const _transformKnockoutStage = (tournamentPart: _TournamentPart) => {
       if (answer) {
         const rowIndex = rows.findIndex(
           ({ host: { id: hostId }, guest: { id: guestId } }) =>
-            hostId === guest.id && guestId === host.id
+            hostId === guest.id && guestId === host.id,
         );
 
         rows[rowIndex].answerMatchId = id;
@@ -190,7 +167,7 @@ export const _transformKnockoutStage = (tournamentPart: _TournamentPart) => {
                 replayDate,
                 unplayed: unplayed ?? false,
                 tech: tech ?? false,
-              }
+              },
             ) +
             (isNotEmpty(forceWinner) && !unplayed
               ? `. Переможець: ${
@@ -227,7 +204,7 @@ export const _transformKnockoutStage = (tournamentPart: _TournamentPart) => {
               replayDate,
               unplayed: unplayed ?? false,
               tech: tech ?? false,
-            }
+            },
           ),
           hostScore,
           guestScore,
@@ -241,7 +218,7 @@ export const _transformKnockoutStage = (tournamentPart: _TournamentPart) => {
 
         rows.push(row);
       }
-    }
+    },
   );
 
   const awayGoalRule = !!tournamentPart.stage.stageScheme.awayGoal;
@@ -257,7 +234,7 @@ export const _transformKnockoutStage = (tournamentPart: _TournamentPart) => {
           ? forceWinnerId === host.id
             ? "host"
             : "guest"
-          : undefined
+          : undefined,
       );
 
       return {

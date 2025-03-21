@@ -24,6 +24,7 @@ import {
   DEFAULT_SWISS_LENGTH,
   DATE_FORMAT,
   StageScheme,
+  StageTableRow,
 } from "@fbs2.0/types";
 import { FormEvent } from "react";
 import dayjs from "dayjs";
@@ -578,3 +579,30 @@ export const getWinner = (
 
   return { host: false, guest: false };
 };
+
+export const getWinnerDefinitor =
+  (awayGoalRule: boolean) => (row: StageTableRow) => {
+    const { results, host, guest, forceWinnerId } = row;
+
+    const winner = getWinner(
+      results,
+      awayGoalRule,
+      isNotEmpty(forceWinnerId)
+        ? forceWinnerId === host.id
+          ? "host"
+          : "guest"
+        : undefined,
+    );
+
+    return {
+      ...row,
+      host: {
+        ...host,
+        isWinner: winner.host,
+      },
+      guest: {
+        ...guest,
+        isWinner: winner.guest,
+      },
+    };
+  };

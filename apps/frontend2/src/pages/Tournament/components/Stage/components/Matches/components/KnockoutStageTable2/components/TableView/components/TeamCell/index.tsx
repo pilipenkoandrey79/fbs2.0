@@ -29,11 +29,11 @@ const TeamCell: FC<Props> = ({ team, stage }) => {
         showCity={isLgScreen}
         className={classNames(styles.club, {
           [styles.winner]: team?.isWinner,
-          [styles.mine]: [UKRAINE, USSR].includes(team.club.city.country.name),
+          [styles.mine]: [UKRAINE, USSR].includes(team.club?.city.country.name),
           [styles.relegated]:
             isNotEmpty(stage.linkedTournament) && !team?.isWinner,
           [styles[`highlighted-${stage.tournamentSeason.tournament}`]]:
-            team.club.id === highlightId,
+            team.club?.id === highlightId,
         })}
       />
     </td>

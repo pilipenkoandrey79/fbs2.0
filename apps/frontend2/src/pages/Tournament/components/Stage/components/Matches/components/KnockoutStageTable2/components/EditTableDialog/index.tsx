@@ -162,12 +162,22 @@ const EditTableDialog: FC<Props> = ({
                     ]);
 
                     const clearResult = (key: number) => {
+                      const answer = form.getFieldValue([
+                        "matches",
+                        field.name,
+                        "results",
+                        key,
+                        "answer",
+                      ]);
+
                       form.setFieldValue(
                         ["matches", field.name, "results", key],
                         {
                           hostScore: null,
                           guestScore: null,
                           date: "",
+                          answer,
+                          ...(answer ? { replayDate: "" } : {}),
                         } as KnockoutStageTableRowResult,
                       );
                     };

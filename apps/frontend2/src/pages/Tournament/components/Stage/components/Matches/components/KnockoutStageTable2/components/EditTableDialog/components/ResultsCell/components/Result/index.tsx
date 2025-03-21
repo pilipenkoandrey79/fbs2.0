@@ -60,7 +60,7 @@ const Result: FC<Props> = ({
           form.getFieldValue(
             namePath.slice(0, -1) as NamePath,
           ) as KnockoutStageTableRowResult[]
-        ).find(({ answer, date }) => !answer && !!date);
+        ).find(({ answer }) => !answer);
 
     const totalHostScore =
       (values?.hostScore || 0) + (previousResult?.hostScore || 0);
@@ -83,6 +83,12 @@ const Result: FC<Props> = ({
     namePath,
     stageScheme.awayGoal,
   ]);
+
+  useEffect(() => {
+    if (!!values?.answer && !showPenaltyOrReplay && !!values?.replayDate) {
+      form.setFieldValue([...namePath, "replayDate"] as NamePath, "");
+    }
+  }, []);
 
   return (
     <tr className={styles.result}>

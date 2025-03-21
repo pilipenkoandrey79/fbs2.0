@@ -47,7 +47,7 @@ const Club: FC<Props> = ({
   const content = (
     <Tooltip title={tooltip}>
       <Typography.Text
-        ellipsis={{ tooltip: club.name }}
+        ellipsis={{ tooltip: club?.name }}
         delete={expelled}
         type={dimmed ? "secondary" : undefined}
         className={classNames(styles.club, className)}
@@ -55,8 +55,8 @@ const Club: FC<Props> = ({
         {showCountry && (
           <Flag country={club?.city?.country} className={styles.flag} />
         )}
-        {(i18n.resolvedLanguage === Language.en ? club?.name : club.name_ua) ||
-          club.name}
+        {(i18n.resolvedLanguage === Language.en ? club?.name : club?.name_ua) ||
+          club?.name}
         {city && <small className={styles.city}>{`(${city})`}</small>}
       </Typography.Text>
     </Tooltip>
@@ -69,8 +69,8 @@ const Club: FC<Props> = ({
       to={
         to ||
         `${generatePath(Paths.CLUBS)}/${generatePath(Paths.COUNTRY_CLUBS, {
-          code: `${club.city?.country.code}`,
-        })}?${createSearchParams([[CV_SEARCH_PARAMETER, `club-${club.id}`]])}`
+          code: `${club?.city?.country.code}`,
+        })}?${createSearchParams([[CV_SEARCH_PARAMETER, `club-${club?.id}`]])}`
       }
       className={styles["club-link"]}
     >

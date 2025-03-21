@@ -1,5 +1,5 @@
 import { Group, MatchesDto, Stage, TournamentStage } from "@fbs2.0/types";
-import { sleep } from "@fbs2.0/utils";
+import { getWinnerDefinitor, sleep } from "@fbs2.0/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
@@ -33,7 +33,9 @@ export const useUpdateKnockoutMatchTable = (
             ...oldData?.[group as Group],
             tours: {
               ...oldData?.[group as Group]?.tours,
-              [tour || 1]: data.matches,
+              [tour || 1]: data.matches.map(
+                getWinnerDefinitor(!!stage.stageScheme.awayGoal),
+              ),
             },
           },
         }),
