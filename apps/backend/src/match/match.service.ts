@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, Repository } from "typeorm";
 import {
   DeductedPointsDto,
+  MatchesDto,
   MatchResultDto,
   StageType,
   Tournament,
@@ -424,5 +425,58 @@ export class MatchService {
 
       return aDate - bDate;
     });
+  }
+
+  public async updateKnockoutMatchTable(
+    season: string,
+    tournament: Tournament,
+    stageType: StageType,
+    dto: MatchesDto,
+  ) {
+    const tournamentSeason = await this.tournamentSeasonRepository.findOne({
+      where: { tournament, season },
+    });
+
+    const stage = await this.stageRepository.findOne({
+      where: { tournamentSeason: { id: tournamentSeason.id }, stageType },
+    });
+
+    const existedMatches = await this.findMatches(
+      season,
+      tournament,
+      stageType,
+    );
+
+    const dtoIds = dto.matches.map(({ id }) => id);
+
+    const idsToDelete = existedMatches
+      .filter(({ id }) => !dtoIds.includes(id))
+      .map(({ id }) => id);
+
+    const toSave = dto.matches.reduce<{
+      toCreate: MatchesDto["matches"];
+      toUpdate: MatchesDto["matches"];
+    }>(
+      (acc, match) => {
+        if (isNotEmpty(match.id)) {
+          acc.toUpdate.push(match);
+        } else {
+          acc.toCreate.push(match);
+        }
+
+        return acc;
+      },
+      { toCreate: [], toUpdate: [] },
+    );
+
+    const toCreate = toSave.toCreate
+      .map((match) => Match.fromStageTableRow(match, stage))
+      .flat();
+
+    await Promise.all(
+      toCreate.map(async (match) => await this.matchRepository.save(match)),
+    );
+
+    return "ok";
   }
 }

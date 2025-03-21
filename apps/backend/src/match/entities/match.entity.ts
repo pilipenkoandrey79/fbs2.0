@@ -9,6 +9,7 @@ import {
   Group,
   Match as MatchInterface,
   BaseMatch as BaseMatchInterface,
+  StageTableRow,
 } from "@fbs2.0/types";
 import { ApiProperty } from "@nestjs/swagger";
 
@@ -89,4 +90,44 @@ export class Match extends BaseMatch implements MatchInterface {
   @ManyToOne(() => Stage, { nullable: false })
   @ApiProperty({ type: () => Stage })
   stage: Stage;
+
+  static fromStageTableRow(
+    { group, tour, host, guest, results, forceWinnerId }: StageTableRow,
+    stage: Stage,
+  ): Match[] {
+    const commponProps: Partial<Match> = {
+      group,
+      tour,
+      host,
+      guest,
+      stage,
+      ...(forceWinnerId
+        ? {
+            forceWinner: {
+              id: forceWinnerId,
+            } as Participant,
+          }
+        : {}),
+    };
+
+    return results.map((record) => {
+      const match = new Match();
+
+      return Object.assign(
+        match,
+        record.answer
+          ? { ...commponProps, host: guest, guest: host }
+          : commponProps,
+        record.answer
+          ? {
+              ...record,
+              hostScore: record.guestScore,
+              guestScore: record.hostScore,
+              hostPen: record.guestPen,
+              guestPen: record.hostPen,
+            }
+          : record,
+      );
+    });
+  }
 }

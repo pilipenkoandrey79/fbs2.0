@@ -12,7 +12,7 @@ import {
   Query,
   UseGuards,
 } from "@nestjs/common";
-import { ApiEntities, StageType, Tournament } from "@fbs2.0/types";
+import { ApiEntities, MatchesDto, StageType, Tournament } from "@fbs2.0/types";
 import { isSeasonLabelValid, isTournamentValid } from "@fbs2.0/utils";
 import {
   ApiBearerAuth,
@@ -117,6 +117,27 @@ export class MatchController {
     @Body() body: UpdateMatchResultDto,
   ): Promise<Match> {
     return this.service.updateMatchResult(id, body);
+  }
+
+  @Put("/:season/:tournament/:stage")
+  @UseGuards(AccessTokenGuard)
+  @ApiBearerAuth()
+  @ApiParam({ name: "season", type: "string" })
+  @ApiParam({ name: "tournament", enum: Tournament })
+  @ApiParam({ name: "stage", enum: StageType })
+  @ApiOkResponse()
+  public setStageResults(
+    @Param("season") season: string,
+    @Param("tournament") tournament: Tournament,
+    @Param("stage") stage: StageType,
+    @Body() body: MatchesDto,
+  ) {
+    return this.service.updateKnockoutMatchTable(
+      season,
+      tournament,
+      stage,
+      body,
+    );
   }
 
   @Delete("/:id")

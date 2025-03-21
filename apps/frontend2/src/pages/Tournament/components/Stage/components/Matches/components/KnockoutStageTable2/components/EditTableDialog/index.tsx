@@ -12,10 +12,12 @@ import {
   StageInternal,
   StageSchemeType,
   StageTableRow,
+  Tournament,
   TournamentStage,
 } from "@fbs2.0/types";
 import { PlusOutlined } from "@ant-design/icons";
 import { getStageTransKey, isNotEmpty } from "@fbs2.0/utils";
+import { useParams } from "react-router";
 
 import { TeamCell } from "./components/TeamCell";
 import { SubmitButton } from "../../../../../../../../../../components/SubmitButton";
@@ -51,10 +53,18 @@ const EditTableDialog: FC<Props> = ({
   open,
   onClose,
 }) => {
+  const { season, tournament } = useParams();
   const { t } = useTranslation();
   const rows = matches?.[group as Group]?.tours?.[tour || 1] || [];
   const [form] = Form.useForm<MatchesDto>();
-  const updateTable = useUpdateKnockoutMatchTable(stage, group, tour);
+
+  const updateTable = useUpdateKnockoutMatchTable(
+    season,
+    tournament as Tournament,
+    stage,
+    group,
+    tour,
+  );
 
   const initialValues: MatchesDto = {
     matches: rows.map((row) => {

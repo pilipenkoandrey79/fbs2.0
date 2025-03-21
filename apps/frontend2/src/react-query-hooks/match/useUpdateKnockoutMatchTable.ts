@@ -1,12 +1,22 @@
-import { Group, MatchesDto, Stage, TournamentStage } from "@fbs2.0/types";
-import { getWinnerDefinitor, sleep } from "@fbs2.0/utils";
+import {
+  ApiEntities,
+  Group,
+  MatchesDto,
+  Stage,
+  Tournament,
+  TournamentStage,
+} from "@fbs2.0/types";
+import { getWinnerDefinitor } from "@fbs2.0/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
 import { MutationContext } from "../client";
 import { QUERY_KEY } from "../query-key";
+import ApiClient from "../../api/api.client";
 
 export const useUpdateKnockoutMatchTable = (
+  season: string | undefined,
+  tournament: Tournament | undefined,
   stage: Stage,
   group: Group | undefined,
   tour: number | undefined,
@@ -14,11 +24,11 @@ export const useUpdateKnockoutMatchTable = (
   const queryClient = useQueryClient();
 
   return useMutation<MatchesDto, AxiosError, MatchesDto, MutationContext>({
-    mutationFn: async (data) => {
-      await sleep(500);
-
-      return data;
-    },
+    mutationFn: async (data) =>
+      ApiClient.getInstance().put<MatchesDto, MatchesDto>(
+        `${ApiEntities.Match}/${season}/${tournament}/${encodeURIComponent(stage.stageType)}`,
+        data,
+      ),
     onMutate: (data) => {
       queryClient.setQueryData(
         [
