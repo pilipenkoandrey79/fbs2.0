@@ -23,9 +23,9 @@ export const useUpdateKnockoutMatchTable = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation<MatchesDto, AxiosError, MatchesDto, MutationContext>({
+  return useMutation<TournamentStage, AxiosError, MatchesDto, MutationContext>({
     mutationFn: async (data) =>
-      ApiClient.getInstance().put<MatchesDto, MatchesDto>(
+      ApiClient.getInstance().put<TournamentStage, MatchesDto>(
         `${ApiEntities.Match}/${season}/${tournament}/${encodeURIComponent(stage.stageType)}`,
         data,
       ),
@@ -52,6 +52,17 @@ export const useUpdateKnockoutMatchTable = (
       );
 
       return { success: "Match table updated" };
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(
+        [
+          QUERY_KEY.matches,
+          stage.tournamentSeason.season,
+          stage.tournamentSeason.tournament,
+          stage.stageType,
+        ],
+        data,
+      );
     },
   });
 };

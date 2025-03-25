@@ -12,6 +12,7 @@ import {
   StageTableRow,
 } from "@fbs2.0/types";
 import { ApiProperty } from "@nestjs/swagger";
+import { isNotEmpty } from "@fbs2.0/utils";
 
 import { Stage } from "./stage.entity";
 import { Participant } from "../../participant/entities/participant.entity";
@@ -110,24 +111,29 @@ export class Match extends BaseMatch implements MatchInterface {
         : {}),
     };
 
-    return results.map((record) => {
-      const match = new Match();
+    return results
+      .map((record) => {
+        const match = new Match();
 
-      return Object.assign(
-        match,
-        record.answer
-          ? { ...commponProps, host: guest, guest: host }
-          : commponProps,
-        record.answer
-          ? {
-              ...record,
-              hostScore: record.guestScore,
-              guestScore: record.hostScore,
-              hostPen: record.guestPen,
-              guestPen: record.hostPen,
-            }
-          : record,
+        return Object.assign(
+          match,
+          record.answer
+            ? { ...commponProps, host: guest, guest: host }
+            : commponProps,
+          record.answer
+            ? {
+                ...record,
+                hostScore: record.guestScore,
+                guestScore: record.hostScore,
+                hostPen: record.guestPen,
+                guestPen: record.hostPen,
+              }
+            : record,
+          { date: record.date || null },
+        );
+      })
+      .filter(
+        (match) => isNotEmpty(match.host.id) && isNotEmpty(match.guest.id),
       );
-    });
   }
 }

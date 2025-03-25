@@ -93,7 +93,28 @@ const Result: FC<Props> = ({
   return (
     <tr className={styles.result}>
       <td className={styles.date}>
-        <DateInput name={[field.name, "date"]} size="small" required={false} />
+        <DateInput
+          name={[field.name, "date"]}
+          size="small"
+          dependencies={[
+            [field.name, "hostScore"],
+            [field.name, "guestScore"],
+          ]}
+          rules={[
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (
+                  getFieldValue([...namePath, "hostScore"]) ||
+                  getFieldValue([...namePath, "guestScore"])
+                ) {
+                  return value ? Promise.resolve() : Promise.reject("");
+                }
+
+                return Promise.resolve();
+              },
+            }),
+          ]}
+        />
         <Form.Item noStyle name={[field.name, "answer"]} />
       </td>
       <td className={styles.score}>

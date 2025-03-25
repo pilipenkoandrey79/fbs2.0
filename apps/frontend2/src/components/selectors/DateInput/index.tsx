@@ -4,22 +4,19 @@ import { DatePicker, DatePickerProps, Form } from "antd";
 import { FC } from "react";
 import dayjs from "dayjs";
 import { SizeType } from "antd/es/config-provider/SizeContext";
-import { NamePath } from "antd/es/form/interface";
+import { FieldProps } from "rc-field-form/lib/Field";
 
-interface Props {
-  name: NamePath;
-  label?: string;
+interface Props extends FieldProps {
   availableDates?: string[];
   size?: SizeType;
   required?: boolean;
 }
 
 const DateInput: FC<Props> = ({
-  name,
-  label,
   availableDates,
   size,
   required = true,
+  ...restProps
 }) => {
   const presets: DatePickerProps["presets"] = availableDates
     ?.map((label) => ({
@@ -30,11 +27,10 @@ const DateInput: FC<Props> = ({
 
   return (
     <Form.Item
-      name={name}
-      label={label}
       rules={[{ required, message: "" }]}
       getValueProps={(value) => ({ value: formatDatePickerValue(value) })}
       normalize={(value) => normalizeDatePickerValue(value)}
+      {...restProps}
     >
       <DatePicker
         format={DATE_FORMAT}

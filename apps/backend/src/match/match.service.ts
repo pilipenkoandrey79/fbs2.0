@@ -447,7 +447,10 @@ export class MatchService {
       stageType,
     );
 
-    const dtoIds = dto.matches.map(({ id }) => id);
+    const dtoIds = dto.matches
+      .map(({ id, answerMatchId }) => [id, answerMatchId])
+      .flat()
+      .filter((value): value is number => isNotEmpty(value));
 
     const idsToDelete = existedMatches
       .filter(({ id }) => !dtoIds.includes(id))
@@ -477,6 +480,10 @@ export class MatchService {
       toCreate.map(async (match) => await this.matchRepository.save(match)),
     );
 
-    return "ok";
+    await Promise.all(
+      idsToDelete.map(async (id) => await this.removeMatch(id, {})),
+    );
+
+    return await this.getStageMatches(season, tournament, stageType);
   }
 }
