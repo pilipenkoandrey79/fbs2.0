@@ -1,4 +1,7 @@
-import { DeductedPoints as DeductedPointsInterface } from "@fbs2.0/types";
+import {
+  DeductedPointsDto,
+  DeductedPoints as DeductedPointsInterface,
+} from "@fbs2.0/types";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 
@@ -24,4 +27,11 @@ export class DeductedPoints implements DeductedPointsInterface {
   @Column({ type: "integer", nullable: false })
   @ApiProperty({ type: "number" })
   points: number;
+
+  constructor(dto?: DeductedPointsDto) {
+    if (dto) {
+      this.participant = { id: dto.participantId } as Participant;
+      this.points = dto.points;
+    }
+  }
 }

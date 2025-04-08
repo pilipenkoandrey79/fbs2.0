@@ -225,14 +225,8 @@ export class MatchService {
         existedMatch.tech = tech;
 
         existedMatch.deductedPointsList = deductions.map(
-          ({ participantId, points }) => {
-            const item = new DeductedPoints();
-
-            item.points = points;
-            item.participant = { id: participantId } as Participant;
-
-            return item;
-          },
+          ({ participantId, points }) =>
+            new DeductedPoints({ points, participantId }),
         );
 
         return await this.matchRepository.save(existedMatch);
@@ -257,14 +251,10 @@ export class MatchService {
     match.unplayed = unplayed;
     match.tech = tech;
 
-    match.deductedPointsList = deductions.map(({ participantId, points }) => {
-      const item = new DeductedPoints();
-
-      item.points = points;
-      item.participant = { id: participantId } as Participant;
-
-      return item;
-    });
+    match.deductedPointsList = deductions.map(
+      ({ participantId, points }) =>
+        new DeductedPoints({ participantId, points }),
+    );
 
     return await this.matchRepository.save(match);
   }
@@ -297,14 +287,10 @@ export class MatchService {
       : null;
 
     const setDeductedPoints = (deductions: DeductedPointsDto[]) =>
-      deductions.map(({ participantId, points }) => {
-        const item = new DeductedPoints();
-
-        item.participant = { id: participantId } as Participant;
-        item.points = points;
-
-        return item;
-      });
+      deductions.map(
+        ({ participantId, points }) =>
+          new DeductedPoints({ participantId, points }),
+      );
 
     if (answer) {
       const answerMatch = await this.matchRepository.findOne({
@@ -473,8 +459,92 @@ export class MatchService {
     );
 
     const toCreate = toSave.toCreate
-      .map((match) => Match.fromStageTableRow(match, stage))
+      .map((match) => Match.createFromStageTableRow(match, stage))
       .flat();
+
+    await Promise.all(
+      toSave.toUpdate.map(async (match) => {
+        // written by copilot. Check it and verify.
+        // Check if the match exists
+        // if (!match.id) {
+        //   throw new Error("Match ID is required for update");
+        // }
+        // const existedMatch = await this.matchRepository.findOne({
+        //   where: { id: match.id },
+        //   relations: {
+        //     host: true,
+        //     guest: true,
+        //     deductedPointsList: true,
+        //     stage: { tournamentSeason: true },
+        //   },
+        // });
+        // const host = await this.participantRepository.findOne({
+        //   where: { id: match.host.id },
+        // });
+        // const guest = await this.participantRepository.findOne({
+        //   where: { id: match.guest.id },
+        // });
+        // const tournamentSeason = await this.tournamentSeasonRepository.findOne({
+        //   where: { tournament, season },
+        // });
+        // const stage = await this.stageRepository.findOne({
+        //   where: { tournamentSeason: { id: tournamentSeason.id }, stageType },
+        // });
+        // const forceWinner = match.forceWinner
+        //   ? await this.participantRepository.findOne({
+        //       where: { id: match.forceWinner.id },
+        //     })
+        //   : null;
+        // const hostScoreValue = isNotEmpty(match.hostScore)
+        //   ? match.hostScore
+        //   : null;
+        // const guestScoreValue = isNotEmpty(match.guestScore)
+        //   ? match.guestScore
+        //   : null;
+        // const hostPenValue = isNotEmpty(match.hostPen) ? match.hostPen : null;
+        // const guestPenValue = isNotEmpty(match.guestPen)
+        //   ? match.guestPen
+        //   : null;
+        // const deductions = match.deductedPointsList.map(
+        //   ({ participantId, points }) =>
+        //     new DeductedPoints({ points, participantId }),
+        // );
+        // const answerMatchId = match.answerMatchId
+        //   ? await this.matchRepository.findOne({
+        //       where: { id: match.answerMatchId },
+        //       relations: { host: true, guest: true },
+        //     })
+        //   : null;
+        // const answer = match.answerMatchId ? match.answer : existedMatch.answer;
+        // const answerMatch = answerMatchId
+        //   ? await this.matchRepository.findOne({
+        //       where: {
+        //         host: { id: match.guest.id },
+        //         guest: { id: match.host.id },
+        //         stage: { id: stage.id },
+        //       },
+        //       relations: { host: true, guest: true },
+        //     })
+        //   : null;
+        // const matchToUpdate = answer ? answerMatch : existedMatch;
+        // matchToUpdate.date = match.date || null;
+        // matchToUpdate.replayDate = match.replayDate || null;
+        // matchToUpdate.hostScore = answer ? guestScoreValue : hostScoreValue;
+        // matchToUpdate.guestScore = answer ? hostScoreValue : guestScoreValue;
+        // matchToUpdate.hostPen = answer ? guestPenValue : hostPenValue;
+        // matchToUpdate.guestPen = answer ? hostPenValue : guestPenValue;
+        // matchToUpdate.forceWinner = forceWinner;
+        // matchToUpdate.unplayed = match.unplayed;
+        // matchToUpdate.tech = match.tech;
+        // matchToUpdate.tour = match.tour;
+        // matchToUpdate.group = match.group;
+        // matchToUpdate.deductedPointsList = deductions;
+        // matchToUpdate.host = answer ? guest : host;
+        // matchToUpdate.guest = answer ? host : guest;
+        // matchToUpdate.stage = stage;
+        // matchToUpdate.answer = answer;
+      }),
+    );
 
     await Promise.all(
       toCreate.map(async (match) => await this.matchRepository.save(match)),

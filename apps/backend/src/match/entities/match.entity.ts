@@ -92,8 +92,16 @@ export class Match extends BaseMatch implements MatchInterface {
   @ApiProperty({ type: () => Stage })
   stage: Stage;
 
-  static fromStageTableRow(
-    { group, tour, host, guest, results, forceWinnerId }: StageTableRow,
+  static createFromStageTableRow(
+    {
+      group,
+      tour,
+      host,
+      guest,
+      results,
+      forceWinnerId,
+      deductedPointsList,
+    }: StageTableRow,
     stage: Stage,
   ): Match[] {
     const commponProps: Partial<Match> = {
@@ -102,6 +110,12 @@ export class Match extends BaseMatch implements MatchInterface {
       host,
       guest,
       stage,
+      deductedPointsList: deductedPointsList
+        .filter(({ points }) => !!points)
+        .map(
+          ({ participant, points }) =>
+            new DeductedPoints({ points, participantId: participant.id }),
+        ),
       ...(forceWinnerId
         ? {
             forceWinner: {

@@ -3,6 +3,7 @@ import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ClubWithWinner,
+  DeductedPoints,
   Group,
   GROUP_STAGES,
   KnockoutStageTableRowResult,
@@ -80,6 +81,25 @@ const EditTableDialog: FC<Props> = ({
           };
         }
       }
+
+      const deductedPointsList = [
+        {
+          participant: { id: row.host.id } as Participant,
+          points:
+            row.deductedPointsList?.find(
+              ({ participant }) => row.host.id === participant.id,
+            )?.points || 0,
+        } as DeductedPoints,
+        {
+          participant: { id: row.guest.id } as Participant,
+          points:
+            row.deductedPointsList?.find(
+              ({ participant }) => row.guest.id === participant.id,
+            )?.points || 0,
+        } as DeductedPoints,
+      ];
+
+      row.deductedPointsList = deductedPointsList;
 
       return row;
     }),
@@ -220,7 +240,9 @@ const EditTableDialog: FC<Props> = ({
                             stageScheme={stage.stageScheme}
                             host={host}
                             guest={guest}
-                            removable={stage.nextStage?.matchesCount === 0}
+                            removable={
+                              (stage.nextStage?.matchesCount || 0) === 0
+                            }
                           />
                         </tr>
                         <tr>
