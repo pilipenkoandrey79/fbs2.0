@@ -18,6 +18,33 @@ import { Stage } from "./stage.entity";
 import { Participant } from "../../participant/entities/participant.entity";
 import { DeductedPoints } from "./deducted-points.entity";
 
+const getCommonProps = ({
+  group,
+  tour,
+  host,
+  guest,
+  forceWinnerId,
+  deductedPointsList,
+}: StageTableRow): Partial<Match> => ({
+  group,
+  tour,
+  host,
+  guest,
+  deductedPointsList: deductedPointsList
+    ?.filter(({ points }) => !!points)
+    .map(
+      ({ participant, points }) =>
+        new DeductedPoints({ points, participantId: participant.id }),
+    ),
+  ...(forceWinnerId
+    ? {
+        forceWinner: {
+          id: forceWinnerId,
+        } as Participant,
+      }
+    : {}),
+});
+
 export class BaseMatch implements BaseMatchInterface {
   @PrimaryGeneratedColumn()
   @ApiProperty({ type: "number" })
@@ -92,47 +119,42 @@ export class Match extends BaseMatch implements MatchInterface {
   @ApiProperty({ type: () => Stage })
   stage: Stage;
 
-  static createFromStageTableRow(
-    {
-      group,
-      tour,
-      host,
-      guest,
-      results,
-      forceWinnerId,
-      deductedPointsList,
-    }: StageTableRow,
-    stage: Stage,
-  ): Match[] {
-    const commponProps: Partial<Match> = {
-      group,
-      tour,
-      host,
-      guest,
-      stage,
-      deductedPointsList: deductedPointsList
-        .filter(({ points }) => !!points)
-        .map(
-          ({ participant, points }) =>
-            new DeductedPoints({ points, participantId: participant.id }),
-        ),
-      ...(forceWinnerId
+  public updateFromStageTableRow(row: StageTableRow, isAnswer: boolean) {
+    const result = row.results.find(({ answer }) => answer === isAnswer);
+
+    Object.assign(
+      this,
+      getCommonProps(row),
+      isAnswer ? { host: row.guest, guest: row.host } : {},
+      isAnswer
         ? {
-            forceWinner: {
-              id: forceWinnerId,
-            } as Participant,
+            ...result,
+            hostScore: result?.guestScore,
+            guestScore: result?.hostScore,
+            hostPen: result?.guestPen,
+            guestPen: result?.hostPen,
           }
-        : {}),
+        : result,
+      {
+        date: result?.date || null,
+      },
+    );
+  }
+
+  static createFromStageTableRow(row: StageTableRow, stage: Stage): Match[] {
+    const commponProps = {
+      ...getCommonProps(row),
+      stage,
     };
 
-    return results
+    return row.results
       .map((record) => {
         const match = new Match();
 
         return Object.assign(
           match,
           record.answer
-            ? { ...commponProps, host: guest, guest: host }
+            ? { ...commponProps, host: row.guest, guest: row.host }
             : commponProps,
           record.answer
             ? {

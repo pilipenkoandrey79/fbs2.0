@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, Repository } from "typeorm";
 import {
@@ -427,6 +427,10 @@ export class MatchService {
       where: { tournamentSeason: { id: tournamentSeason.id }, stageType },
     });
 
+    if (!tournamentSeason || !stage) {
+      throw new BadRequestException();
+    }
+
     const existedMatches = await this.findMatches(
       season,
       tournament,
@@ -464,85 +468,39 @@ export class MatchService {
 
     await Promise.all(
       toSave.toUpdate.map(async (match) => {
-        // written by copilot. Check it and verify.
-        // Check if the match exists
-        // if (!match.id) {
-        //   throw new Error("Match ID is required for update");
-        // }
-        // const existedMatch = await this.matchRepository.findOne({
-        //   where: { id: match.id },
-        //   relations: {
-        //     host: true,
-        //     guest: true,
-        //     deductedPointsList: true,
-        //     stage: { tournamentSeason: true },
-        //   },
-        // });
-        // const host = await this.participantRepository.findOne({
-        //   where: { id: match.host.id },
-        // });
-        // const guest = await this.participantRepository.findOne({
-        //   where: { id: match.guest.id },
-        // });
-        // const tournamentSeason = await this.tournamentSeasonRepository.findOne({
-        //   where: { tournament, season },
-        // });
-        // const stage = await this.stageRepository.findOne({
-        //   where: { tournamentSeason: { id: tournamentSeason.id }, stageType },
-        // });
-        // const forceWinner = match.forceWinner
-        //   ? await this.participantRepository.findOne({
-        //       where: { id: match.forceWinner.id },
-        //     })
-        //   : null;
-        // const hostScoreValue = isNotEmpty(match.hostScore)
-        //   ? match.hostScore
-        //   : null;
-        // const guestScoreValue = isNotEmpty(match.guestScore)
-        //   ? match.guestScore
-        //   : null;
-        // const hostPenValue = isNotEmpty(match.hostPen) ? match.hostPen : null;
-        // const guestPenValue = isNotEmpty(match.guestPen)
-        //   ? match.guestPen
-        //   : null;
-        // const deductions = match.deductedPointsList.map(
-        //   ({ participantId, points }) =>
-        //     new DeductedPoints({ points, participantId }),
-        // );
-        // const answerMatchId = match.answerMatchId
-        //   ? await this.matchRepository.findOne({
-        //       where: { id: match.answerMatchId },
-        //       relations: { host: true, guest: true },
-        //     })
-        //   : null;
-        // const answer = match.answerMatchId ? match.answer : existedMatch.answer;
-        // const answerMatch = answerMatchId
-        //   ? await this.matchRepository.findOne({
-        //       where: {
-        //         host: { id: match.guest.id },
-        //         guest: { id: match.host.id },
-        //         stage: { id: stage.id },
-        //       },
-        //       relations: { host: true, guest: true },
-        //     })
-        //   : null;
-        // const matchToUpdate = answer ? answerMatch : existedMatch;
-        // matchToUpdate.date = match.date || null;
-        // matchToUpdate.replayDate = match.replayDate || null;
-        // matchToUpdate.hostScore = answer ? guestScoreValue : hostScoreValue;
-        // matchToUpdate.guestScore = answer ? hostScoreValue : guestScoreValue;
-        // matchToUpdate.hostPen = answer ? guestPenValue : hostPenValue;
-        // matchToUpdate.guestPen = answer ? hostPenValue : guestPenValue;
-        // matchToUpdate.forceWinner = forceWinner;
-        // matchToUpdate.unplayed = match.unplayed;
-        // matchToUpdate.tech = match.tech;
-        // matchToUpdate.tour = match.tour;
-        // matchToUpdate.group = match.group;
-        // matchToUpdate.deductedPointsList = deductions;
-        // matchToUpdate.host = answer ? guest : host;
-        // matchToUpdate.guest = answer ? host : guest;
-        // matchToUpdate.stage = stage;
-        // matchToUpdate.answer = answer;
+        if (!match.id) {
+          throw new BadRequestException("Match ID is required for update");
+        }
+
+        const host = await this.participantRepository.findOne({
+          where: { id: match.host.id },
+        });
+
+        const guest = await this.participantRepository.findOne({
+          where: { id: match.guest.id },
+        });
+
+        if (!host || !guest) {
+          throw new BadRequestException();
+        }
+
+        const existedMatch = await this.matchRepository.findOne({
+          where: { id: match.id },
+        });
+
+        if (existedMatch) {
+          existedMatch.updateFromStageTableRow(match, false);
+          await this.matchRepository.save(existedMatch);
+        }
+
+        const existedAnswerMatch = await this.matchRepository.findOne({
+          where: { id: match.answerMatchId },
+        });
+
+        if (match.answerMatchId && existedAnswerMatch) {
+          existedAnswerMatch.updateFromStageTableRow(match, true);
+          await this.matchRepository.save(existedAnswerMatch);
+        }
       }),
     );
 

@@ -80,20 +80,18 @@ export const getKnockoutStageMatchesData = (
             deductedPointsList,
           };
 
-          if (date) {
-            row.results.push({
-              hostScore,
-              guestScore,
-              hostPen,
-              guestPen,
-              answer: false,
-              unplayed: unplayed ?? false,
-              tech: tech ?? false,
-              date,
-              replayDate:
-                !afterMatchPenalties && replayDate ? replayDate : undefined,
-            });
-          }
+          row.results.push({
+            hostScore,
+            guestScore,
+            hostPen,
+            guestPen,
+            answer: false,
+            unplayed: unplayed ?? false,
+            tech: tech ?? false,
+            date: date ?? "",
+            replayDate:
+              !afterMatchPenalties && replayDate ? replayDate : undefined,
+          });
 
           return [...acc, row];
         }

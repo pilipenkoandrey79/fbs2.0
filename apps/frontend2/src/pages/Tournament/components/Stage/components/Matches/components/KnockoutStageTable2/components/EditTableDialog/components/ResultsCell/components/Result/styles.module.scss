@@ -1,3 +1,5 @@
+@use "../../../../../../../../../../../../../../style/variables.module.scss";
+
 tr.result {
   td {
     border: none !important;
@@ -6,6 +8,10 @@ tr.result {
 
     &.score {
       width: 72px;
+
+      @media (min-width: variables.$screen-md) {
+        width: 120px;
+      }
     }
 
     &.clear,
@@ -26,4 +32,8 @@ tr.result {
 
 .number {
   max-width: 30px;
+
+  @media (min-width: variables.$screen-md) {
+    max-width: 60px;
+  }
 }

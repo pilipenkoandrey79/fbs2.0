@@ -97,7 +97,7 @@ const EditTableDialog: FC<Props> = ({
               ({ participant }) => row.guest.id === participant.id,
             )?.points || 0,
         } as DeductedPoints,
-      ];
+      ].filter(({ points }) => points > 0);
 
       row.deductedPointsList = deductedPointsList;
 
