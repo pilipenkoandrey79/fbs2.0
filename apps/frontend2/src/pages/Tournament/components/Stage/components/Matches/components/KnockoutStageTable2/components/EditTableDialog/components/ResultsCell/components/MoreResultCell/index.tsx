@@ -167,7 +167,6 @@ const MoreResultCell: FC<Props> = ({
                   changeOnWheel
                   size="small"
                   className={styles.number}
-                  defaultValue={0}
                 />
               </Form.Item>
               <span>:</span>
@@ -181,7 +180,6 @@ const MoreResultCell: FC<Props> = ({
                   changeOnWheel
                   size="small"
                   className={styles.number}
-                  defaultValue={0}
                 />
               </Form.Item>
             </Flex>

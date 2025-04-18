@@ -209,21 +209,21 @@ const EditTableDialog: FC<Props> = ({
                                   ? [
                                       {
                                         date: "",
-                                        hostScore: null,
-                                        guestScore: null,
+                                        hostScore: 0,
+                                        guestScore: 0,
                                       },
                                     ]
                                   : [
                                       {
                                         date: "",
-                                        hostScore: null,
-                                        guestScore: null,
+                                        hostScore: 0,
+                                        guestScore: 0,
                                         answer: false,
                                       },
                                       {
                                         date: "",
-                                        hostScore: null,
-                                        guestScore: null,
+                                        hostScore: 0,
+                                        guestScore: 0,
                                         answer: true,
                                       },
                                     ],
