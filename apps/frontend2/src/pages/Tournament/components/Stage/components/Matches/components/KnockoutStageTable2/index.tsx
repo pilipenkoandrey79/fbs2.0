@@ -34,6 +34,7 @@ const KnockoutStageTable: FC<BaseEditTableProps> = (props) => {
             participants={participants}
             onClose={() => setEditing(false)}
             open={editing}
+            key={`${stage.tournamentSeason.season}-${stage.tournamentSeason.tournament}-${stage.stageType}-${group}-${tour}`}
           />
         </>
       )}

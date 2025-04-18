@@ -2,10 +2,10 @@ import { FC } from "react";
 import { DeleteOutlined } from "@ant-design/icons";
 import {
   MatchesDto,
-  StageScheme,
   ClubWithWinner,
   GROUP_STAGES,
   StageSchemeType,
+  StageInternal,
 } from "@fbs2.0/types";
 import { FormInstance, Popconfirm, Button, Form } from "antd";
 import { NamePath } from "antd/es/form/interface";
@@ -18,7 +18,7 @@ import styles from "./styles.module.scss";
 interface Props {
   name: NamePath;
   form: FormInstance<MatchesDto>;
-  stageScheme: StageScheme;
+  stage: StageInternal;
   host: ClubWithWinner;
   guest: ClubWithWinner;
   removable: boolean;
@@ -29,7 +29,7 @@ interface Props {
 const ResultsCell: FC<Props> = ({
   form,
   name,
-  stageScheme,
+  stage,
   removable,
   host,
   guest,
@@ -61,7 +61,7 @@ const ResultsCell: FC<Props> = ({
                 form={form}
                 field={field}
                 name={name}
-                stageScheme={stageScheme}
+                stage={stage}
                 removable={removable}
                 clearResult={clearResult}
               />
@@ -70,9 +70,9 @@ const ResultsCell: FC<Props> = ({
         </Form.List>
       </tbody>
     </table>
-    {[...GROUP_STAGES, StageSchemeType.LEAGUE].includes(stageScheme.type) && (
-      <Deduction form={form} name={name} host={host} guest={guest} />
-    )}
+    {[...GROUP_STAGES, StageSchemeType.LEAGUE].includes(
+      stage.stageScheme.type,
+    ) && <Deduction form={form} name={name} host={host} guest={guest} />}
   </td>
 );
 

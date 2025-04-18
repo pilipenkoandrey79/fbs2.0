@@ -1,0 +1,17 @@
+@use "../../../../../../../../../../../../style/mixins.scss";
+@use "../../../../../../../../../../../../style/colors.module.scss";
+
+.match {
+  .number {
+    width: 20px;
+    padding: 6px 2px;
+    text-align: center;
+  }
+
+  @include mixins.edit-table-highlight;
+
+  .winner {
+    border-width: 2px !important;
+    border-color: colors.$primaryBase !important;
+  }
+}

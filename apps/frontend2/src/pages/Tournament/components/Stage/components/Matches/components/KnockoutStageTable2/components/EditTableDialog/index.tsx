@@ -2,7 +2,6 @@ import { Button, Divider, Form, Modal } from "antd";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  ClubWithWinner,
   DeductedPoints,
   Group,
   GROUP_STAGES,
@@ -19,10 +18,10 @@ import {
 import { PlusOutlined } from "@ant-design/icons";
 import { getStageTransKey, isNotEmpty } from "@fbs2.0/utils";
 import { useParams } from "react-router";
+import classNames from "classnames";
 
-import { TeamCell } from "./components/TeamCell";
+import { MatchRow } from "./components/MatchRow";
 import { SubmitButton } from "../../../../../../../../../../components/SubmitButton";
-import { ResultsCell } from "./components/ResultsCell";
 import { getAvailableStageParticipants } from "../../../../../../utils";
 import { useUpdateKnockoutMatchTable } from "../../../../../../../../../../react-query-hooks/match/useUpdateKnockoutMatchTable";
 
@@ -134,12 +133,7 @@ const EditTableDialog: FC<Props> = ({
   const submit = async (values: MatchesDto) => {
     await updateTable.mutateAsync(values);
 
-    close();
-  };
-
-  const close = () => {
     onClose();
-    form.resetFields();
   };
 
   return (
@@ -162,104 +156,41 @@ const EditTableDialog: FC<Props> = ({
           {t("tournament.stages.matches.edit.title")}
         </span>
       }
-      onClose={close}
-      onCancel={close}
+      onClose={onClose}
+      onCancel={onClose}
       width={800}
       maskClosable={false}
       footer={[]}
+      destroyOnClose
     >
       <div className={styles.content}>
         <Form<MatchesDto>
           form={form}
           onFinish={submit}
           initialValues={initialValues}
+          key={`${stage.tournamentSeason.season}-${stage.tournamentSeason.tournament}-${stage.stageType}`}
         >
-          <table className={styles.table}>
+          <table
+            className={classNames(
+              styles.table,
+              styles[stage.tournamentSeason.tournament],
+            )}
+          >
             <Form.List name="matches">
               {(fields, { add, remove }) => (
                 <>
-                  {fields.map((field, index, array) => {
-                    const host: ClubWithWinner = form.getFieldValue([
-                      "matches",
-                      field.name,
-                      "host",
-                    ]);
-
-                    const guest: ClubWithWinner = form.getFieldValue([
-                      "matches",
-                      field.name,
-                      "guest",
-                    ]);
-
-                    const clearResult = (key: number) => {
-                      const answer = form.getFieldValue([
-                        "matches",
-                        field.name,
-                        "results",
-                        key,
-                        "answer",
-                      ]);
-
-                      form.setFieldValue(
-                        ["matches", field.name, "results", key],
-                        {
-                          hostScore: null,
-                          guestScore: null,
-                          date: "",
-                          answer,
-                          ...(answer ? { replayDate: "" } : {}),
-                        } as KnockoutStageTableRowResult,
-                      );
-                    };
-
-                    return (
-                      <tbody key={field.key}>
-                        <tr>
-                          {array.length > 5 && (
-                            <td className={styles.number} rowSpan={2}>
-                              {index + 1}
-                            </td>
-                          )}
-                          <TeamCell
-                            name={[field.name, "host"]}
-                            form={form}
-                            selectedIds={selectedIds}
-                            participants={
-                              host.id !== undefined
-                                ? [...participantsOptions, host]
-                                : participantsOptions
-                            }
-                          />
-                          <Form.Item noStyle name={[field.name, "tour"]} />
-                          <Form.Item noStyle name={[field.name, "group"]} />
-                          <ResultsCell
-                            name={[field.name, "results"]}
-                            form={form}
-                            remove={remove}
-                            clearResult={clearResult}
-                            stageScheme={stage.stageScheme}
-                            host={host}
-                            guest={guest}
-                            removable={
-                              (stage.nextStage?.matchesCount || 0) === 0
-                            }
-                          />
-                        </tr>
-                        <tr>
-                          <TeamCell
-                            name={[field.name, "guest"]}
-                            form={form}
-                            selectedIds={selectedIds}
-                            participants={
-                              guest.id !== undefined
-                                ? [...participantsOptions, guest]
-                                : participantsOptions
-                            }
-                          />
-                        </tr>
-                      </tbody>
-                    );
-                  })}
+                  {fields.map((field, index, array) => (
+                    <MatchRow
+                      form={form}
+                      field={field}
+                      key={field.key}
+                      num={array.length > 5 ? index + 1 : undefined}
+                      stage={stage}
+                      selectedIds={selectedIds}
+                      participantsOptions={participantsOptions}
+                      remove={remove}
+                    />
+                  ))}
                   <tbody>
                     <tr>
                       <td colSpan={fields.length > 5 ? 3 : 2}>

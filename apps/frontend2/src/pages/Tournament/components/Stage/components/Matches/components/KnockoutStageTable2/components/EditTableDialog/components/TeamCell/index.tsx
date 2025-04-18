@@ -15,9 +15,16 @@ interface Props {
   form: FormInstance<MatchesDto>;
   selectedIds: number[];
   participants?: Participant[];
+  className?: string;
 }
 
-const TeamCell: FC<Props> = ({ name, participants, selectedIds, form }) => {
+const TeamCell: FC<Props> = ({
+  name,
+  participants,
+  selectedIds,
+  form,
+  className,
+}) => {
   const { t, i18n } = useTranslation();
 
   const collator = new Intl.Collator(
@@ -51,7 +58,7 @@ const TeamCell: FC<Props> = ({ name, participants, selectedIds, form }) => {
     );
 
   return (
-    <td>
+    <td className={className}>
       <Form.Item
         name={name}
         rules={[{ required: true, message: t("common.placeholder.club") }]}

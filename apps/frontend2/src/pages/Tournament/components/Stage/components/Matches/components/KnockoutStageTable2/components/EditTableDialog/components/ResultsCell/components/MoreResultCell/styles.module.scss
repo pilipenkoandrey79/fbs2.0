@@ -1,5 +1,11 @@
+@use "../../../../../../../../../../../../../../style/mixins.scss";
+
 .content {
   .number {
     width: 60px;
+  }
+
+  .pen {
+    @include mixins.edit-table-highlight;
   }
 }

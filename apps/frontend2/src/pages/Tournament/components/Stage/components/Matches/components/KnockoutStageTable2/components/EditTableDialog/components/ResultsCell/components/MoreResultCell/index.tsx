@@ -13,30 +13,26 @@ import {
 import { MoreOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { NamePath } from "antd/es/form/interface";
-import {
-  KnockoutStageTableRowResult,
-  MatchesDto,
-  ONE_MATCH_STAGES,
-  StageScheme,
-} from "@fbs2.0/types";
+import { MatchesDto, StageInternal } from "@fbs2.0/types";
+import { isNotEmpty } from "@fbs2.0/utils";
+import classNames from "classnames";
 
 import { DateInput } from "../../../../../../../../../../../../../../components/selectors/DateInput";
 import { Club } from "../../../../../../../../../../../../../../components/Club";
 
 import styles from "./styles.module.scss";
-import { isNotEmpty } from "@fbs2.0/utils";
 
 interface Props {
   namePath: NamePath;
   form: FormInstance<MatchesDto>;
-  stageScheme: StageScheme;
+  stage: StageInternal;
   showPenaltyOrReplay: boolean;
 }
 
 const MoreResultCell: FC<Props> = ({
   namePath,
   form,
-  stageScheme,
+  stage,
   showPenaltyOrReplay,
 }) => {
   const { t } = useTranslation();
@@ -58,7 +54,7 @@ const MoreResultCell: FC<Props> = ({
   useEffect(() => {
     setShowFoceWinner(
       !!values?.unplayed ||
-        (!stageScheme.pen &&
+        (!stage.stageScheme.pen &&
           isNotEmpty(values?.hostPen) &&
           isNotEmpty(values?.guestPen) &&
           values?.hostPen === values?.guestPen) ||
@@ -74,7 +70,7 @@ const MoreResultCell: FC<Props> = ({
     values?.guestPen,
     form,
     namePath,
-    stageScheme.pen,
+    stage.stageScheme.pen,
   ]);
 
   useEffect(() => {
@@ -143,21 +139,28 @@ const MoreResultCell: FC<Props> = ({
               display:
                 showPenaltyOrReplay && !values?.unplayed ? "block" : "none",
             }}
+            className={classNames(
+              styles.pen,
+              styles[stage.tournamentSeason.tournament],
+            )}
           >
             <div>
               <span>
                 {t(
                   `tournament.stages.matches.form.${
-                    stageScheme.pen ? "penalty" : "replay"
+                    stage.stageScheme.pen ? "penalty" : "replay"
                   }`,
                 )}
               </span>
-              {!stageScheme.pen && (
+              {!stage.stageScheme.pen && (
                 <DateInput name={[namePath.at(-1) as number, "replayDate"]} />
               )}
             </div>
             <Flex align="center" gap={4} justify="flex-start">
-              <Form.Item name={[namePath.at(-1) as number, "hostPen"]}>
+              <Form.Item
+                name={[namePath.at(-1) as number, "hostPen"]}
+                className={styles.host}
+              >
                 <InputNumber
                   min={0}
                   controls
@@ -167,7 +170,10 @@ const MoreResultCell: FC<Props> = ({
                 />
               </Form.Item>
               <span>:</span>
-              <Form.Item name={[namePath.at(-1) as number, "guestPen"]}>
+              <Form.Item
+                name={[namePath.at(-1) as number, "guestPen"]}
+                className={styles.guest}
+              >
                 <InputNumber
                   min={0}
                   controls

@@ -49,3 +49,55 @@
     }
   }
 }
+
+@mixin edit-table-highlight {
+  &.UCL {
+    .host {
+      background-color: colors.$ucl-primary-light;
+    }
+
+    .guest {
+      background-color: colors.$ucl-secondary-light;
+    }
+  }
+
+  &.UEL {
+    .host {
+      background-color: colors.$uel-primary-light;
+    }
+
+    .guest {
+      background-color: colors.$uel-secondary-light;
+    }
+  }
+
+  &.UECL {
+    .host {
+      background-color: colors.$uecl-primary-light;
+    }
+
+    .guest {
+      background-color: colors.$uecl-secondary-light;
+    }
+  }
+
+  &.CWC {
+    .host {
+      background-color: colors.$cwc-primary-light;
+    }
+
+    .guest {
+      background-color: colors.$cwc-secondary-light;
+    }
+  }
+
+  &.ICFC {
+    .host {
+      background-color: colors.$icfc-primary-light;
+    }
+
+    .guest {
+      background-color: colors.$icfc-secondary-light;
+    }
+  }
+}

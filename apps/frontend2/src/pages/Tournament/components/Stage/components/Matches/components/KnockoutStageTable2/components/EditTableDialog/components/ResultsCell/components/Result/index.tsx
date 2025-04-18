@@ -13,10 +13,12 @@ import {
   KnockoutStageTableRowResult,
   MatchesDto,
   ONE_MATCH_STAGES,
-  StageScheme,
+  StageInternal,
+  StageTableRow,
 } from "@fbs2.0/types";
 import { NamePath } from "antd/es/form/interface";
 import { ClearOutlined } from "@ant-design/icons";
+import classNames from "classnames";
 
 import { DateInput } from "../../../../../../../../../../../../../../components/selectors/DateInput";
 import { MoreResultCell } from "../MoreResultCell";
@@ -27,7 +29,7 @@ interface Props {
   form: FormInstance<MatchesDto>;
   name: NamePath;
   field: FormListFieldData;
-  stageScheme: StageScheme;
+  stage: StageInternal;
   removable: boolean;
 
   clearResult: (key: number) => void;
@@ -37,7 +39,7 @@ const Result: FC<Props> = ({
   form,
   name,
   field,
-  stageScheme,
+  stage,
   removable,
   clearResult,
 }) => {
@@ -45,8 +47,16 @@ const Result: FC<Props> = ({
   const [showPenaltyOrReplay, setShowPenaltyOrReplay] = useState(false);
   const values = Form.useWatch(namePath, form);
 
+  const availableDates = [
+    ...new Set(
+      (form.getFieldValue(["matches"]) as StageTableRow[])
+        .map(({ results }) => results.map(({ date }) => date))
+        .flat(),
+    ),
+  ];
+
   useEffect(() => {
-    const isOneMatch = ONE_MATCH_STAGES.includes(stageScheme.type);
+    const isOneMatch = ONE_MATCH_STAGES.includes(stage.stageScheme.type);
 
     if (!isOneMatch && !values?.answer) {
       setShowPenaltyOrReplay(false);
@@ -73,7 +83,7 @@ const Result: FC<Props> = ({
 
     setShowPenaltyOrReplay(
       totalHostScore === totalGuestScore &&
-        (stageScheme.awayGoal ? hostAwayScore === guestAwayScore : true),
+        (stage.stageScheme.awayGoal ? hostAwayScore === guestAwayScore : true),
     );
   }, [
     values?.answer,
@@ -81,7 +91,7 @@ const Result: FC<Props> = ({
     values?.guestScore,
     form,
     namePath,
-    stageScheme.awayGoal,
+    stage.stageScheme.awayGoal,
   ]);
 
   useEffect(() => {
@@ -100,6 +110,7 @@ const Result: FC<Props> = ({
             [field.name, "hostScore"],
             [field.name, "guestScore"],
           ]}
+          availableDates={availableDates}
           rules={[
             ({ getFieldValue }) => ({
               validator(_, value) {
@@ -117,7 +128,12 @@ const Result: FC<Props> = ({
         />
         <Form.Item noStyle name={[field.name, "answer"]} />
       </td>
-      <td className={styles.score}>
+      <td
+        className={classNames(
+          styles.score,
+          styles[stage.tournamentSeason.tournament],
+        )}
+      >
         <Flex
           align="center"
           gap={4}
@@ -128,7 +144,7 @@ const Result: FC<Props> = ({
               : "flex",
           }}
         >
-          <Form.Item name={[field.name, "hostScore"]}>
+          <Form.Item name={[field.name, "hostScore"]} className={styles.host}>
             <InputNumber
               min={0}
               controls
@@ -138,7 +154,7 @@ const Result: FC<Props> = ({
             />
           </Form.Item>
           <span>:</span>
-          <Form.Item name={[field.name, "guestScore"]}>
+          <Form.Item name={[field.name, "guestScore"]} className={styles.guest}>
             <InputNumber
               min={0}
               controls
@@ -158,7 +174,7 @@ const Result: FC<Props> = ({
               <MoreResultCell
                 namePath={namePath}
                 form={form}
-                stageScheme={stageScheme}
+                stage={stage}
                 showPenaltyOrReplay={showPenaltyOrReplay}
               />
             </Badge>
