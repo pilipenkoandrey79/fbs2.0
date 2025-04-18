@@ -1,7 +1,0 @@
-@use "../../../../../../../../../../style/mixins.scss";
-
-.submission {
-  @include mixins.flex(column, flex-start, center);
-  padding: 4px;
-  white-space: nowrap;
-}
