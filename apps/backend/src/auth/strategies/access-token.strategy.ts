@@ -10,12 +10,11 @@ import { UsersService } from "../../user/user.servise";
 export class AccessTokenStrategy extends PassportStrategy(Strategy, "jwt") {
   constructor(
     protected configService: ConfigService,
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: configService.get<string>("JWT_ACCESS_SECRET"),
-      usernameField: "email",
     });
   }
 

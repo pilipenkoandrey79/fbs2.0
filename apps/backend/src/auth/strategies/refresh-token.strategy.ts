@@ -10,16 +10,15 @@ import { UsersService } from "../../user/user.servise";
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
   Strategy,
-  "jwt-refresh"
+  "jwt-refresh",
 ) {
   constructor(
     protected configService: ConfigService,
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: configService.get<string>("JWT_REFRESH_SECRET"),
-      usernameField: "email",
       passReqToCallback: true,
     });
   }
