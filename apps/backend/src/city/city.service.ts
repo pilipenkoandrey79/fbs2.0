@@ -46,7 +46,7 @@ export class CityService {
 
   public async createCityOldName(
     cityId: number,
-    body: _OldCityNameDto
+    body: _OldCityNameDto,
   ): Promise<OldCityName> {
     const city = await this.cityRepository.findOne({ where: { id: cityId } });
 
@@ -103,7 +103,7 @@ export class CityService {
     const city = new City();
 
     city.name = body.name;
-    city.name_ua = body.name_ua;
+    city.name_ua = body.name_ua || null;
 
     const country = await this.countryRepository.findOne({
       where: { id: body.countryId },
@@ -112,7 +112,7 @@ export class CityService {
     city.country = country;
 
     city.oldNames = await Promise.all(
-      body.oldNames.map(async ({ name, name_ua, till, countryId }) => {
+      body.oldNames?.map(async ({ name, name_ua, till, countryId }) => {
         const oldCityName = new OldCityName();
 
         oldCityName.name = name;
@@ -126,7 +126,7 @@ export class CityService {
         oldCityName.country = country;
 
         return oldCityName;
-      })
+      }) || [],
     );
 
     return this.cityRepository.save(city);
@@ -165,7 +165,7 @@ export class CityService {
         } else {
           await this.cityOldNameRepository.remove(item);
         }
-      })
+      }),
     );
 
     await Promise.all(
@@ -186,7 +186,7 @@ export class CityService {
           oldName.country = country;
 
           await this.cityOldNameRepository.save(oldName);
-        })
+        }),
     );
 
     return await this.cityRepository.findOne({
@@ -207,7 +207,7 @@ export class CityService {
 
     if (city.oldNames.length > 0) {
       city.oldNames.forEach(
-        async (item) => await this.cityOldNameRepository.remove(item)
+        async (item) => await this.cityOldNameRepository.remove(item),
       );
     }
 
