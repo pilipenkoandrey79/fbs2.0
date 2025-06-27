@@ -12,6 +12,7 @@ import { UserModule } from "./user/user.module";
 import { CoefficientModule } from "./coefficient/coefficient.module";
 import { CityModule } from "./city/city.module";
 import { CountryModule } from "./country/country.module";
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { CountryModule } from "./country/country.module";
     TournamentModule,
     UserModule,
     CoefficientModule,
+    HealthModule,
   ],
 })
 export class AppModule {}
