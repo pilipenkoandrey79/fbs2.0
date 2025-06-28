@@ -1,0 +1,40 @@
+services:
+  frontend:
+    container_name: fbs2-frontend
+    build:
+      context: .
+      dockerfile: apps/frontend2/Dockerfile
+    ports:
+      - '8080:80' # Expose the UI app on port 80
+    networks:
+      - app-network
+    depends_on:
+      - backend
+  backend:
+    container_name: fbs2-backend
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    ports:
+      - '3331:3331' # Expose the backend on port 3331
+    networks:
+      - app-network
+    depends_on:
+      - db
+  db:
+    image: postgres:17
+    container_name: fbs2-db
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+    ports:
+      - '5432:5432'
+    networks:
+      - app-network
+networks:
+  app-network:
+    driver: bridge

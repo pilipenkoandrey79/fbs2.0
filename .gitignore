@@ -47,3 +47,5 @@ openapi.json
 openapitools.json
 
 /apps/frontend/src/mono-api
+/.serve.env
+/.build.env

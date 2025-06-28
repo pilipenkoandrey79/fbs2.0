@@ -47,7 +47,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         ClubCoefficient,
       ],
       logger: "file",
-      synchronize: true, // never use TRUE in production!
+      synchronize: this.config.get<boolean>("DATABASE_SYNC"),
     };
   }
 }
