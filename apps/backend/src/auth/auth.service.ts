@@ -13,7 +13,7 @@ export class AuthService {
   constructor(
     protected configService: ConfigService,
     private readonly usersService: UsersService,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
   ) {}
 
   async googleUserValidate(googleUser: IGoogleUser): Promise<Partial<User>> {
@@ -47,12 +47,14 @@ export class AuthService {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, {
         secret: this.configService.get<string>("JWT_ACCESS_SECRET"),
-        expiresIn: this.configService.get<string>("JWT_ACCESS_EXPIRATION_TIME"),
+        expiresIn: Number(
+          this.configService.get<string>("JWT_ACCESS_EXPIRATION_TIME"),
+        ),
       }),
       this.jwtService.signAsync(payload, {
         secret: this.configService.get<string>("JWT_REFRESH_SECRET"),
         expiresIn: Number(
-          this.configService.get<string>("VITE_JWT_REFRESH_EXPIRATION_TIME")
+          this.configService.get<string>("VITE_JWT_REFRESH_EXPIRATION_TIME"),
         ),
       }),
     ]);
@@ -65,7 +67,7 @@ export class AuthService {
 
   async refreshTokens(
     id: number,
-    refreshToken: string
+    refreshToken: string,
   ): Promise<JWTTokensPair> {
     const user = await this.usersService.findOneById(id);
 
@@ -75,7 +77,7 @@ export class AuthService {
 
     const refreshTokenMatches = await validateHashedData(
       refreshToken,
-      user.refreshToken
+      user.refreshToken,
     );
 
     if (!refreshTokenMatches) {
