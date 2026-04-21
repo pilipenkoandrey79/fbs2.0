@@ -98,9 +98,12 @@ const EditTableDialog: FC<Props> = ({
         } as DeductedPoints,
       ].filter(({ points }) => points > 0);
 
-      row.deductedPointsList = deductedPointsList;
-
-      return row;
+      return {
+        ...row,
+        id: isNotEmpty(row.id) ? row.id : null,
+        answerMatchId: isNotEmpty(row.answerMatchId) ? row.answerMatchId : null,
+        deductedPointsList,
+      } as unknown as StageTableRow;
     }),
   };
 
@@ -131,7 +134,17 @@ const EditTableDialog: FC<Props> = ({
     : 2;
 
   const submit = async (values: MatchesDto) => {
-    await updateTable.mutateAsync(values);
+    const payload = {
+      matches: values.matches.map((match) => ({
+        ...match,
+        id: isNotEmpty(match.id) ? match.id : null,
+        answerMatchId: isNotEmpty(match.answerMatchId)
+          ? match.answerMatchId
+          : null,
+      })),
+    } as MatchesDto;
+
+    await updateTable.mutateAsync(payload);
 
     onClose();
   };
@@ -156,12 +169,11 @@ const EditTableDialog: FC<Props> = ({
           {t("tournament.stages.matches.edit.title")}
         </span>
       }
-      onClose={onClose}
       onCancel={onClose}
       width={800}
       maskClosable={false}
       footer={[]}
-      destroyOnClose
+      destroyOnHidden
     >
       <div className={styles.content}>
         <Form<MatchesDto>
@@ -200,6 +212,9 @@ const EditTableDialog: FC<Props> = ({
                           icon={<PlusOutlined />}
                           onClick={() =>
                             add({
+                              id: null,
+                              answerMatchId: null,
+                              forceWinnerId: null,
                               host: {},
                               guest: {},
                               group,
@@ -227,7 +242,7 @@ const EditTableDialog: FC<Props> = ({
                                         answer: true,
                                       },
                                     ],
-                            } as StageTableRow)
+                            } as unknown as StageTableRow)
                           }
                           disabled={
                             selectedIds.length >= availableParticipants.length
@@ -240,7 +255,7 @@ const EditTableDialog: FC<Props> = ({
               )}
             </Form.List>
           </table>
-          <Divider type="horizontal" />
+          <Divider orientation="horizontal" />
           <SubmitButton
             form={form}
             label={t("common.save")}

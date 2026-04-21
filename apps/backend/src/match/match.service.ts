@@ -442,7 +442,17 @@ export class MatchService {
       .flat()
       .filter((value): value is number => isNotEmpty(value));
 
-    const idsToDelete = existedMatches
+    const dtoTourGroupKeys = new Set(
+      dto.matches.map(
+        ({ tour, group }) => `${tour ?? "undefined"}|${group ?? "undefined"}`,
+      ),
+    );
+
+    const existedMatchesInScope = existedMatches.filter(({ tour, group }) =>
+      dtoTourGroupKeys.has(`${tour ?? "undefined"}|${group ?? "undefined"}`),
+    );
+
+    const idsToDelete = existedMatchesInScope
       .filter(({ id }) => !dtoIds.includes(id))
       .map(({ id }) => id);
 

@@ -5,7 +5,7 @@ import {
   Participant,
   StageInternal,
 } from "@fbs2.0/types";
-import { Form, FormInstance, FormListFieldData } from "antd";
+import { Form, FormInstance, FormListFieldData, Input } from "antd";
 import { FC } from "react";
 import classNames from "classnames";
 import { getWinner, isNotEmpty } from "@fbs2.0/utils";
@@ -89,6 +89,15 @@ const MatchRow: FC<Props> = ({
             {num}
           </td>
         )}
+        <Form.Item hidden name={[field.name, "id"]}>
+          <Input />
+        </Form.Item>
+        <Form.Item hidden name={[field.name, "answerMatchId"]}>
+          <Input />
+        </Form.Item>
+        <Form.Item hidden name={[field.name, "forceWinnerId"]}>
+          <Input />
+        </Form.Item>
         <TeamCell
           name={[field.name, "host"]}
           form={form}
@@ -102,8 +111,12 @@ const MatchRow: FC<Props> = ({
             [styles.winner]: winnerInfo.host,
           })}
         />
-        <Form.Item noStyle name={[field.name, "tour"]} />
-        <Form.Item noStyle name={[field.name, "group"]} />
+        <Form.Item hidden name={[field.name, "tour"]}>
+          <Input />
+        </Form.Item>
+        <Form.Item hidden name={[field.name, "group"]}>
+          <Input />
+        </Form.Item>
         <ResultsCell
           name={[field.name, "results"]}
           form={form}
