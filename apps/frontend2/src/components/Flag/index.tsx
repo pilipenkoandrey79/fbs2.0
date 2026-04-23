@@ -22,10 +22,13 @@ const Flag: FC<Props> = ({ country, className }) => {
           ? country?.name
           : country?.name_ua) || country?.name
       }
-      className={className}
     >
       <span
-        className={classNames(styles.flag, styles[country?.code || "xx"])}
+        className={classNames(
+          styles.flag,
+          styles[country?.code || "xx"],
+          className,
+        )}
       />
     </Tooltip>
   ) : null;
