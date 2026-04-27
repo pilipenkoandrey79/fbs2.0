@@ -18,6 +18,11 @@ export const getYearSelector =
       ? clubs.map((club) => prepareClub(club, year as string))
       : clubs;
 
+
+/**
+GET /club
+GET /club?countryId=:countryId
+*/
 export const useGetClubs = <T = Club[]>(
   countryId?: number,
   select?: (data: Club[]) => T,

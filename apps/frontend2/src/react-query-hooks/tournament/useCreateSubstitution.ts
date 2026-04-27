@@ -13,6 +13,9 @@ import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
 import { MutationContext } from "../client";
 
+/**
+POST /tournament/create-stage-substitution
+*/
 export const useCreateSubstitution = (stageType: StageType) => {
   const { season, tournament } = useParams();
   const queryClient = useQueryClient();
@@ -27,7 +30,7 @@ export const useCreateSubstitution = (stageType: StageType) => {
     mutationFn: (substitution) =>
       ApiClient.getInstance().post<StageSubstitution, StageSubstitutionDto>(
         `${ApiEntities.Tournament}/create-stage-substitution`,
-        substitution
+        substitution,
       ),
     onSettled: () => {
       queryClient.invalidateQueries({

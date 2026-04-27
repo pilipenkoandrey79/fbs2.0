@@ -7,6 +7,10 @@ import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
 import { MutationContext } from "../client";
 
+
+/**
+POST /v2/city
+*/
 export const useCreateCity = () => {
   const queryClient = useQueryClient();
   const { t } = useTranslation();

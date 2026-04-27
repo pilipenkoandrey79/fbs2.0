@@ -7,9 +7,12 @@ import { QUERY_KEY } from "../query-key";
 
 export const getSeasonSummary = async (season: string | undefined) =>
   await ApiClient.getInstance().get<TournamentSummary[]>(
-    `${ApiEntities.Tournament}/${season}/summary`
+    `${ApiEntities.Tournament}/${season}/summary`,
   );
 
+/**
+GET /tournament/:season/summary
+*/
 export const useGetSeasonSummary = (season: string | undefined) =>
   useQuery<TournamentSummary[], AxiosError>({
     queryKey: [QUERY_KEY.summary, season],

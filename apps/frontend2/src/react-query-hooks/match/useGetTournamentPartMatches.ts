@@ -31,6 +31,9 @@ export const getTournamentPartMatchesQueryFn =
       ? null
       : await fetchStageMatches(season, tournament, stage.stageType);
 
+/**
+GET /match/:season/:tournament/:stage
+*/
 export const useGetTournamentPartMatches = (
   season: string | undefined,
   tournament: Tournament | undefined,

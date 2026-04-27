@@ -8,6 +8,9 @@ import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
 import { MutationContext } from "../client";
 
+/**
+PUT /match/:id
+*/
 export const useUpdateMatchResult = (stageType: StageType) => {
   const { season, tournament } = useParams();
   const queryClient = useQueryClient();
@@ -22,7 +25,7 @@ export const useUpdateMatchResult = (stageType: StageType) => {
     mutationFn: ({ id, payload }) =>
       ApiClient.getInstance().put<Match, MatchResultDto>(
         `${ApiEntities.Match}/${id}`,
-        payload
+        payload,
       ),
     onSettled: () => {
       queryClient.invalidateQueries({

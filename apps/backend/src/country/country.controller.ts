@@ -29,26 +29,35 @@ export class CountryController {
   @Inject(CountryService)
   private readonly service: CountryService;
 
+  /**
+  GET /country
+  */
   @Get()
   @ApiOkResponse({ type: [Country] })
   public getCountries(): Promise<Country[]> {
     return this.service.getCountries();
   }
 
+  /**
+  GET /country/:id/cities
+  */
   @Get("/:id/cities")
   @ApiParam({ name: "id", type: "number" })
   @ApiOkResponse({ type: [City] })
   public getCountryCities(
-    @Param("id", ParseIntPipe) id: number
+    @Param("id", ParseIntPipe) id: number,
   ): Promise<City[]> {
     return this.service.getCountryCities(id);
   }
 
+  /**
+  GET /country/:id/cv
+  */
   @Get("/:id/cv")
   @ApiParam({ name: "id", type: "number" })
   @ApiOkResponse({ type: [CountryCV] })
   public getCountryCV(
-    @Param("id", ParseIntPipe) id: number
+    @Param("id", ParseIntPipe) id: number,
   ): Promise<CountryCV[]> {
     return this.service.getCountryCV(id);
   }

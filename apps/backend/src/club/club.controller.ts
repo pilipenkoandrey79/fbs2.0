@@ -28,6 +28,9 @@ export class ClubController {
   @Inject(ClubService)
   private readonly service: ClubService;
 
+  /**
+  PUT /v2/club/:id
+  */
   @Put("/:id")
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
@@ -35,11 +38,14 @@ export class ClubController {
   @ApiOkResponse({ type: Club })
   public updateClub(
     @Param("id", ParseIntPipe) clubId: number,
-    @Body() body: ClubDto
+    @Body() body: ClubDto,
   ): Promise<Club> {
     return this.service.updateClub(clubId, body);
   }
 
+  /**
+  POST /v2/club
+  */
   @Post()
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()

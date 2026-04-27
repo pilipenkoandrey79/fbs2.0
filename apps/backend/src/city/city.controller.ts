@@ -29,6 +29,9 @@ export class CityController {
   @Inject(CityService)
   private readonly service: CityService;
 
+  /**
+  GET /v2/city/:id
+  */
   @Get("/:id")
   @ApiParam({ name: "id", type: "number" })
   @ApiOkResponse({ type: City })
@@ -36,6 +39,9 @@ export class CityController {
     return this.service.getCity(cityId);
   }
 
+  /**
+  POST /v2/city
+  */
   @Post()
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
@@ -44,6 +50,9 @@ export class CityController {
     return this.service.createCity(body);
   }
 
+  /**
+  PUT /v2/city/:id
+  */
   @Put("/:id")
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
@@ -51,7 +60,7 @@ export class CityController {
   @ApiOkResponse({ type: City })
   public updateCity(
     @Param("id", ParseIntPipe) cityId: number,
-    @Body() body: CityDto
+    @Body() body: CityDto,
   ): Promise<City> {
     return this.service.updateCity(cityId, body);
   }

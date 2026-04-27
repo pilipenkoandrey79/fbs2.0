@@ -6,6 +6,10 @@ import { useTranslation } from "react-i18next";
 import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
 
+
+/**
+DELETE /city/:id
+*/
 export const useDeleteCity = (countryId: number | undefined) => {
   const queryClient = useQueryClient();
   const { t } = useTranslation();

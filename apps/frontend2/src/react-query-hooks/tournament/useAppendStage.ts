@@ -6,6 +6,9 @@ import { useTranslation } from "react-i18next";
 import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
 
+/**
+POST /tournament/:season/:tournament/stage
+*/
 export const useAppendStage = (tournamentSeason: TournamentSeason) => {
   const queryClient = useQueryClient();
   const { t } = useTranslation();
@@ -14,7 +17,7 @@ export const useAppendStage = (tournamentSeason: TournamentSeason) => {
     mutationFn: (stageDto) =>
       ApiClient.getInstance().post<Stage, StageDto>(
         `${ApiEntities.Tournament}/${tournamentSeason.season}/${tournamentSeason.tournament}/stage`,
-        stageDto
+        stageDto,
       ),
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.seasons] });

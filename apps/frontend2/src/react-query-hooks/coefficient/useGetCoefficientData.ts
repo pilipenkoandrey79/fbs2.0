@@ -7,9 +7,12 @@ import { QUERY_KEY } from "../query-key";
 
 const fetchData = async (season: string) =>
   await ApiClient.getInstance().get<CoefficientData[]>(
-    `${ApiEntities.Coefficient}/${season}/full`
+    `${ApiEntities.Coefficient}/${season}/full`,
   );
 
+/**
+GET /coefficient/:season/full
+*/
 export const useGetCoefficientData = (season: string | undefined) =>
   useQuery<CoefficientData[], AxiosError>({
     queryKey: [QUERY_KEY.coefficient, season],

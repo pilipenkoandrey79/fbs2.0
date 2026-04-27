@@ -7,9 +7,12 @@ import { QUERY_KEY } from "../query-key";
 
 const fetchCountryCV = async (id: number | undefined) =>
   await ApiClient.getInstance().get<CountryCV[]>(
-    `${ApiEntities.Country}/${id}/cv`
+    `${ApiEntities.Country}/${id}/cv`,
   );
 
+/**
+GET /country/:id/cv
+*/
 export const useGetCountryCV = (id: number | undefined) =>
   useQuery<CountryCV[], AxiosError>({
     queryKey: [QUERY_KEY.countryCV, id],

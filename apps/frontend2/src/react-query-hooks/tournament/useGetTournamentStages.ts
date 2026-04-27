@@ -8,16 +8,19 @@ import { getTournamentPartMatchesQueryFn } from "../match/useGetTournamentPartMa
 
 export const getTournamentStages = async (
   season: string | undefined,
-  tournament: Tournament | undefined
+  tournament: Tournament | undefined,
 ) =>
   await ApiClient.getInstance().get<Stage[]>(
-    `${ApiEntities.Tournament}/${season}/${tournament}`
+    `${ApiEntities.Tournament}/${season}/${tournament}`,
   );
 
+/**
+GET /tournament/:season/:tournament
+*/
 export const useGetTournamentStages = (
   season: string | undefined,
   tournament: Tournament | undefined,
-  preloadMatches = true
+  preloadMatches = true,
 ) => {
   const queryClient = useQueryClient();
 

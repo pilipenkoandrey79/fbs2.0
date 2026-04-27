@@ -6,6 +6,9 @@ import { useTranslation } from "react-i18next";
 import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
 
+/**
+DELETE /tournament/:id
+*/
 export const useDeleteTournament = (season: string) => {
   const queryClient = useQueryClient();
   const { t } = useTranslation();

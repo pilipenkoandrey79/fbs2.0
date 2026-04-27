@@ -11,9 +11,12 @@ import { useTranslation } from "react-i18next";
 import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
 
+/**
+PATCH /tournament/stage/:id
+*/
 export const useUpdateStage = (
   tournamentSeason: TournamentSeason,
-  id: number
+  id: number,
 ) => {
   const queryClient = useQueryClient();
   const { t } = useTranslation();
@@ -22,7 +25,7 @@ export const useUpdateStage = (
     mutationFn: (dto) =>
       ApiClient.getInstance().patch<Stage, StageUpdateDto>(
         `${ApiEntities.Tournament}/stage/${id}`,
-        dto
+        dto,
       ),
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.seasons] });

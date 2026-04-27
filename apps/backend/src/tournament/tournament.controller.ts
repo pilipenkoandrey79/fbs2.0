@@ -40,12 +40,19 @@ export class TournamentController {
   @Inject(TournamentService)
   private readonly service: TournamentService;
 
+  /**
+  GET /tournament/seasons
+  GET /tournament/seasons?simplified=true
+  */
   @Get("seasons")
   @ApiQuery({ name: "simplified", type: Boolean })
   public getSeasons(@Query("simplified") simplified: boolean) {
     return this.service.getAvailableTournaments(simplified);
   }
 
+  /**
+  GET /tournament/:season/summary
+  */
   @Get("/:season/summary")
   @ApiParam({ name: "season", type: "string" })
   @ApiOkResponse({ type: [TournamentSummary] })
@@ -58,6 +65,9 @@ export class TournamentController {
     return this.service.getSeasonSummary(season);
   }
 
+  /**
+  GET /tournament/:season/:tournament
+  */
   @Get("/:season/:tournament")
   @ApiParam({ name: "season", type: "string" })
   @ApiParam({ name: "tournament", enum: Tournament })
@@ -65,7 +75,7 @@ export class TournamentController {
   @ApiBadRequestResponse()
   public getStages(
     @Param("season") season: string,
-    @Param("tournament") tournament: Tournament
+    @Param("tournament") tournament: Tournament,
   ) {
     if (!isSeasonLabelValid(season, false) || !isTournamentValid(tournament)) {
       throw new NotFoundException();
@@ -74,6 +84,9 @@ export class TournamentController {
     return this.service.getStages(season, tournament);
   }
 
+  /**
+  POST /tournament/:season/:tournament
+  */
   @Post("/:season/:tournament")
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
@@ -84,7 +97,7 @@ export class TournamentController {
   public createTournament(
     @Param("season") season: string,
     @Param("tournament") tournament: Tournament,
-    @Body() body: StageDto[]
+    @Body() body: StageDto[],
   ) {
     if (!isSeasonLabelValid(season, false) || !isTournamentValid(tournament)) {
       throw new NotFoundException();
@@ -93,6 +106,9 @@ export class TournamentController {
     return this.service.createTournament(season, tournament, body);
   }
 
+  /**
+  DELETE /tournament/:id
+  */
   @Delete("/:id")
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
@@ -102,6 +118,9 @@ export class TournamentController {
     return this.service.removeTournament(id);
   }
 
+  /**
+  POST /tournament/create-stage-substitution
+  */
   @Post("/create-stage-substitution")
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
@@ -110,6 +129,9 @@ export class TournamentController {
     return this.service.createStageSubstitution(body);
   }
 
+  /**
+  POST /tournament/:season/:tournament/stage
+  */
   @Post("/:season/:tournament/stage")
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
@@ -120,7 +142,7 @@ export class TournamentController {
   public appendStage(
     @Param("season") season: string,
     @Param("tournament") tournament: Tournament,
-    @Body() body: StageDto
+    @Body() body: StageDto,
   ) {
     if (!isSeasonLabelValid(season, false) || !isTournamentValid(tournament)) {
       throw new NotFoundException();
@@ -129,6 +151,9 @@ export class TournamentController {
     return this.service.appendStage(season, tournament, body);
   }
 
+  /**
+  PATCH /tournament/stage/:id
+  */
   @Patch("/stage/:id")
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
@@ -136,11 +161,14 @@ export class TournamentController {
   @ApiOkResponse({ type: Stage })
   public updateStage(
     @Param("id", new ParseIntPipe()) id: number,
-    @Body() body: StageUpdateDto
+    @Body() body: StageUpdateDto,
   ) {
     return this.service.updateStage(id, body);
   }
 
+  /**
+  DELETE /tournament/stage/:id
+  */
   @Delete("/stage/:id")
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()

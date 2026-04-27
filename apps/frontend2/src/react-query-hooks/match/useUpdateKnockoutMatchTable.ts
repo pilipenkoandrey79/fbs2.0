@@ -14,6 +14,9 @@ import { MutationContext } from "../client";
 import { QUERY_KEY } from "../query-key";
 import ApiClient from "../../api/api.client";
 
+/**
+PUT /match/:season/:tournament/:stage
+*/
 export const useUpdateKnockoutMatchTable = (
   season: string | undefined,
   tournament: Tournament | undefined,

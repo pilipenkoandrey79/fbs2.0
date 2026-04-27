@@ -7,9 +7,12 @@ import { QUERY_KEY } from "../query-key";
 
 const fetchGraphData = async (id: number) =>
   await ApiClient.getInstance().get<CoefficientHistoryItem[]>(
-    `${ApiEntities.Coefficient}/country/${id}`
+    `${ApiEntities.Coefficient}/country/${id}`,
   );
 
+/**
+GET /coefficient/country/:countryId
+*/
 export const useGetCoefficientHistoryGraph = (id: number) =>
   useQuery<CoefficientHistoryItem[], AxiosError>({
     queryKey: [QUERY_KEY.coefficientGraph, id],

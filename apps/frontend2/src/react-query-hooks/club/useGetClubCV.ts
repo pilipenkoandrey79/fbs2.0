@@ -10,6 +10,11 @@ const fetchClubCV = async (id: number | undefined, till?: string) =>
     `${ApiEntities.Club}/${id}/cv${till ? `?till=${till}` : ""}`,
   );
 
+
+/**
+GET /club/:id/cv
+GET /club/:id/cv?till=:till
+*/
 export const useGetClubCV = (id: number | undefined, till?: string) =>
   useQuery<ClubCV[], AxiosError>({
     queryKey: till ? [QUERY_KEY.clubCV, id, till] : [QUERY_KEY.clubCV, id],

@@ -11,14 +11,12 @@ import {
   ClubTournamentCoefficient,
   CoefficientData,
   CountryClubCoefficient,
-  HIGHLIGHTED_CLUB_ID_SEARCH_PARAM,
   SeasonCoefficient,
   TournamentSeason,
   UKRAINE,
   USSR,
 } from "@fbs2.0/types";
 import { useTranslation } from "react-i18next";
-import { createSearchParams } from "react-router";
 
 import { useGetCoefficientData } from "../../../../react-query-hooks/coefficient/useGetCoefficientData";
 import { useGetWinners } from "../../../../react-query-hooks/coefficient/useGetWinners";

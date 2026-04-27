@@ -8,6 +8,9 @@ import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
 import { MutationContext } from "../client";
 
+/**
+PUT /participant/:id
+*/
 export const useUpdateParticipant = () => {
   const queryClient = useQueryClient();
   const { season, tournament } = useParams();
@@ -22,14 +25,14 @@ export const useUpdateParticipant = () => {
     mutationFn: ({ id, participantDto }) =>
       ApiClient.getInstance().put<Participant, ParticipantDto>(
         `${ApiEntities.Participant}/${id}`,
-        participantDto
+        participantDto,
       ),
     onSettled: () => {
       [QUERY_KEY.participants, QUERY_KEY.matches].forEach((key) =>
         queryClient.invalidateQueries({
           queryKey: [key, season, tournament],
           refetchType: "all",
-        })
+        }),
       );
     },
     onMutate: () => ({ success: t("tournament.participants.list.replaced") }),

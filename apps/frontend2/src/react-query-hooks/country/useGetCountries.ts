@@ -8,6 +8,9 @@ import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
 import { BCP47Locales, Language } from "../../i18n/locales";
 
+/**
+GET /country
+*/
 const useGetCountries = (year?: string) => {
   const { i18n } = useTranslation();
 
@@ -15,20 +18,21 @@ const useGetCountries = (year?: string) => {
     queryKey: [QUERY_KEY.countries],
     queryFn: async () => {
       return await ApiClient.getInstance().get<Country[]>(
-        `${ApiEntities.Country}`
+        `${ApiEntities.Country}`,
       );
     },
     select: (data: Country[]) => {
       const collator = new Intl.Collator(
-        BCP47Locales[i18n.resolvedLanguage as Language]
+        BCP47Locales[i18n.resolvedLanguage as Language],
       );
 
       const countries = data.sort((a, b) =>
         collator.compare(
           (i18n.resolvedLanguage === Language.en ? a.name : a.name_ua) ||
             a.name,
-          (i18n.resolvedLanguage === Language.en ? b.name : b.name_ua) || b.name
-        )
+          (i18n.resolvedLanguage === Language.en ? b.name : b.name_ua) ||
+            b.name,
+        ),
       );
 
       return isNotEmpty(year)

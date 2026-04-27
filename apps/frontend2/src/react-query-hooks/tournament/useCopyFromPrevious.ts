@@ -4,6 +4,9 @@ import { AxiosError } from "axios";
 
 import { getTournamentStages } from "./useGetTournamentStages";
 
+/**
+GET /tournament/:season/:tournament
+*/
 export const useCopyFromPrevious = () =>
   useMutation<Stage[], AxiosError, Omit<TournamentSeason, "id">>({
     mutationFn: async ({ season, tournament }: Omit<TournamentSeason, "id">) =>

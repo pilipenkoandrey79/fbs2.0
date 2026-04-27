@@ -34,10 +34,13 @@ export class _CityController {
   @Inject(CityService)
   private readonly service: CityService;
 
+  /**
+  GET /city
+  */
   @Get()
   @ApiOkResponse({ type: [City] })
   public getCities(
-    @Query("withoutClubs") withoutClubs: boolean
+    @Query("withoutClubs") withoutClubs: boolean,
   ): Promise<City[]> {
     return this.service.getCities(withoutClubs);
   }
@@ -57,11 +60,14 @@ export class _CityController {
   @ApiOkResponse({ type: City })
   public updateCity(
     @Param("id", ParseIntPipe) cityId: number,
-    @Body() body: City
+    @Body() body: City,
   ): Promise<City> {
     return this.service._updateCity(cityId, body);
   }
 
+  /**
+  DELETE /city/:id
+  */
   @Delete("/:id")
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
@@ -79,7 +85,7 @@ export class _CityController {
   @ApiCreatedResponse({ type: _CreateOldCityNameDTO })
   public createCityOldName(
     @Param("id", ParseIntPipe) cityId: number,
-    @Body() body: _CreateOldCityNameDTO
+    @Body() body: _CreateOldCityNameDTO,
   ) {
     return this.service.createCityOldName(cityId, body);
   }

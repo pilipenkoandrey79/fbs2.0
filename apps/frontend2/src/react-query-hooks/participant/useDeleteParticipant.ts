@@ -8,6 +8,9 @@ import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
 import { MutationContext } from "../client";
 
+/**
+DELETE /participant/:id
+*/
 export const useDeleteParticipant = () => {
   const queryClient = useQueryClient();
   const { season, tournament } = useParams();
@@ -16,21 +19,21 @@ export const useDeleteParticipant = () => {
   return useMutation<unknown, AxiosError, number, MutationContext>({
     mutationFn: (participantId) =>
       ApiClient.getInstance().delete(
-        `${ApiEntities.Participant}/${participantId}`
+        `${ApiEntities.Participant}/${participantId}`,
       ),
     onSettled: () => {
       [QUERY_KEY.participants, QUERY_KEY.matches].forEach((key) =>
         queryClient.invalidateQueries({
           queryKey: [key, season, tournament],
           refetchType: "all",
-        })
+        }),
       );
     },
     onMutate: (participantId) => {
       queryClient.setQueryData(
         [QUERY_KEY.participants, season, tournament],
         (old: Participant[]): Participant[] =>
-          old.filter(({ id }) => id !== participantId)
+          old.filter(({ id }) => id !== participantId),
       );
 
       return {

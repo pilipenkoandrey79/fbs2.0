@@ -7,6 +7,10 @@ import ApiClient from "../../api/api.client";
 const fetchClub = async (clubId: number | undefined) =>
   await ApiClient.getInstance().get<Club>(`${ApiEntities.Club}/${clubId}`);
 
+
+/**
+GET /club/:id
+*/
 export const useGetClub = (clubId: number | undefined) =>
   useQuery<Club, Error>({
     queryKey: [QUERY_KEY.club, clubId],

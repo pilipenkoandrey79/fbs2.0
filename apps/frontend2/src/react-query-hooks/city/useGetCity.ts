@@ -7,6 +7,10 @@ import ApiClient from "../../api/api.client";
 const fetchCity = async (cityId: number | undefined) =>
   await ApiClient.getInstance().get<City>(`v2/${ApiEntities.City}/${cityId}`);
 
+
+/**
+GET /v2/city/:id
+*/
 export const useGetCity = (cityId: number) =>
   useQuery<City, Error>({
     queryKey: [QUERY_KEY.city, cityId],

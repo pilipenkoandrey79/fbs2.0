@@ -13,6 +13,10 @@ const fetchCitiesByCountry = async (countryId: number | undefined) =>
     `${ApiEntities.Country}/${countryId}/cities`
   );
 
+
+/**
+GET /country/:id/cities
+*/
 export const useGetCitiesByCountry = (countryId: number | undefined) => {
   const { i18n } = useTranslation();
 

@@ -8,6 +8,9 @@ import ApiClient from "../../api/api.client";
 import { MUTATION_KEY, QUERY_KEY } from "../query-key";
 import { MutationContext } from "../client";
 
+/**
+POST /coefficient/:season
+*/
 export const useCalculateCoefficient = () => {
   const queryClient = useQueryClient();
   const { t } = useTranslation();
@@ -16,7 +19,7 @@ export const useCalculateCoefficient = () => {
     mutationKey: [MUTATION_KEY.calculateCoefficients],
     mutationFn: (season: string | undefined) =>
       ApiClient.getInstance().post<number>(
-        `${ApiEntities.Coefficient}/${season}`
+        `${ApiEntities.Coefficient}/${season}`,
       ),
     onSettled: (_, __, season) => {
       queryClient.invalidateQueries({

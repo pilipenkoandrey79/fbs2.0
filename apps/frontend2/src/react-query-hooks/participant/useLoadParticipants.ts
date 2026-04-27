@@ -6,6 +6,9 @@ import { useParams } from "react-router";
 import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
 
+/**
+POST /participant/:season/:tournament/copy-from-prev-season
+*/
 export const useLoadParticipants = () => {
   const { season, tournament } = useParams();
   const queryClient = useQueryClient();
@@ -13,14 +16,14 @@ export const useLoadParticipants = () => {
   return useMutation<number, AxiosError>({
     mutationFn: () =>
       ApiClient.getInstance().post<number>(
-        `${ApiEntities.Participant}/${season}/${tournament}/copy-from-prev-season`
+        `${ApiEntities.Participant}/${season}/${tournament}/copy-from-prev-season`,
       ),
     onSettled: () => {
       [QUERY_KEY.participants, QUERY_KEY.matches].forEach((key) =>
         queryClient.invalidateQueries({
           queryKey: [key, season, tournament],
           refetchType: "all",
-        })
+        }),
       );
     },
   });

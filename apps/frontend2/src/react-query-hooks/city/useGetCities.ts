@@ -26,6 +26,10 @@ export const getCitiesByCountry =
       );
   };
 
+
+/**
+GET /city
+*/
 export const useGetCities = (select?: (data: City[]) => City[]) =>
   useQuery<City[], AxiosError>({
     queryKey: [QUERY_KEY.cities],

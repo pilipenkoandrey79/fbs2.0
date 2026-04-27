@@ -14,6 +14,9 @@ import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
 import { MutationContext } from "../client";
 
+/**
+POST /participant/:season/:tournament
+*/
 export const useCreateParticipant = () => {
   const { season, tournament } = useParams();
   const queryClient = useQueryClient();
@@ -23,14 +26,14 @@ export const useCreateParticipant = () => {
     mutationFn: (participantDto) =>
       ApiClient.getInstance().post<Participant, ParticipantDto>(
         `${ApiEntities.Participant}/${season}/${tournament}`,
-        participantDto
+        participantDto,
       ),
     onSettled: () => {
       [QUERY_KEY.participants, QUERY_KEY.matches].forEach((key) =>
         queryClient.invalidateQueries({
           queryKey: [key, season, tournament],
           refetchType: "all",
-        })
+        }),
       );
     },
     onMutate: (participantDto) => {
@@ -53,7 +56,7 @@ export const useCreateParticipant = () => {
               },
               fromStage: null,
             },
-          ]
+          ],
         );
       }
 

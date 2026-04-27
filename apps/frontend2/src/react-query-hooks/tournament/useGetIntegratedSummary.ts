@@ -7,9 +7,12 @@ import { QUERY_KEY } from "../query-key";
 
 const fetchIntegratedSummary = async () =>
   await ApiClient.getInstance().get<AvailableTournaments>(
-    `${ApiEntities.Tournament}/seasons`
+    `${ApiEntities.Tournament}/seasons`,
   );
 
+/**
+GET /tournament/seasons
+*/
 export const useGetIntegratedSummary = () =>
   useQuery<AvailableTournaments, AxiosError>({
     queryKey: [QUERY_KEY.integrated_summary],

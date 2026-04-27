@@ -37,6 +37,10 @@ export class _ClubController {
   @Inject(ClubService)
   private readonly service: ClubService;
 
+  /**
+  GET /club
+  GET /club?countryId=:countryId
+  */
   @Get()
   @ApiOkResponse({ type: [Club] })
   @ApiQuery({ name: "countryId", type: Number })
@@ -45,6 +49,9 @@ export class _ClubController {
     return this.service.getClubs(countryId);
   }
 
+  /**
+  GET /club/:id
+  */
   @Get("/:id")
   @ApiParam({ name: "id", type: "number" })
   @ApiOkResponse({ type: Club })
@@ -52,6 +59,10 @@ export class _ClubController {
     return this.service.getClub(id);
   }
 
+  /**
+  GET /club/:id/cv
+  GET /club/:id/cv?till=:till
+  */
   @Get("/:id/cv")
   @ApiParam({ name: "id", type: "number" })
   @ApiOkResponse({ type: [ClubCV] })
@@ -71,6 +82,9 @@ export class _ClubController {
     return this.service._updateClub(body);
   }
 
+  /**
+  DELETE /club/:id
+  */
   @Delete("/:id")
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()

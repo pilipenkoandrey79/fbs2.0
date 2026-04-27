@@ -7,9 +7,12 @@ import { QUERY_KEY } from "../query-key";
 
 const fetchData = async (season: string) =>
   await ApiClient.getInstance().get<Winner[]>(
-    `${ApiEntities.Coefficient}/${season}/winners`
+    `${ApiEntities.Coefficient}/${season}/winners`,
   );
 
+/**
+GET /coefficient/:season/winners
+*/
 export const useGetWinners = (season: string) =>
   useQuery<Winner[], AxiosError>({
     queryKey: [QUERY_KEY.winners, season],

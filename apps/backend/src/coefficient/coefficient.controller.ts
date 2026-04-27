@@ -39,6 +39,9 @@ export class CoefficientController {
     return this.service.getAllSeasonClubCoefficients(season);
   }
 
+  /**
+  GET /coefficient/:season/winners
+  */
   @Get("/:season/winners")
   @ApiParam({ name: "season", type: "string" })
   @ApiOkResponse({ type: [Winner] })
@@ -51,15 +54,21 @@ export class CoefficientController {
     return this.service.getWinners(season);
   }
 
+  /**
+  GET /coefficient/country/:countryId
+  */
   @Get("/country/:countryId")
   @ApiParam({ name: "countryId", type: "number" })
   @ApiOkResponse({ type: [CoefficientHistoryItem] })
   public getCountryCoefficientHistory(
-    @Param("countryId", new ParseIntPipe()) countryId: number
+    @Param("countryId", new ParseIntPipe()) countryId: number,
   ): Promise<CoefficientHistoryItem[]> {
     return this.service.getCountryCoefficientHistory(countryId);
   }
 
+  /**
+  GET /coefficient/:season/full
+  */
   @Get("/:season/full")
   @ApiParam({ name: "season", type: "string" })
   @ApiOkResponse({ type: [CoefficientData] })
@@ -67,6 +76,9 @@ export class CoefficientController {
     return this.service.getCountryCoefficient(season);
   }
 
+  /**
+  POST /coefficient/:season
+  */
   @Post("/:season")
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()

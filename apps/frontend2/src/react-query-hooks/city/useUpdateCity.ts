@@ -6,6 +6,10 @@ import { useTranslation } from "react-i18next";
 import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
 
+
+/**
+PUT /v2/city/:id
+*/
 export const useUpdateCity = () => {
   const queryClient = useQueryClient();
   const { t } = useTranslation();

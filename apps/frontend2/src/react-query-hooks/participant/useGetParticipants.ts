@@ -11,23 +11,26 @@ import { BCP47Locales, Language } from "../../i18n/locales";
 
 const fetchParticipants = async (
   season: string | undefined,
-  tournament: Tournament | undefined
+  tournament: Tournament | undefined,
 ) =>
   await ApiClient.getInstance().get<Participant[]>(
-    `${ApiEntities.Participant}/${season}/${tournament}`
+    `${ApiEntities.Participant}/${season}/${tournament}`,
   );
 
+/**
+GET /participant/:season/:tournament
+*/
 export const useGetParticipants = <T extends any[] = Participant[]>(
   season: string | undefined,
   tournament: string | undefined,
-  select?: (data: Participant[]) => T
+  select?: (data: Participant[]) => T,
 ) => {
   const { i18n } = useTranslation();
   const startOfSeason = (season || "").split("-")[0];
 
   const defaultSelect = (data: Participant[]): Participant[] => {
     const collator = new Intl.Collator(
-      BCP47Locales[i18n.resolvedLanguage as Language]
+      BCP47Locales[i18n.resolvedLanguage as Language],
     );
 
     return data
@@ -42,8 +45,8 @@ export const useGetParticipants = <T extends any[] = Participant[]>(
             : a.club.city.country.name_ua) || a.club.city.country.name,
           (i18n.resolvedLanguage === Language.en
             ? b.club.city.country.name
-            : b.club.city.country.name_ua) || b.club.city.country.name
-        )
+            : b.club.city.country.name_ua) || b.club.city.country.name,
+        ),
       );
   };
 

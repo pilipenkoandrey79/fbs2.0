@@ -12,6 +12,9 @@ import { AxiosError } from "axios";
 import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
 
+/**
+GET /match/combat
+*/
 export const useGetCombatMatches = (countryId: number, rivalId: number) =>
   useQuery<Match[], AxiosError, Combat>({
     queryKey: [QUERY_KEY.combat, countryId, rivalId],

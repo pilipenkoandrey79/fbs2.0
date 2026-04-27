@@ -38,6 +38,9 @@ export class MatchController {
   @Inject(MatchService)
   private readonly service: MatchService;
 
+  /**
+  GET /match/combat
+  */
   @Get("/combat")
   @ApiOkResponse({ type: [Match] })
   public getTwoCountriesMatches(
@@ -75,6 +78,9 @@ export class MatchController {
     return this.service.getMatches(season, tournament);
   }
 
+  /**
+  GET /match/:season/:tournament/:stage
+  */
   @Get("/:season/:tournament/:stage")
   @ApiParam({ name: "season", type: "string" })
   @ApiParam({ name: "tournament", enum: Tournament })
@@ -93,6 +99,9 @@ export class MatchController {
     return this.service.getStageMatches(season, tournament, stage);
   }
 
+  /**
+  POST /match/:season/:tournament
+  */
   @Post("/:season/:tournament")
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
@@ -107,6 +116,9 @@ export class MatchController {
     return this.service.createMatch(season, tournament, body);
   }
 
+  /**
+  PUT /match/:id
+  */
   @Put("/:id")
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
@@ -119,6 +131,9 @@ export class MatchController {
     return this.service.updateMatchResult(id, body);
   }
 
+  /**
+  PUT /match/:season/:tournament/:stage
+  */
   @Put("/:season/:tournament/:stage")
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
@@ -140,6 +155,9 @@ export class MatchController {
     );
   }
 
+  /**
+  DELETE /match/:id
+  */
   @Delete("/:id")
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
@@ -152,6 +170,9 @@ export class MatchController {
     return this.service.removeMatch(id, body);
   }
 
+  /**
+  DELETE /match/:id/results
+  */
   @Delete("/:id/results")
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()

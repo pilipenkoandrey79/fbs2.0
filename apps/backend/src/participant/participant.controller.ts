@@ -49,6 +49,9 @@ export class ParticipantController {
     return this.service.getAllSeasonParticipants(season);
   }
 
+  /**
+  GET /participant/:season/:tournament
+  */
   @Get("/:season/:tournament")
   @ApiParam({ name: "season", type: "string" })
   @ApiParam({ name: "tournament", enum: Tournament })
@@ -56,7 +59,7 @@ export class ParticipantController {
   @ApiBadRequestResponse()
   public getParticipants(
     @Param("season") season: string,
-    @Param("tournament") tournament: Tournament
+    @Param("tournament") tournament: Tournament,
   ) {
     if (!isSeasonLabelValid(season, false) || !isTournamentValid(tournament)) {
       throw new NotFoundException();
@@ -65,6 +68,9 @@ export class ParticipantController {
     return this.service.getParticipants(season, tournament);
   }
 
+  /**
+  POST /participant/:season/:tournament
+  */
   @Post("/:season/:tournament")
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
@@ -74,16 +80,19 @@ export class ParticipantController {
   public createParticipant(
     @Param("season") season: string,
     @Param("tournament") tournament: Tournament,
-    @Body() body: CreateParticipantDto
+    @Body() body: CreateParticipantDto,
   ): Promise<Participant> {
     return this.service.createParticipant(
       season,
       tournament,
       body.clubId,
-      body.startingStage
+      body.startingStage,
     );
   }
 
+  /**
+  PUT /participant/:id
+  */
   @Put("/:id")
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
@@ -91,11 +100,14 @@ export class ParticipantController {
   @ApiOkResponse({ type: Participant })
   public updateParticipant(
     @Param("id", new ParseIntPipe()) id: number,
-    @Body() body: CreateParticipantDto
+    @Body() body: CreateParticipantDto,
   ): Promise<Participant> {
     return this.service.editParticipant(id, body.clubId, body.startingStage);
   }
 
+  /**
+  POST /participant/:season/:tournament/add-from-other-tournament
+  */
   @Post("/:season/:tournament/add-from-other-tournament")
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
@@ -104,7 +116,7 @@ export class ParticipantController {
   @ApiCreatedResponse()
   public addParticipantsFromAnotherTournament(
     @Param("season") season: string,
-    @Param("tournament") tournament: Tournament
+    @Param("tournament") tournament: Tournament,
   ): Promise<number> {
     if (!isSeasonLabelValid(season, false) || !isTournamentValid(tournament)) {
       throw new NotFoundException();
@@ -112,10 +124,13 @@ export class ParticipantController {
 
     return this.service.addParticipantsFromAnotherTournament(
       season,
-      tournament
+      tournament,
     );
   }
 
+  /**
+  POST /participant/:season/:tournament/copy-from-prev-season
+  */
   @Post("/:season/:tournament/copy-from-prev-season")
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()
@@ -124,7 +139,7 @@ export class ParticipantController {
   @ApiCreatedResponse()
   public copyParticipantsFromPreviousSeason(
     @Param("season") season: string,
-    @Param("tournament") tournament: Tournament
+    @Param("tournament") tournament: Tournament,
   ) {
     if (!isSeasonLabelValid(season, false) || !isTournamentValid(tournament)) {
       throw new NotFoundException();
@@ -133,6 +148,9 @@ export class ParticipantController {
     return this.service.copyParticipantsFromPreviousSeason(season, tournament);
   }
 
+  /**
+  DELETE /participant/:id
+  */
   @Delete("/:id")
   @UseGuards(AccessTokenGuard)
   @ApiBearerAuth()

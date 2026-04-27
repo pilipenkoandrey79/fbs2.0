@@ -8,6 +8,10 @@ import ApiClient from "../../api/api.client";
 import { MUTATION_KEY, QUERY_KEY } from "../query-key";
 import { MutationContext } from "../client";
 
+/**
+DELETE /match/:id
+DELETE /match/:id/results
+*/
 export const useDeleteMatch = (stageType: StageType) => {
   const { season, tournament } = useParams();
   const queryClient = useQueryClient();
@@ -27,7 +31,7 @@ export const useDeleteMatch = (stageType: StageType) => {
     mutationFn: ({ matchId, answerMatchId, clearResults }) =>
       ApiClient.getInstance().delete<unknown, DeleteMatchDto>(
         `${ApiEntities.Match}/${matchId}${clearResults ? "/results" : ""}`,
-        { answerMatchId }
+        { answerMatchId },
       ),
     onSettled: () => {
       queryClient.invalidateQueries({
@@ -43,7 +47,7 @@ export const useDeleteMatch = (stageType: StageType) => {
         {
           season,
           tournament,
-        }
+        },
       ),
     }),
   });

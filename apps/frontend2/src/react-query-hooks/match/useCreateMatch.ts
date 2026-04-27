@@ -8,6 +8,9 @@ import ApiClient from "../../api/api.client";
 import { QUERY_KEY } from "../query-key";
 import { MutationContext } from "../client";
 
+/**
+POST /match/:season/:tournament
+*/
 export const useCreateMatch = () => {
   const { season, tournament } = useParams();
   const queryClient = useQueryClient();
@@ -17,7 +20,7 @@ export const useCreateMatch = () => {
     mutationFn: (matchDto) =>
       ApiClient.getInstance().post<Match, MatchDto>(
         `${ApiEntities.Match}/${season}/${tournament}`,
-        matchDto
+        matchDto,
       ),
     onSettled: (_, __, matchDto) => {
       queryClient.invalidateQueries({
