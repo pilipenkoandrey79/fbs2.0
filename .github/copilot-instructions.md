@@ -93,3 +93,18 @@ Frontend uses Vite env vars (`VITE_*` prefix):
 - Backend entities: `{name}.entity.ts` with corresponding `{name}.dto.ts`
 - Frontend components: PascalCase folders with `index.tsx` + `styles.module.scss`
 - React Query hooks: `use{Action}{Entity}.ts` (e.g., `useGetClubs.ts`, `useUpdateClub.ts`)
+
+## Formatting & Style
+
+- always use curly braces for conditional blocks, loops, and functions even if they are single line
+- divide blocks of code with empty lines for better readability
+- add empty line before blocks
+- prefer css classes over inline styles
+- name css classes using defices (e.g. class-name) instead of camelCase (e.g. className)
+- never delete existed empty lines
+- always use colors from the design system (colors.$color-name) instead of hardcoded color values. Import colors from the file frontend2\src\style\colors.module.scss
+- prefer arrow functions over function declarations
+- for boolean variables and functions use "is" prefix (e.g. isLoading, isEnabled, isVisible)
+- for functions that perform actions use verbs (e.g. fetchData, loadUser, saveChanges)
+- keep line length under 120 characters
+- keep only one React component per file and split components into separate files if they grow too large. Never exceed 400 lines in a single file.

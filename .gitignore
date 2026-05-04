@@ -49,3 +49,5 @@ openapitools.json
 /apps/frontend/src/mono-api
 /.serve.env
 /.build.env
+/bash.exe.stackdump
+/.claude
