@@ -50,4 +50,4 @@ openapitools.json
 /.serve.env
 /.build.env
 /bash.exe.stackdump
-/.claude
+/.claude/settings.local.json
