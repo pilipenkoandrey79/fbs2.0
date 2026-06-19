@@ -1,12 +1,11 @@
 import { DATE_FORMAT } from "@fbs2.0/types";
 import { formatDatePickerValue, normalizeDatePickerValue } from "@fbs2.0/utils";
-import { DatePicker, DatePickerProps, Form } from "antd";
+import { DatePicker, DatePickerProps, Form, FormItemProps } from "antd";
 import { FC } from "react";
 import dayjs from "dayjs";
 import { SizeType } from "antd/es/config-provider/SizeContext";
-import { FieldProps } from "rc-field-form/lib/Field";
 
-interface Props extends FieldProps {
+interface Props extends FormItemProps {
   availableDates?: string[];
   size?: SizeType;
   required?: boolean;

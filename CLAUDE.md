@@ -19,6 +19,9 @@ Import shared libs via `@fbs2.0/types` and `@fbs2.0/utils` (configured in `tscon
 npx nx serve backend      # NestJS backend (port 3331)
 npx nx serve frontend2    # React frontend (Vite, port 4201)
 
+# Run both in parallel
+npx nx run-many -t serve -p backend frontend2
+
 # Full stack with Docker
 docker compose up
 

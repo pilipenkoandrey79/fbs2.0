@@ -3,6 +3,7 @@ import {
   Card,
   Divider,
   Form,
+  Input,
   InputNumber,
   Modal,
   Popconfirm,
@@ -61,7 +62,6 @@ const CityDialog: FC<Props> = ({ onClose, id, countryId, isEmpty }) => {
       open
       className={styles.modal}
       title={t(`clubs.city.title.${id === -1 ? "create" : "edit"}`)}
-      onClose={onClose}
       onCancel={onClose}
       width={800}
       maskClosable={false}
@@ -84,7 +84,9 @@ const CityDialog: FC<Props> = ({ onClose, id, countryId, isEmpty }) => {
             disabled={createCity.isPending || updateCity.isPending}
           >
             <NameField className={styles.name} />
-            <Form.Item noStyle name="countryId" />
+            <Form.Item hidden name="countryId">
+              <Input />
+            </Form.Item>
             <Form.List name="oldNames">
               {(fields, { add, remove }) => (
                 <div key="oldNames">
@@ -109,7 +111,9 @@ const CityDialog: FC<Props> = ({ onClose, id, countryId, isEmpty }) => {
                         }}
                         className={styles.remove}
                       />
-                      <Form.Item noStyle name={[field.name, "id"]} />
+                      <Form.Item hidden name={[field.name, "id"]}>
+                        <Input />
+                      </Form.Item>
                       <div className={styles["old-name-container"]}>
                         <NameField
                           required={false}

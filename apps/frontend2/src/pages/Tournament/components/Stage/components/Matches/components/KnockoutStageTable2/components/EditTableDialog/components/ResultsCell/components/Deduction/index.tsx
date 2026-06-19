@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Checkbox, Flex, Form, FormInstance, InputNumber } from "antd";
+import { Checkbox, Flex, Form, FormInstance, Input, InputNumber } from "antd";
 import { ClubWithWinner, MatchesDto } from "@fbs2.0/types";
 import { NamePath } from "antd/es/form/interface";
 
@@ -57,9 +57,11 @@ const Deduction: FC<Props> = ({ form, name, host, guest }) => {
       {showDeduction && (
         <Flex>
           <Form.Item
-            noStyle
+            hidden
             name={[name[0], "deductedPointsList", 0, "participant"]}
-          />
+          >
+            <Input />
+          </Form.Item>
           <Form.Item
             name={[name[0], "deductedPointsList", 0, "points"]}
             label={
@@ -75,9 +77,11 @@ const Deduction: FC<Props> = ({ form, name, host, guest }) => {
             <InputNumber min={0} controls changeOnWheel size="small" />
           </Form.Item>
           <Form.Item
-            noStyle
+            hidden
             name={[name[0], "deductedPointsList", 1, "participant"]}
-          />
+          >
+            <Input />
+          </Form.Item>
           <Form.Item
             name={[name[0], "deductedPointsList", 1, "points"]}
             label={

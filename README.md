@@ -23,3 +23,7 @@ Run `npx nx build fbs2.0` to build the application. The build artifacts are stor
 ## Update dependencies
 
 `npx npm-check-updates -u`
+
+## Run
+
+`npx nx run-many -t serve -p frontend2 backend`

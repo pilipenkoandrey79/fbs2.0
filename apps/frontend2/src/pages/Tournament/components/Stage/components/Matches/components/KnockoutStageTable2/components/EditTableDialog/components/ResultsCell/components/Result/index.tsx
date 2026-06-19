@@ -6,6 +6,7 @@ import {
   Form,
   FormInstance,
   FormListFieldData,
+  Input,
   InputNumber,
   Popconfirm,
 } from "antd";
@@ -126,7 +127,9 @@ const Result: FC<Props> = ({
             }),
           ]}
         />
-        <Form.Item noStyle name={[field.name, "answer"]} />
+        <Form.Item hidden name={[field.name, "answer"]}>
+          <Input />
+        </Form.Item>
       </td>
       <td
         className={classNames(

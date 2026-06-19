@@ -15,6 +15,7 @@ import {
   Form,
   FormInstance,
   FormListFieldData,
+  Input,
   InputNumber,
   Segmented,
 } from "antd";
@@ -78,14 +79,16 @@ const StageForm: FC<Props> = ({ stage, form, remove, addAfter }) => {
       )}
       <div className={styles.container}>
         <div className={styles["stage-section"]}>
-          <Form.Item noStyle name="previousStageType"></Form.Item>
+          <Form.Item hidden name={[stage.name, "previousStageType"]}>
+            <Input />
+          </Form.Item>
           <StageTypeSelector
             name={[stage.name, "stageType"]}
             label={t("home.tournament.stage.type")}
             onChange={(stageType: StageType) => {
               form.setFieldValue(
                 ["stages", stage.name, "stageSchemeType"],
-                getDefaultSchemeByType(stageType)
+                getDefaultSchemeByType(stageType),
               );
             }}
           />
@@ -105,7 +108,7 @@ const StageForm: FC<Props> = ({ stage, form, remove, addAfter }) => {
           />
 
           {isOlimpic(
-            form.getFieldValue(["stages", stage.name, "stageSchemeType"])
+            form.getFieldValue(["stages", stage.name, "stageSchemeType"]),
           ) && (
             <>
               <Form.Item
@@ -132,7 +135,7 @@ const StageForm: FC<Props> = ({ stage, form, remove, addAfter }) => {
             </>
           )}
           {isGroup(
-            form.getFieldValue(["stages", stage.name, "stageSchemeType"])
+            form.getFieldValue(["stages", stage.name, "stageSchemeType"]),
           ) && (
             <Form.Item
               name={[stage.name, "groups"]}
@@ -176,7 +179,7 @@ const StageForm: FC<Props> = ({ stage, form, remove, addAfter }) => {
                     stage.name,
                     key as "linkedTournament" | "linkedStage",
                   ],
-                  undefined
+                  undefined,
                 );
               });
             }}

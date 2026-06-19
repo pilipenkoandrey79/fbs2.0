@@ -26,7 +26,11 @@ const CreateTournament: FC<Props> = ({ onClose }) => {
   const copyFromPrevious = useCopyFromPrevious();
 
   const submit = async (values: TournamentDto) => {
-    values.stages = values.stages.map((stage, index, stages) => ({
+    values.stages = (
+      Array.isArray(values.stages)
+        ? values.stages
+        : (Object.values(values.stages) as StageDto[])
+    ).map((stage, index, stages) => ({
       ...stage,
       previousStageType: stages[index - 1]?.stageType || null,
     }));
@@ -41,43 +45,42 @@ const CreateTournament: FC<Props> = ({ onClose }) => {
       return;
     }
 
-    const stages = await copyFromPrevious.mutateAsync({
-      tournament: values.tournament,
-      season: [values.start - 1, values.end - 1].join("-"),
-    });
-
-    form.setFieldValue(
-      "stages",
-      stages.map<StageDto>(
-        ({
-          stageType,
-          previousStage,
-          linkedTournament,
-          linkedTournamentStage,
-          stageScheme: {
-            isStarting,
-            pen,
-            type,
-            awayGoal,
-            groups,
-            swissNum,
-            swissTours,
-          },
-        }) => ({
-          stageType,
-          stageSchemeType: type,
+    const stages = (
+      await copyFromPrevious.mutateAsync({
+        tournament: values.tournament,
+        season: [values.start - 1, values.end - 1].join("-"),
+      })
+    ).map<StageDto>(
+      ({
+        stageType,
+        previousStage,
+        linkedTournament,
+        linkedTournamentStage,
+        stageScheme: {
           isStarting,
-          pen: pen ?? undefined,
-          awayGoal: awayGoal ?? undefined,
+          pen,
+          type,
+          awayGoal,
           groups,
-          swissNum: swissNum ?? undefined,
-          swissTours: swissTours ?? undefined,
-          previousStageType: previousStage?.stageType,
-          linkedTournament,
-          linkedStage: linkedTournamentStage,
-        })
-      )
+          swissNum,
+          swissTours,
+        },
+      }) => ({
+        stageType,
+        stageSchemeType: type,
+        isStarting,
+        pen: pen ?? undefined,
+        awayGoal: awayGoal ?? undefined,
+        groups,
+        swissNum: swissNum ?? undefined,
+        swissTours: swissTours ?? undefined,
+        previousStageType: previousStage?.stageType,
+        linkedTournament,
+        linkedStage: linkedTournamentStage,
+      }),
     );
+
+    form.setFieldValue("stages", stages);
   };
 
   useEffect(() => {
@@ -87,7 +90,7 @@ const CreateTournament: FC<Props> = ({ onClose }) => {
       () => {
         setValid(true);
       },
-      () => null
+      () => null,
     );
   }, [form, values]);
 
@@ -96,7 +99,6 @@ const CreateTournament: FC<Props> = ({ onClose }) => {
       open
       className={styles.modal}
       title={t("home.create")}
-      onClose={onClose}
       onCancel={onClose}
       width={800}
       maskClosable={false}
@@ -135,7 +137,7 @@ const CreateTournament: FC<Props> = ({ onClose }) => {
                 validator: async (_, names) => {
                   if (!names || names.length < 1) {
                     return Promise.reject(
-                      new Error(t("home.tournament.stage.error"))
+                      new Error(t("home.tournament.stage.error")),
                     );
                   }
                 },
