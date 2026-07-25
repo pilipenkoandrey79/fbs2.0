@@ -72,5 +72,9 @@
         "unitTestRunner": "none"
       }
     }
-  }
+  },
+  "tui": {
+    "enabled": false
+  },
+  "analytics": false
 }
