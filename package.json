@@ -28,6 +28,7 @@
     "class-validator": "^0.14.3",
     "classnames": "^2.5.1",
     "core-js": "^3.48.0",
+    "deps": "^1.0.0",
     "echarts": "^6.0.0",
     "echarts-for-react": "^3.0.6",
     "i18next": "^25.8.4",

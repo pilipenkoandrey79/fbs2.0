@@ -6,7 +6,11 @@ import { ConfigService } from "@nestjs/config";
 import { IGoogleUser } from "./strategies/google.strategy";
 import { User } from "../user/user.entity";
 import { UsersService } from "../user/user.servise";
-import { hashData, validateHashedData } from "../shared/utils";
+import {
+  hashData,
+  parseExpirationTime,
+  validateHashedData,
+} from "../shared/utils";
 
 @Injectable()
 export class AuthService {
@@ -44,19 +48,23 @@ export class AuthService {
   async getTokens(id: number, email: string): Promise<JWTTokensPair> {
     const payload = { email, sub: id };
 
+    const accessTokenOptions = {
+      secret: this.configService.get<string>("JWT_ACCESS_SECRET"),
+      expiresIn: parseExpirationTime(
+        this.configService.get<string>("JWT_ACCESS_EXPIRATION_TIME"),
+      ),
+    };
+
+    const refreshTokenOptions = {
+      secret: this.configService.get<string>("JWT_REFRESH_SECRET"),
+      expiresIn: parseExpirationTime(
+        this.configService.get<string>("VITE_JWT_REFRESH_EXPIRATION_TIME"),
+      ),
+    };
+
     const [accessToken, refreshToken] = await Promise.all([
-      this.jwtService.signAsync(payload, {
-        secret: this.configService.get<string>("JWT_ACCESS_SECRET"),
-        expiresIn: Number(
-          this.configService.get<string>("JWT_ACCESS_EXPIRATION_TIME"),
-        ),
-      }),
-      this.jwtService.signAsync(payload, {
-        secret: this.configService.get<string>("JWT_REFRESH_SECRET"),
-        expiresIn: Number(
-          this.configService.get<string>("VITE_JWT_REFRESH_EXPIRATION_TIME"),
-        ),
-      }),
+      this.jwtService.signAsync(payload, accessTokenOptions),
+      this.jwtService.signAsync(payload, refreshTokenOptions),
     ]);
 
     return {
